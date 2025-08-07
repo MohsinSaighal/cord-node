@@ -4,39 +4,14 @@ import Dashboard from "./components/Dashboard";
 import NodeManager from "./components/NodeManager";
 import Tasks from "./components/Tasks";
 import Leaderboard from "./components/Leaderboard";
-import { metadata, projectId, solanaWeb3JsAdapter } from "./config";
-import {
-  ConnectionProvider,
-  WalletProvider,
-} from "@solana/wallet-adapter-react";
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import {
-  PhantomWalletAdapter,
-  SolflareWalletAdapter,
-  // Add other wallet adapters you want to support
-} from "@solana/wallet-adapter-wallets";
-import {
-  WalletModalProvider,
-  WalletMultiButton, // You might use this button in your UI
-} from "@solana/wallet-adapter-react-ui";
-import { clusterApiUrl } from "@solana/web3.js";
-
-// Import the wallet adapter styles
-import "@solana/wallet-adapter-react-ui/styles.css";
 import ReferralSystem from "./components/ReferralSystem";
 import Settings from "./components/Settings";
 import AuthModal from "./components/AuthModal";
 import WelcomePopup from "./components/WelcomePopup";
+import { QueryProvider } from "./providers/QueryProvider";
+import { useUserStore } from "./stores/userStore";
+import { useAppStore } from "./stores/appStore";
 import { UserData } from "./types";
-import { createAppKit } from "@reown/appkit/react";
-import { solana, solanaTestnet, solanaDevnet } from "@reown/appkit/networks";
-import {
-  getCurrentSession,
-  signOut,
-  getUserFromDatabase,
-  updateUserInDatabase,
-  getStoredSession,
-} from "./utils/supabaseAuth";
 import { isNewDay, calculateMiningRate } from "./utils/calculations";
 import {
   getReferralCodeFromUrl,
@@ -46,13 +21,19 @@ import {
 import { useAntiCheat } from "./hooks/useAntiCheat";
 
 function App() {
-  const [currentTab, setCurrentTab] = useState("dashboard");
-  const [user, setUser] = useState<UserData | null>(null);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showWelcomePopup, setShowWelcomePopup] = useState(false);
-  const [isNewUser, setIsNewUser] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const { user, loading, setUser, setLoading, updateUser, logout } = useUserStore();
+  const {
+    currentTab,
+    showAuthModal,
+    showWelcomePopup,
+    isNewUser,
+    isMobileMenuOpen,
+    setCurrentTab,
+    setShowAuthModal,
+    setShowWelcomePopup,
+    setIsNewUser,
+    setIsMobileMenuOpen,
+  } = useAppStore();
 
   // Initialize anti-cheat system
   const { checkAntiCheat } = useAntiCheat(user);
@@ -175,8 +156,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      await signOut();
-      setUser(null);
+      logout();
     } catch (error) {
       console.error("Error signing out:", error);
     }
@@ -184,8 +164,8 @@ function App() {
 
   const handleUserUpdate = async (updatedUser: UserData) => {
     try {
-      await updateUserInDatabase(updatedUser);
-      setUser(updatedUser);
+      // Use the store to update user data
+      updateUser(updatedUser);
     } catch (error) {
       console.error("Error updating user:", error);
     }
@@ -263,10 +243,8 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <ConnectionProvider endpoint={endpoint}>
-        <WalletProvider wallets={wallets} autoConnect>
-          <WalletModalProvider>
+    <QueryProvider>
+      <div className="min-h-screen bg-black text-white">
             {user && (
               <Header
                 user={user}
@@ -296,10 +274,8 @@ function App() {
                 onClose={() => setShowWelcomePopup(false)}
               />
             )}
-          </WalletModalProvider>
-        </WalletProvider>
-      </ConnectionProvider>
-    </div>
+      </div>
+    </QueryProvider>
   );
 }
 
