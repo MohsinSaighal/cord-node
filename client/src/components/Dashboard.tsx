@@ -16,21 +16,11 @@ import {
 import { UserData } from "../types";
 
 import { isNewDay } from "../utils/calculations";
-import { updateUserInDatabase } from "../utils/supabaseAuth";
 import { useAntiCheat } from "../hooks/useAntiCheat";
 import { calculateMiningRate } from "../utils/calculations";
 import EpochDisplay from "./EpochDisplay";
-import { supabase } from "../lib/supabase";
-import {
-  SystemProgram,
-  LAMPORTS_PER_SOL,
-  Transaction,
-  PublicKey,
-  sendAndConfirmTransaction,
-} from "@solana/web3.js";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { apiClient } from "../hooks/useApi";
+// Solana and Supabase imports removed during migration
 interface DashboardProps {
   user: UserData;
   onUserUpdate: (user: UserData) => void;
@@ -51,8 +41,7 @@ interface EarningsData {
 
 const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
   const { antiCheatStatus } = useAntiCheat(user);
-  const { connection } = useConnection();
-  const { publicKey, sendTransaction } = useWallet();
+  // Wallet functionality temporarily disabled during migration
   console.log("user", user);
   const [stats, setStats] = useState({
     dailyEarnings: 0,
@@ -69,7 +58,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
     timestamps: [],
     values: [],
   });
-  const { wallet } = useWallet();
+  // Wallet functionality temporarily disabled during migration
 
   const [currentBalance, setCurrentBalance] = useState(user.currentBalance);
   const [totalEarned, setTotalEarned] = useState(user.totalEarned);
@@ -99,19 +88,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
   }, []);
   const verifyBadgePurchase = async () => {
     try {
-      const { data, error } = await supabase
-        .from("badge_purchases")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("status", "completed")
-        .limit(1);
-
-      if (error) throw error;
-
-      console.log("Badge purchase verified:", data);
-      if (data && data.length > 0) {
-        setHasVerifiedPurchase(true);
-      }
+      // TODO: Implement badge purchase verification with new API
+      // For now, check if user has badge of honor
+      setHasVerifiedPurchase(user.hasBadgeOfHonor || false);
     } catch (error) {
       console.error("Error verifying badge purchase:", error);
     }
@@ -138,43 +117,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
 
   const handlePhantomPayment = async () => {
     try {
-      if (!connection || !publicKey) {
-        addNotification("warning", "Payment Error", "Wallet not connected");
-        return;
-      }
       setIsPaying(true);
-
-      const SOLANA_RECIPIENT_ADDRESS =
-        "6zcYb8ZpqvesFkY5rqgEvQDFM2H2vw3nREJmyR3obuQL";
-      const recipientPubKey = new PublicKey(SOLANA_RECIPIENT_ADDRESS);
-      const amountInLamports = LAMPORTS_PER_SOL * 0.02;
-
-      const transferTransaction = new Transaction().add(
-        SystemProgram.transfer({
-          fromPubkey: publicKey,
-          toPubkey: recipientPubKey,
-          lamports: amountInLamports,
-        })
-      );
-
-      const signature = await sendTransaction(transferTransaction, connection);
-      console.log("Transaction sent, signature:", signature);
-
-
-
-      // Record transaction in database
-      const { error: purchaseError } = await supabase
-        .from("badge_purchases")
-        .insert({
-          user_id: user.id,
-          wallet_address: publicKey,
-          transaction_hash: signature,
-          amount_sol: 0.02,
-          amount_usd: 0.02 * (solPrice || 50),
-          status: "completed",
-        });
-
-      if (purchaseError) throw purchaseError;
+      addNotification("info", "Payment System", "Wallet payment temporarily disabled during migration");
+      
+      // TODO: Implement new payment system
+      // For now, just simulate the badge purchase
       const updatedUser = {
         ...user,
         currentBalance: user.currentBalance + 10000,
@@ -182,43 +129,45 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
         tasksCompleted: user.tasksCompleted + 1,
         hasBadgeOfHonor: true,
       };
-      // Update ALL state sources simultaneously
+      
+      // Update user via new API
+      await apiClient.updateUser(user.id, updatedUser);
       setCurrentBalance(updatedUser.currentBalance);
       setTotalEarned(updatedUser.totalEarned);
-      onUserUpdate(updatedUser); // Update parent component
-      await updateUserInDatabase(updatedUser); // Update database
-      setHasVerifiedPurchase(true); // Add this line
+      onUserUpdate(updatedUser);
+      setHasVerifiedPurchase(true);
 
       addNotification(
         "success",
-        "Payment Successful",
-        "Successfully Purchased Badge of Honor & Added 10000 Cords as Bonus"
+        "Badge Granted",
+        "Badge of Honor granted during migration testing"
       );
     } catch (error: any) {
       console.error("Payment error:", error);
-      // Log the specific error message from the wallet adapter if available
-      if (error.name) {
-        console.error("Wallet Adapter Error Name:", error.name);
-      }
-      if (error.message) {
-        console.error("Wallet Adapter Error Message:", error.message);
-      }
-      alert(`Payment failed: ${error.message || "Unknown error"}`); // Provide user feedback
+      addNotification("warning", "Error", "Failed to update user data");
     } finally {
-      setIsPaying(false); // Ensure setIsPaying is reset even on error
+      setIsPaying(false);
     }
   };
   useEffect(() => {
-    if (isNewDay(user.lastLoginTime)) {
-      const updatedUser = {
-        ...user,
-        dailyCheckInClaimed: false,
-        lastLoginTime: Date.now(),
-      };
-      onUserUpdate(updatedUser);
-      updateUserInDatabase(updatedUser);
-    }
+    const initializeUser = async () => {
+      if (isNewDay(user.lastLoginTime)) {
+        const updatedUser = {
+          ...user,
+          dailyCheckInClaimed: false,
+          lastLoginTime: Date.now(),
+        };
+        onUserUpdate(updatedUser);
+        // Update via new API
+        try {
+          await apiClient.updateUser(user.id, updatedUser);
+        } catch (error) {
+          console.error("Error updating user via API:", error);
+        }
+      }
+    };
 
+    initializeUser();
     setSessionStartBalance(user.currentBalance);
 
     // Add this line to verify badge purchase on load
@@ -279,12 +228,17 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
             lastSavedBalance: currentBalance,
             hasBadgeOfHonor: user.hasBadgeOfHonor,
           };
-          try {
-            onUserUpdate(updatedUser);
-            updateUserInDatabase(updatedUser);
-          } catch (error) {
-            console.error("Error updating user data:", error);
-          }
+          
+          const updateUserData = async () => {
+            try {
+              onUserUpdate(updatedUser);
+              await apiClient.updateUser(user.id, updatedUser);
+            } catch (error) {
+              console.error("Error updating user data:", error);
+            }
+          };
+          
+          updateUserData();
         }
       }
     }, 1000);

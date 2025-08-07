@@ -19,11 +19,7 @@ import {
   storeReferralCode,
 } from "./utils/referral";
 import { useAntiCheat } from "./hooks/useAntiCheat";
-import {
-  PhantomWalletAdapter,
-  SolflareWalletAdapter,
-  // Add other wallet adapters you want to support
-} from "@solana/wallet-adapter-wallets";
+// Solana wallet adapters temporarily removed during migration
 function App() {
   const { user, loading, setUser, setLoading, updateUser, logout } =
     useUserStore();
@@ -47,18 +43,7 @@ function App() {
     // initializeApp();
   }, []);
 
-  // You can also provide a custom RPC endpoint
-  const endpoint =
-    "https://solana-mainnet.g.alchemy.com/v2/NsnP2tXE9zCuu7hjj4zpABQ--AraC4pB";
-
-  const wallets = useMemo(
-    () => [
-      new PhantomWalletAdapter(),
-      new SolflareWalletAdapter(),
-      // Add other wallet adapters here
-    ],
-    []
-  );
+  // Wallet functionality temporarily disabled during Supabase migration
 
   // const initializeApp = async () => {
   //   try {

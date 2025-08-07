@@ -1,13 +1,16 @@
-import { createClient } from '@supabase/supabase-js';
+// Supabase client removed during migration to TypeORM
+// This file is temporarily disabled during Supabase to TypeORM migration
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
-}
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = {
+  // Temporary mock object to prevent import errors during migration
+  from: () => ({
+    select: () => ({ eq: () => ({ single: () => Promise.resolve({ data: null, error: null }) }) }),
+    insert: () => Promise.resolve({ data: null, error: null }),
+    update: () => ({ eq: () => Promise.resolve({ data: null, error: null }) }),
+    delete: () => ({ eq: () => Promise.resolve({ data: null, error: null }) })
+  }),
+  rpc: () => Promise.resolve({ data: null, error: null })
+};
 
 // Make supabase available globally for debugging
 if (typeof window !== 'undefined' && import.meta.env.DEV) {
