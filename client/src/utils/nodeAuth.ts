@@ -17,7 +17,7 @@ const storeUserSession = (userData: UserData): void => {
     'cordnode_user_session',
     JSON.stringify({
       ...JSON.parse(JSON.stringify(userData)),
-      joinDate: userData.joinDate.toISOString(),
+      joinDate: userData.joinDate,
       lastSavedBalance: userData.currentBalance,
     })
   );

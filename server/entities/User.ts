@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany,
   Index,
+  PrimaryColumn,
 } from "typeorm";
 import { Task } from "./Task";
 import { UserEpochStats } from "./UserEpochStats";
@@ -15,100 +16,100 @@ import { ReferralData } from "./ReferralData";
 @Index(["username"], { unique: true })
 @Index(["referralCode"], { unique: true })
 export class User {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
+  @PrimaryColumn({type:"varchar", length: 36})
+  id!: string;
 
   @Column({ type: "varchar", length: 255, unique: true })
-  username: string;
+  username!: string;
 
   @Column({ type: "varchar", length: 10 })
-  discriminator: string;
+  discriminator!: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })
-  avatar: string;
+  avatar!: string;
 
   @Column({ type: "decimal", precision: 10, scale: 2, default: 0 })
-  accountAge: number;
+  accountAge!: number;
 
   @Column({ type: "timestamp" })
-  joinDate: Date;
+  joinDate!: Date;
 
   @Column({ type: "decimal", precision: 10, scale: 2, default: 1.0 })
-  multiplier: number;
+  multiplier!: number;
 
   @Column({ type: "boolean", default: false })
-  compensationClaimed: boolean;
+  compensationClaimed!: boolean;
 
   @Column({ type: "boolean", default: false })
-  hasBadgeOfHonor: boolean;
+  hasBadgeOfHonor!: boolean;
 
   @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
-  totalEarned: number;
+  totalEarned!: number;
 
   @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
-  currentBalance: number;
+  currentBalance!: number;
 
   @Column({ type: "boolean", default: false })
-  isNodeActive: boolean;
+  isNodeActive!: boolean;
 
   @Column({ type: "integer", default: 0 })
-  tasksCompleted: number;
+  tasksCompleted!: number;
 
   @Column({ type: "integer", default: 0 })
-  rank: number;
+  rank!: number;
 
   @Column({ type: "bigint", nullable: true })
-  nodeStartTime: number;
+  nodeStartTime!: number;
 
   @Column({ type: "bigint", default: () => "EXTRACT(epoch FROM NOW()) * 1000" })
-  lastLoginTime: number;
+  lastLoginTime!: number;
 
   @Column({ type: "boolean", default: false })
-  dailyCheckInClaimed: boolean;
+  dailyCheckInClaimed!: boolean;
 
   @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
-  weeklyEarnings: number;
+  weeklyEarnings!: number;
 
   @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
-  monthlyEarnings: number;
+  monthlyEarnings!: number;
 
   @Column({ type: "varchar", length: 50, nullable: true, unique: true })
-  referralCode: string;
+  referralCode!: string;
 
   @Column({ type: "varchar", length: 50, nullable: true })
-  referredBy: string;
+  referredBy!: string;
 
   @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
-  referralEarnings: number;
+  referralEarnings!: number;
 
   @Column({ type: "integer", default: 0 })
-  totalReferrals: number;
+  totalReferrals!: number;
 
   @Column({ type: "varchar", length: 100, nullable: true })
-  currentEpochId: string;
+  currentEpochId!: string;
 
   @Column({ type: "bigint", nullable: true })
-  epochJoinDate: number;
+  epochJoinDate!: number;
 
   @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
-  totalEpochEarnings: number;
+  totalEpochEarnings!: number;
 
   @Column({ type: "decimal", precision: 15, scale: 8, nullable: true })
-  lastSavedBalance: number;
+  lastSavedBalance!: number;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   // Relations
   @OneToMany(() => Task, (task) => task.user)
-  tasks: Task[];
+  tasks!: Task[];
 
   @OneToMany(() => UserEpochStats, (epochStats) => epochStats.user)
-  epochStats: UserEpochStats[];
+  epochStats!: UserEpochStats[];
 
   @OneToMany(() => ReferralData, (referral) => referral.referrer)
-  referrals: ReferralData[];
+  referrals!: ReferralData[];
 }

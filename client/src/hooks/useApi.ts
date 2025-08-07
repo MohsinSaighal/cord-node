@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { UserData, LeaderboardEntry } from "../types";
 
-const API_BASE = "/api";
+const API_BASE = "http://localhost:5000/api";
 
 // API functions
 export const apiClient = {

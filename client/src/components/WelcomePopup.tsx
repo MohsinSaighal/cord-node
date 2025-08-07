@@ -65,7 +65,7 @@ const WelcomePopup: React.FC<WelcomePopupProps> = ({ user, onClose, isNewUser = 
                     <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400" />
                     <span className="text-white font-medium text-sm sm:text-base">Account Age</span>
                   </div>
-                  <span className="text-xl sm:text-2xl font-bold text-cyan-400" title={`Account created ${user.joinDate?.toLocaleDateString() || 'unknown'}`}>
+                  <span className="text-xl sm:text-2xl font-bold text-cyan-400" title={`Account created ${user.joinDate || 'unknown'}`}>
                     {user.accountAge || 0} years
                   </span>
                 </div>
