@@ -5,6 +5,31 @@ import { setupVite, serveStatic, log } from "./vite";
 import { initializeDatabase } from "./data-source";
 
 const app = express();
+
+// Enable CORS manually for frontend communication
+app.use((req, res, next) => {
+  const allowedOrigins = process.env.NODE_ENV === 'production' 
+    ? ['https://your-production-domain.com'] // Replace with your production domain
+    : ['http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:5000'];
+  
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin as string)) {
+    res.setHeader('Access-Control-Allow-Origin', origin as string);
+  }
+  
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  
+  next();
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

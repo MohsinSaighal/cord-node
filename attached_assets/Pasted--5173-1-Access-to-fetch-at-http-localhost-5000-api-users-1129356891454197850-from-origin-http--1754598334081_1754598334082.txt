@@ -1,0 +1,120 @@
+:5173/:1 Access to fetch at 'http://localhost:5000/api/users/1129356891454197850' from origin 'http://localhost:5173' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error
+requests.js:1  GET http://localhost:5000/api/users/1129356891454197850 net::ERR_FAILED 404 (Not Found)
+(anonymous) @ requests.js:1
+(anonymous) @ traffic.js:1
+fetch @ traffic.js:1
+getUser @ useApi.ts:9
+createOrUpdateUser @ supabaseAuth.ts:155
+await in createOrUpdateUser
+handleOAuthCallback @ supabaseAuth.ts:372
+await in handleOAuthCallback
+handleOAuthReturn @ AuthModal.tsx:80
+(anonymous) @ AuthModal.tsx:53
+commitHookEffectListMount @ chunk-SM3OW2QE.js?v=af5a4cb3:16915
+commitPassiveMountOnFiber @ chunk-SM3OW2QE.js?v=af5a4cb3:18156
+commitPassiveMountEffects_complete @ chunk-SM3OW2QE.js?v=af5a4cb3:18129
+commitPassiveMountEffects_begin @ chunk-SM3OW2QE.js?v=af5a4cb3:18119
+commitPassiveMountEffects @ chunk-SM3OW2QE.js?v=af5a4cb3:18109
+flushPassiveEffectsImpl @ chunk-SM3OW2QE.js?v=af5a4cb3:19490
+flushPassiveEffects @ chunk-SM3OW2QE.js?v=af5a4cb3:19447
+commitRootImpl @ chunk-SM3OW2QE.js?v=af5a4cb3:19416
+commitRoot @ chunk-SM3OW2QE.js?v=af5a4cb3:19277
+performSyncWorkOnRoot @ chunk-SM3OW2QE.js?v=af5a4cb3:18895
+flushSyncCallbacks @ chunk-SM3OW2QE.js?v=af5a4cb3:9119
+(anonymous) @ chunk-SM3OW2QE.js?v=af5a4cb3:18627Understand this error
+:5173/:1 Access to fetch at 'http://localhost:5000/api/users' from origin 'http://localhost:5173' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error
+requests.js:1  POST http://localhost:5000/api/users net::ERR_FAILED 201 (Created)
+(anonymous) @ requests.js:1
+(anonymous) @ traffic.js:1
+fetch @ traffic.js:1
+createUser @ useApi.ts:21
+createOrUpdateUser @ supabaseAuth.ts:212
+await in createOrUpdateUser
+handleOAuthCallback @ supabaseAuth.ts:372
+await in handleOAuthCallback
+handleOAuthReturn @ AuthModal.tsx:80
+(anonymous) @ AuthModal.tsx:53
+commitHookEffectListMount @ chunk-SM3OW2QE.js?v=af5a4cb3:16915
+commitPassiveMountOnFiber @ chunk-SM3OW2QE.js?v=af5a4cb3:18156
+commitPassiveMountEffects_complete @ chunk-SM3OW2QE.js?v=af5a4cb3:18129
+commitPassiveMountEffects_begin @ chunk-SM3OW2QE.js?v=af5a4cb3:18119
+commitPassiveMountEffects @ chunk-SM3OW2QE.js?v=af5a4cb3:18109
+flushPassiveEffectsImpl @ chunk-SM3OW2QE.js?v=af5a4cb3:19490
+flushPassiveEffects @ chunk-SM3OW2QE.js?v=af5a4cb3:19447
+commitRootImpl @ chunk-SM3OW2QE.js?v=af5a4cb3:19416
+commitRoot @ chunk-SM3OW2QE.js?v=af5a4cb3:19277
+performSyncWorkOnRoot @ chunk-SM3OW2QE.js?v=af5a4cb3:18895
+flushSyncCallbacks @ chunk-SM3OW2QE.js?v=af5a4cb3:9119
+(anonymous) @ chunk-SM3OW2QE.js?v=af5a4cb3:18627Understand this error
+supabaseAuth.ts:248 Error in createOrUpdateUser: TypeError: Failed to fetch
+    at requests.js:1:3245
+    at traffic.js:1:1473
+    at new Promise (<anonymous>)
+    at fetch (traffic.js:1:1450)
+    at Object.createUser (useApi.ts:21:28)
+    at createOrUpdateUser (supabaseAuth.ts:212:34)
+    at async handleOAuthCallback (supabaseAuth.ts:372:18)
+    at async handleOAuthReturn (AuthModal.tsx:80:24)
+createOrUpdateUser @ supabaseAuth.ts:248
+await in createOrUpdateUser
+handleOAuthCallback @ supabaseAuth.ts:372
+await in handleOAuthCallback
+handleOAuthReturn @ AuthModal.tsx:80
+(anonymous) @ AuthModal.tsx:53
+commitHookEffectListMount @ chunk-SM3OW2QE.js?v=af5a4cb3:16915
+commitPassiveMountOnFiber @ chunk-SM3OW2QE.js?v=af5a4cb3:18156
+commitPassiveMountEffects_complete @ chunk-SM3OW2QE.js?v=af5a4cb3:18129
+commitPassiveMountEffects_begin @ chunk-SM3OW2QE.js?v=af5a4cb3:18119
+commitPassiveMountEffects @ chunk-SM3OW2QE.js?v=af5a4cb3:18109
+flushPassiveEffectsImpl @ chunk-SM3OW2QE.js?v=af5a4cb3:19490
+flushPassiveEffects @ chunk-SM3OW2QE.js?v=af5a4cb3:19447
+commitRootImpl @ chunk-SM3OW2QE.js?v=af5a4cb3:19416
+commitRoot @ chunk-SM3OW2QE.js?v=af5a4cb3:19277
+performSyncWorkOnRoot @ chunk-SM3OW2QE.js?v=af5a4cb3:18895
+flushSyncCallbacks @ chunk-SM3OW2QE.js?v=af5a4cb3:9119
+(anonymous) @ chunk-SM3OW2QE.js?v=af5a4cb3:18627Understand this error
+supabaseAuth.ts:375 Database operation failed: TypeError: Failed to fetch
+    at requests.js:1:3245
+    at traffic.js:1:1473
+    at new Promise (<anonymous>)
+    at fetch (traffic.js:1:1450)
+    at Object.createUser (useApi.ts:21:28)
+    at createOrUpdateUser (supabaseAuth.ts:212:34)
+    at async handleOAuthCallback (supabaseAuth.ts:372:18)
+    at async handleOAuthReturn (AuthModal.tsx:80:24)
+handleOAuthCallback @ supabaseAuth.ts:375
+await in handleOAuthCallback
+handleOAuthReturn @ AuthModal.tsx:80
+(anonymous) @ AuthModal.tsx:53
+commitHookEffectListMount @ chunk-SM3OW2QE.js?v=af5a4cb3:16915
+commitPassiveMountOnFiber @ chunk-SM3OW2QE.js?v=af5a4cb3:18156
+commitPassiveMountEffects_complete @ chunk-SM3OW2QE.js?v=af5a4cb3:18129
+commitPassiveMountEffects_begin @ chunk-SM3OW2QE.js?v=af5a4cb3:18119
+commitPassiveMountEffects @ chunk-SM3OW2QE.js?v=af5a4cb3:18109
+flushPassiveEffectsImpl @ chunk-SM3OW2QE.js?v=af5a4cb3:19490
+flushPassiveEffects @ chunk-SM3OW2QE.js?v=af5a4cb3:19447
+commitRootImpl @ chunk-SM3OW2QE.js?v=af5a4cb3:19416
+commitRoot @ chunk-SM3OW2QE.js?v=af5a4cb3:19277
+performSyncWorkOnRoot @ chunk-SM3OW2QE.js?v=af5a4cb3:18895
+flushSyncCallbacks @ chunk-SM3OW2QE.js?v=af5a4cb3:9119
+(anonymous) @ chunk-SM3OW2QE.js?v=af5a4cb3:18627Understand this error
+supabaseAuth.ts:416 OAuth callback error: Database error: Failed to fetch
+handleOAuthCallback @ supabaseAuth.ts:416
+await in handleOAuthCallback
+handleOAuthReturn @ AuthModal.tsx:80
+(anonymous) @ AuthModal.tsx:53
+commitHookEffectListMount @ chunk-SM3OW2QE.js?v=af5a4cb3:16915
+commitPassiveMountOnFiber @ chunk-SM3OW2QE.js?v=af5a4cb3:18156
+commitPassiveMountEffects_complete @ chunk-SM3OW2QE.js?v=af5a4cb3:18129
+commitPassiveMountEffects_begin @ chunk-SM3OW2QE.js?v=af5a4cb3:18119
+commitPassiveMountEffects @ chunk-SM3OW2QE.js?v=af5a4cb3:18109
+flushPassiveEffectsImpl @ chunk-SM3OW2QE.js?v=af5a4cb3:19490
+flushPassiveEffects @ chunk-SM3OW2QE.js?v=af5a4cb3:19447
+commitRootImpl @ chunk-SM3OW2QE.js?v=af5a4cb3:19416
+commitRoot @ chunk-SM3OW2QE.js?v=af5a4cb3:19277
+performSyncWorkOnRoot @ chunk-SM3OW2QE.js?v=af5a4cb3:18895
+flushSyncCallbacks @ chunk-SM3OW2QE.js?v=af5a4cb3:9119
+(anonymous) @ chunk-SM3OW2QE.js?v=af5a4cb3:18627Understand this error
+AuthModal.tsx:98 Discord OAuth error: Error: Database error: Failed to fetch
+    at handleOAuthCallback (supabaseAuth.ts:376:13)
+    at async handleOAuthReturn (AuthModal.tsx:80:24)
