@@ -1,4 +1,4 @@
-import { supabase } from "../lib/supabase";
+// Supabase removed during migration - using new API
 import { UserData } from "../types";
 import { calculateMultiplier, calculateInitialBalance } from "./calculations";
 import {
@@ -9,7 +9,7 @@ import {
   calculateAccountAge,
   setOAuthState,
 } from "./discord";
-import { processReferralInDatabase } from "./supabaseReferrals";
+// import { processReferralInDatabase } from "./supabaseReferrals";
 import { getStoredReferralCode, clearStoredReferralCode } from "./referral";
 
 // Function to log authentication attempts
@@ -20,12 +20,8 @@ const logAuthAttempt = async (
   details?: any
 ) => {
   try {
-    await supabase.rpc("log_auth_attempt", {
-      p_user_id: userId,
-      p_auth_method: method,
-      p_status: status,
-      p_details: details ? JSON.stringify(details) : null,
-    });
+    // TODO: Implement auth attempt logging with new API
+    console.log('Auth attempt:', { userId, method, status, details });
   } catch (error) {
     console.error("Failed to log auth attempt:", error);
     // Non-critical, continue even if logging fails
@@ -124,7 +120,10 @@ const clearUserSession = (): void => {
   localStorage.removeItem("cordnode_session_timestamp");
 };
 
-// Create or update user in database
+// Import the new API client
+import { apiClient } from '../hooks/useApi';
+
+// Create or update user in database using new TypeORM API
 export const createOrUpdateUser = async (
   discordUser: any,
   referralCode?: string
@@ -152,46 +151,10 @@ export const createOrUpdateUser = async (
   try {
     // First, try to get existing user
     let existingUser = null;
-    let checkError = null;
-
     try {
-      const { data: existingUsers, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("id", discordUser.id);
-
-      if (existingUsers && existingUsers.length > 0) {
-        existingUser = existingUsers[0];
-      }
-      checkError = error;
+      existingUser = await apiClient.getUser(discordUser.id);
     } catch (error) {
-      console.error("Error checking existing user:", error);
-      checkError = error;
-    }
-
-    if (checkError) {
-      console.error("Error checking existing user:", checkError);
-      await logAuthAttempt(discordUser.id, "discord_oauth", "error_check", {
-        error: checkError.message,
-      });
-
-      // Try alternative method to check if user exists
-      try {
-        const { data: checkResult } = await supabase.rpc("check_user_exists", {
-          p_user_id: discordUser.id,
-        });
-
-        if (checkResult && checkResult.exists) {
-          console.log("User exists according to check_user_exists function");
-          existingUser = checkResult.user_data;
-        }
-      } catch (funcError) {
-        console.error("Error with check_user_exists function:", funcError);
-      }
-
-      if (!existingUser) {
-        throw new Error(`Database error: ${checkError.message}`);
-      }
+      console.log("User not found, will create new one");
     }
 
     let userData: UserData;
@@ -202,52 +165,13 @@ export const createOrUpdateUser = async (
         username: existingUser.username,
       });
 
-      // For existing users, just update the login time and return existing data
-      const { error: updateError } = await supabase
-        .from("users")
-        .update({
-          last_login_time: new Date().toISOString(),
-        })
-        .eq("id", discordUser.id);
-
-      if (updateError) {
-        console.error("Error updating login time:", updateError);
-        // Don't throw error, just log it and continue with existing data
-      }
-
-      userData = {
-        id: existingUser.id,
-        username: existingUser.username,
-        discriminator: existingUser.discriminator,
-        avatar: existingUser.avatar,
-        accountAge: existingUser.account_age,
-        joinDate: new Date(existingUser.join_date),
-        multiplier: existingUser.multiplier,
-        totalEarned: existingUser.total_earned,
-        currentBalance: existingUser.current_balance,
-              hasBadgeOfHonor: existingUser.hasBadgeOfHonor || false,
-
-        isNodeActive: existingUser.is_node_active,
-        nodeStartTime: existingUser.node_start_time
-          ? new Date(existingUser.node_start_time).getTime()
-          : undefined,
-        tasksCompleted: existingUser.tasks_completed,
-        rank: existingUser.rank,
-        lastLoginTime: Date.now(), // Use current time
-        dailyCheckInClaimed: existingUser.daily_checkin_claimed,
-        weeklyEarnings: existingUser.weekly_earnings,
-        monthlyEarnings: existingUser.monthly_earnings,
-        referralCode: existingUser.referral_code,
-        referredBy: existingUser.referred_by || undefined,
-        referralEarnings: existingUser.referral_earnings,
-        totalReferrals: existingUser.total_referrals,
-        currentEpochId: existingUser.current_epoch_id || undefined,
-        epochJoinDate: existingUser.epoch_join_date
-          ? new Date(existingUser.epoch_join_date).getTime()
-          : undefined,
-        totalEpochEarnings: existingUser.total_epoch_earnings || 0,
-        compensationClaimed: existingUser.compensation_claimed || false,
+      // For existing users, update the login time
+      const updatedUser = {
+        ...existingUser,
+        lastLoginTime: Date.now(),
       };
+      
+      userData = await apiClient.updateUser(discordUser.id, updatedUser);
     } else {
       console.log("Creating new user");
       await logAuthAttempt(discordUser.id, "discord_oauth", "new_user", {
@@ -255,175 +179,39 @@ export const createOrUpdateUser = async (
         accountAge,
       });
 
-      // Create new user first (without referral processing)
+      // Create new user data
       const newUserData = {
         id: discordUser.id,
         username: discordUser.username,
         discriminator: discordUser.discriminator,
         avatar: getAvatarUrl(discordUser.id, discordUser.avatar),
-        account_age: accountAge,
-        join_date: new Date(discordUser.created_timestamp).toISOString(),
+        accountAge,
+        joinDate: new Date(discordUser.created_timestamp),
         multiplier,
-        total_earned: baseBalance,
-        current_balance: baseBalance,
-        referral_code: userReferralCode,
+        totalEarned: baseBalance,
+        currentBalance: baseBalance,
+        referralCode: userReferralCode,
         rank: Math.floor(Math.random() * 1000) + 1,
-        last_login_time: new Date().toISOString(),
-        is_node_active: false,
-        tasks_completed: 0,
-        daily_checkin_claimed: false,
-        weekly_earnings: 0,
-        monthly_earnings: 0,
-        referral_earnings: 0,
-        total_referrals: 0,
+        lastLoginTime: Date.now(),
+        isNodeActive: false,
+        tasksCompleted: 0,
+        dailyCheckInClaimed: false,
+        weeklyEarnings: 0,
+        monthlyEarnings: 0,
+        referralEarnings: 0,
+        totalReferrals: 0,
+        referredBy: referralCode || undefined,
+        hasBadgeOfHonor: false,
+        nodeStartTime: undefined,
+        currentEpochId: undefined,
+        epochJoinDate: undefined,
+        totalEpochEarnings: 0,
+        compensationClaimed: false,
       };
 
-      const { data: newUsers, error: insertError } = await supabase
-        .from("users")
-        .insert(newUserData)
-        .select();
+      userData = await apiClient.createUser(newUserData);
 
-      if (insertError) {
-        console.error("Error creating user:", insertError);
-        await logAuthAttempt(discordUser.id, "discord_oauth", "error_insert", {
-          error: insertError.message,
-        });
-
-        // Try alternative method to create user
-        try {
-          console.log("Attempting to create user manually via function");
-          const { data: createResult, error: createFuncError } =
-            await supabase.rpc("create_user_manually", {
-              p_user_id: discordUser.id,
-              p_username: discordUser.username,
-              p_discriminator: discordUser.discriminator,
-              p_avatar: getAvatarUrl(discordUser.id, discordUser.avatar),
-              p_account_age: accountAge,
-              p_join_date: new Date(
-                discordUser.created_timestamp
-              ).toISOString(),
-              p_referral_code: userReferralCode,
-              p_referred_by: referralCode,
-              p_total_earned: baseBalance,
-            });
-
-          if (createFuncError) {
-            console.error("Error with manual user creation:", createFuncError);
-            throw new Error(
-              `Failed to create user: ${createFuncError.message}`
-            );
-          }
-
-          if (createResult && createResult.success) {
-            console.log("User created manually via function:", createResult);
-
-            // Get the newly created user
-            const { data: newUsers, error: fetchError } = await supabase
-              .from("users")
-              .select("*")
-              .eq("id", discordUser.id);
-
-            if (fetchError || !newUsers || newUsers.length === 0) {
-              console.error("Error fetching newly created user:", fetchError);
-              throw new Error("User created but could not be retrieved");
-            }
-
-            const newUser = newUsers[0];
-            userData = {
-              id: newUser.id,
-              username: newUser.username,
-              discriminator: newUser.discriminator,
-              avatar: newUser.avatar,
-              hasBadgeOfHonor:newUser.hasBadgeOfHonor,
-              accountAge: newUser.account_age,
-              joinDate: new Date(newUser.join_date),
-              multiplier: newUser.multiplier,
-              totalEarned: newUser.total_earned,
-              currentBalance: newUser.current_balance,
-              isNodeActive: newUser.is_node_active,
-              nodeStartTime: newUser.node_start_time
-                ? new Date(newUser.node_start_time).getTime()
-                : undefined,
-              tasksCompleted: newUser.tasks_completed,
-              rank: newUser.rank,
-              lastLoginTime: new Date(newUser.last_login_time).getTime(),
-              dailyCheckInClaimed: newUser.daily_checkin_claimed,
-              weeklyEarnings: newUser.weekly_earnings,
-              monthlyEarnings: newUser.monthly_earnings,
-              referralCode: newUser.referral_code || userReferralCode,
-              referredBy: newUser.referred_by || undefined,
-              referralEarnings: newUser.referral_earnings,
-              totalReferrals: newUser.total_referrals,
-              currentEpochId: newUser.current_epoch_id || undefined,
-              epochJoinDate: newUser.epoch_join_date
-                ? new Date(newUser.epoch_join_date).getTime()
-                : undefined,
-              totalEpochEarnings: newUser.total_epoch_earnings || 0,
-              compensationClaimed: newUser.compensation_claimed || false,
-            };
-
-            // Skip the rest of the function since we already have the user data
-            storeUserSession(userData);
-            return userData;
-          }
-        } catch (manualCreateError) {
-          console.error("Error in manual user creation:", manualCreateError);
-        }
-
-        throw new Error(`Failed to create user: ${insertError.message}`);
-      }
-
-      if (!newUsers || newUsers.length === 0) {
-        throw new Error("No user returned after creation");
-      }
-
-      const newUser = newUsers[0];
-      userData = {
-        id: newUser.id,
-        username: newUser.username,
-        discriminator: newUser.discriminator,
-        avatar: newUser.avatar,
-        accountAge: newUser.account_age,
-        joinDate: new Date(newUser.join_date),
-        multiplier: newUser.multiplier,
-        totalEarned: newUser.total_earned,
-        currentBalance: newUser.current_balance,
-        hasBadgeOfHonor: newUser.hasBadgeOfHonor,
-        isNodeActive: newUser.is_node_active,
-        nodeStartTime: newUser.node_start_time
-          ? new Date(newUser.node_start_time).getTime()
-          : undefined,
-        tasksCompleted: newUser.tasks_completed,
-        rank: newUser.rank,
-        lastLoginTime: new Date(newUser.last_login_time).getTime(),
-        dailyCheckInClaimed: newUser.daily_checkin_claimed,
-        weeklyEarnings: newUser.weekly_earnings,
-        monthlyEarnings: newUser.monthly_earnings,
-        referralCode: newUser.referral_code || userReferralCode,
-        referredBy: newUser.referred_by || undefined,
-        referralEarnings: newUser.referral_earnings,
-        totalReferrals: newUser.total_referrals,
-        currentEpochId: newUser.current_epoch_id || undefined,
-        epochJoinDate: newUser.epoch_join_date
-          ? new Date(newUser.epoch_join_date).getTime()
-          : undefined,
-        totalEpochEarnings: newUser.total_epoch_earnings || 0,
-        compensationClaimed: newUser.compensation_claimed || false,
-      };
-
-      // Create default user settings (don't fail if this fails)
-      try {
-        await supabase.from("user_settings").insert({
-          user_id: discordUser.id,
-        });
-      } catch (settingsError) {
-        console.error(
-          "Error creating user settings (non-critical):",
-          settingsError
-        );
-      }
-
-      // Process referral AFTER user is created
+      // Process referral if provided
       if (referralCode && referralCode.trim()) {
         console.log("Processing referral with code:", referralCode.trim());
         await logAuthAttempt(discordUser.id, "referral_processing", "start", {
@@ -431,20 +219,8 @@ export const createOrUpdateUser = async (
         });
 
         try {
-          // Process the referral now that user exists
-          await processReferralInDatabase(userData, referralCode.trim());
-
-          // Refresh user data to get updated referral info
-          const { data: updatedUser } = await supabase
-            .from("users")
-            .select("*")
-            .eq("id", discordUser.id)
-            .single();
-
-          if (updatedUser) {
-            userData.referredBy = updatedUser.referred_by;
-            userData.referralEarnings = updatedUser.referral_earnings;
-          }
+          // TODO: Implement referral processing with new API
+          console.log("Referral processing not yet implemented with new API");
         } catch (referralError) {
           console.error("Error processing referral:", referralError);
           await logAuthAttempt(discordUser.id, "referral_processing", "error", {
@@ -456,12 +232,9 @@ export const createOrUpdateUser = async (
         }
       }
 
-      storeUserSession(userData);
       await logAuthAttempt(discordUser.id, "discord_oauth", "success", {
         username: userData.username,
       });
-
-      return userData;
     }
 
     // Store session for persistence across page refreshes
@@ -480,50 +253,13 @@ export const createOrUpdateUser = async (
   }
 };
 
-// Update user data in database
+// Update user data in database using new TypeORM API
 export const updateUserInDatabase = async (
   userData: UserData
 ): Promise<void> => {
   try {
-    const { error } = await supabase
-      .from("users")
-      .update({
-        username: userData.username,
-        discriminator: userData.discriminator,
-        avatar: userData.avatar,
-        account_age: userData.accountAge,
-        join_date: userData.joinDate.toISOString(),
-        multiplier: userData.multiplier,
-        total_earned: userData.totalEarned || 0,
-        current_balance: userData.currentBalance,
-        is_node_active: userData.isNodeActive,
-        node_start_time: userData.nodeStartTime
-          ? new Date(userData.nodeStartTime).toISOString()
-          : null,
-        tasks_completed: userData.tasksCompleted,
-        rank: userData.rank,
-        last_login_time: new Date(userData.lastLoginTime).toISOString(),
-        daily_checkin_claimed: userData.dailyCheckInClaimed,
-        weekly_earnings: userData.weeklyEarnings,
-        monthly_earnings: userData.monthlyEarnings,
-        referral_earnings: userData.referralEarnings,
-        total_referrals: userData.totalReferrals,
-        referred_by: userData.referredBy || null,
-        current_epoch_id: userData.currentEpochId || null,
-        epoch_join_date: userData.epochJoinDate
-          ? new Date(userData.epochJoinDate).toISOString()
-          : null,
-        total_epoch_earnings: userData.totalEpochEarnings,
-        compensation_claimed: userData.compensationClaimed,
-        hasBadgeOfHonor: userData.hasBadgeOfHonor,
-      })
-      .eq("id", userData.id);
-
-    if (error) {
-      console.error("Error updating user in database:", error);
-      throw new Error(`Failed to update user: ${error.message}`);
-    }
-
+    await apiClient.updateUser(userData.id, userData);
+    
     // Update stored session
     storeUserSession(userData);
   } catch (error) {
@@ -532,63 +268,19 @@ export const updateUserInDatabase = async (
   }
 };
 
-// Get user from database
+// Get user from database using new TypeORM API
 export const getUserFromDatabase = async (
   userId: string
 ): Promise<UserData | null> => {
   if (!userId) return null;
 
   try {
-    const { data: users, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("id", userId);
-
-    if (error) {
-      console.error("Error getting user from database:", error);
-      return null;
+    const userData = await apiClient.getUser(userId);
+    
+    if (userData) {
+      // Update stored session
+      storeUserSession(userData);
     }
-
-    if (!users || users.length === 0) return null;
-
-    const user = users[0];
-    console.log(">>>>>>>>>>>>>>>", user);
-
-    const userData = {
-      id: user.id,
-      username: user.username,
-      discriminator: user.discriminator,
-      avatar: user.avatar,
-      accountAge: user.account_age,
-      joinDate: new Date(user.join_date),
-      multiplier: user.multiplier,
-      totalEarned: user.total_earned,
-      currentBalance: user.current_balance,
-      isNodeActive: user.is_node_active,
-      nodeStartTime: user.node_start_time
-        ? new Date(user.node_start_time).getTime()
-        : undefined,
-      tasksCompleted: user.tasks_completed,
-      rank: user.rank,
-      lastLoginTime: new Date(user.last_login_time).getTime(),
-      dailyCheckInClaimed: user.daily_checkin_claimed,
-      weeklyEarnings: user.weekly_earnings,
-      hasBadgeOfHonor: user.hasBadgeOfHonor,
-      monthlyEarnings: user.monthly_earnings,
-      referralCode: user.referral_code || undefined,
-      referredBy: user.referred_by || undefined,
-      referralEarnings: user.referral_earnings,
-      totalReferrals: user.total_referrals,
-      currentEpochId: user.current_epoch_id || undefined,
-      epochJoinDate: user.epoch_join_date
-        ? new Date(user.epoch_join_date).getTime()
-        : undefined,
-      totalEpochEarnings: user.total_epoch_earnings || 0,
-      compensationClaimed: user.compensation_claimed,
-    };
-
-    // Update stored session
-    storeUserSession(userData);
 
     return userData;
   } catch (error) {
