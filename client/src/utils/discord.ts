@@ -32,9 +32,9 @@ const getRedirectUri = (): string => {
 
 // Discord OAuth configuration
 const DISCORD_CONFIG: DiscordOAuthConfig = {
-  clientId: '1390136966552748072',
-  clientSecret: 'Cj8eKMI5iIigS8Tl34tWKtz5giiIfvF1',
-  redirectUri: 'https://cordnode.xyz', // Default, but we'll use getRedirectUri() when needed
+  clientId: '1392762186908176454',
+  clientSecret: 'yw6r4gGgbY4XcL_epAuYdica_nhumnnH',
+  redirectUri: 'http://localhost:3000', // Default, but we'll use getRedirectUri() when needed
   scope: 'identify email'
 };
 

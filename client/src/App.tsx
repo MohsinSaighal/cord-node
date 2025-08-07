@@ -19,9 +19,14 @@ import {
   storeReferralCode,
 } from "./utils/referral";
 import { useAntiCheat } from "./hooks/useAntiCheat";
-
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+  // Add other wallet adapters you want to support
+} from "@solana/wallet-adapter-wallets";
 function App() {
-  const { user, loading, setUser, setLoading, updateUser, logout } = useUserStore();
+  const { user, loading, setUser, setLoading, updateUser, logout } =
+    useUserStore();
   const {
     currentTab,
     showAuthModal,
@@ -39,11 +44,12 @@ function App() {
   const { checkAntiCheat } = useAntiCheat(user);
 
   useEffect(() => {
-    initializeApp();
+    // initializeApp();
   }, []);
 
   // You can also provide a custom RPC endpoint
-  const endpoint = "https://solana-mainnet.g.alchemy.com/v2/NsnP2tXE9zCuu7hjj4zpABQ--AraC4pB";
+  const endpoint =
+    "https://solana-mainnet.g.alchemy.com/v2/NsnP2tXE9zCuu7hjj4zpABQ--AraC4pB";
 
   const wallets = useMemo(
     () => [
@@ -51,90 +57,91 @@ function App() {
       new SolflareWalletAdapter(),
       // Add other wallet adapters here
     ],
-  []);
+    []
+  );
 
-  const initializeApp = async () => {
-    try {
-      // Check for referral code in URL first
-      const referralCode = getReferralCodeFromUrl();
-      if (referralCode) {
-        console.log("Found referral code in URL:", referralCode);
-        storeReferralCode(referralCode);
-        clearReferralFromUrl();
-      }
+  // const initializeApp = async () => {
+  //   try {
+  //     // Check for referral code in URL first
+  //     const referralCode = getReferralCodeFromUrl();
+  //     if (referralCode) {
+  //       console.log("Found referral code in URL:", referralCode);
+  //       storeReferralCode(referralCode);
+  //       clearReferralFromUrl();
+  //     }
 
-      // First check for stored local session (for page refresh persistence)
-      const storedSession = getStoredSession();
-      if (storedSession) {
-        console.log(
-          "Found stored session, restoring user:",
-          storedSession.username
-        );
+  //     // First check for stored local session (for page refresh persistence)
+  //     const storedSession = getStoredSession();
+  //     if (storedSession) {
+  //       console.log(
+  //         "Found stored session, restoring user:",
+  //         storedSession.username
+  //       );
 
-        // Refresh user data from database to get latest state
-        const freshUserData = await getUserFromDatabase(storedSession.id);
-        if (freshUserData) {
-          // Ensure we don't lose balance between sessions
-          if (storedSession.currentBalance > freshUserData.currentBalance) {
-            console.log(
-              "Stored balance higher than database balance, keeping stored balance"
-            );
-            freshUserData.currentBalance = storedSession.currentBalance;
-            freshUserData.totalEarned = Math.max(
-              freshUserData.totalEarned,
-              storedSession.currentBalance
-            );
-          }
+  //       // Refresh user data from database to get latest state
+  //       const freshUserData = await getUserFromDatabase(storedSession.id);
+  //       if (freshUserData) {
+  //         // Ensure we don't lose balance between sessions
+  //         if (storedSession.currentBalance > freshUserData.currentBalance) {
+  //           console.log(
+  //             "Stored balance higher than database balance, keeping stored balance"
+  //           );
+  //           freshUserData.currentBalance = storedSession.currentBalance;
+  //           freshUserData.totalEarned = Math.max(
+  //             freshUserData.totalEarned,
+  //             storedSession.currentBalance
+  //           );
+  //         }
 
-          // Reset daily tasks if new day
-          if (isNewDay(freshUserData.lastLoginTime)) {
-            freshUserData.dailyCheckInClaimed = false;
-            freshUserData.lastLoginTime = Date.now();
-            await updateUserInDatabase(freshUserData);
-          }
+  //         // Reset daily tasks if new day
+  //         if (isNewDay(freshUserData.lastLoginTime)) {
+  //           freshUserData.dailyCheckInClaimed = false;
+  //           freshUserData.lastLoginTime = Date.now();
+  //           await updateUserInDatabase(freshUserData);
+  //         }
 
-          console.log("ss", freshUserData);
+  //         console.log("ss", freshUserData);
 
-          setUser({
-            ...freshUserData,
-            compensationClaimed: freshUserData.compensationClaimed,
-            hasBadgeOfHonor: freshUserData.hasBadgeOfHonor,
-          });
-        } else {
-          // If we can't get fresh data, use stored session
-          setUser({
-            ...storedSession,
-            compensationClaimed: storedSession.compensationClaimed,
-            hasBadgeOfHonor: storedSession.hasBadgeOfHonor,
-          });
-        }
-      } else {
-        // Check for Supabase session (OAuth callback)
-        if (storedSession && storedSession.id) {
-          if (session?.user?.user_metadata?.discord_id) {
-            // Get user data from database
-            const userData = await getUserFromDatabase(
-              session.user.user_metadata.discord_id
-            );
-            if (userData) {
-              // Reset daily tasks if new day
-              if (isNewDay(userData.lastLoginTime)) {
-                userData.dailyCheckInClaimed = false;
-                userData.lastLoginTime = Date.now();
-                await updateUserInDatabase(userData);
-              }
+  //         setUser({
+  //           ...freshUserData,
+  //           compensationClaimed: freshUserData.compensationClaimed,
+  //           hasBadgeOfHonor: freshUserData.hasBadgeOfHonor,
+  //         });
+  //       } else {
+  //         // If we can't get fresh data, use stored session
+  //         setUser({
+  //           ...storedSession,
+  //           compensationClaimed: storedSession.compensationClaimed,
+  //           hasBadgeOfHonor: storedSession.hasBadgeOfHonor,
+  //         });
+  //       }
+  //     } else {
+  //       // Check for Supabase session (OAuth callback)
+  //       if (storedSession && storedSession.id) {
+  //         if (session?.user?.user_metadata?.discord_id) {
+  //           // Get user data from database
+  //           const userData = await getUserFromDatabase(
+  //             session.user.user_metadata.discord_id
+  //           );
+  //           if (userData) {
+  //             // Reset daily tasks if new day
+  //             if (isNewDay(userData.lastLoginTime)) {
+  //               userData.dailyCheckInClaimed = false;
+  //               userData.lastLoginTime = Date.now();
+  //               await updateUserInDatabase(userData);
+  //             }
 
-              setUser(userData);
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Error initializing app:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //             setUser(userData);
+  //           }
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error initializing app:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleLogin = (userData: UserData, isNew: boolean = false) => {
     setUser(userData);
@@ -171,22 +178,22 @@ function App() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4">
-            <img
-              src="https://i.ibb.co/5gZ6p5Vf/CordNode.png"
-              alt="CordNode Logo"
-              className="w-full h-full object-contain animate-pulse"
-            />
-          </div>
-          <div className="text-white text-lg">Loading CordNode...</div>
-        </div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="min-h-screen bg-black flex items-center justify-center">
+  //       <div className="text-center">
+  //         <div className="w-16 h-16 mx-auto mb-4">
+  //           <img
+  //             src="https://i.ibb.co/5gZ6p5Vf/CordNode.png"
+  //             alt="CordNode Logo"
+  //             className="w-full h-full object-contain animate-pulse"
+  //           />
+  //         </div>
+  //         <div className="text-white text-lg">Loading CordNode...</div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   const renderContent = () => {
     if (!user) {
@@ -245,35 +252,33 @@ function App() {
   return (
     <QueryProvider>
       <div className="min-h-screen bg-black text-white">
-            {user && (
-              <Header
-                user={user}
-                currentTab={currentTab}
-                setCurrentTab={setCurrentTab}
-                onLogout={handleLogout}
-                isMobileMenuOpen={isMobileMenuOpen}
-                setIsMobileMenuOpen={setIsMobileMenuOpen}
-              />
-            )}
+        {user && (
+          <Header
+            user={user}
+            currentTab={currentTab}
+            setCurrentTab={setCurrentTab}
+            onLogout={handleLogout}
+            isMobileMenuOpen={isMobileMenuOpen}
+            setIsMobileMenuOpen={setIsMobileMenuOpen}
+          />
+        )}
 
-            <main className={user ? "pt-14 sm:pt-20" : ""}>
-              {renderContent()}
-            </main>
+        <main className={user ? "pt-14 sm:pt-20" : ""}>{renderContent()}</main>
 
-            {showAuthModal && (
-              <AuthModal
-                onClose={() => setShowAuthModal(false)}
-                onLogin={handleLogin}
-              />
-            )}
+        {showAuthModal && (
+          <AuthModal
+            onClose={() => setShowAuthModal(false)}
+            onLogin={handleLogin}
+          />
+        )}
 
-            {showWelcomePopup && !!user && (
-              <WelcomePopup
-                user={user}
-                isNewUser={isNewUser}
-                onClose={() => setShowWelcomePopup(false)}
-              />
-            )}
+        {showWelcomePopup && !!user && (
+          <WelcomePopup
+            user={user}
+            isNewUser={isNewUser}
+            onClose={() => setShowWelcomePopup(false)}
+          />
+        )}
       </div>
     </QueryProvider>
   );

@@ -14,38 +14,38 @@ import { UserEpochStats } from "./UserEpochStats";
 @Index(["isActive"])
 export class Epoch {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
 
   @Column({ type: "integer", unique: true })
-  epochNumber: number;
+  epochNumber!: number;
 
   @Column({ type: "varchar", length: 255 })
-  name: string;
+  name!: string;
 
   @Column({ type: "text" })
-  description: string;
+  description!: string;
 
   @Column({ type: "timestamp" })
-  startDate: Date;
+  startDate!: Date;
 
   @Column({ type: "timestamp" })
-  endDate: Date;
+  endDate!: Date;
 
   @Column({ type: "boolean", default: true })
-  isActive: boolean;
+  isActive!: boolean;
 
   @Column({ type: "decimal", precision: 10, scale: 2, default: 1.0 })
-  rewardsMultiplier: number;
+  rewardsMultiplier!: number;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   // Relations
   @OneToMany(() => UserEpochStats, (userEpochStats) => userEpochStats.epoch)
-  userStats: UserEpochStats[];
+  userStats!: UserEpochStats[];
 
   // Computed properties
   get daysRemaining(): number {

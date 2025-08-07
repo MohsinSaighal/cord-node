@@ -15,35 +15,35 @@ import { User } from "./User";
 @Index(["code"], { unique: true })
 export class ReferralData {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
 
   @Column({ type: "varchar", length: 50, unique: true })
-  code: string;
+  code!: string;
 
   @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
-  totalEarnings: number;
+  totalEarnings!: number;
 
   @Column({ type: "integer", default: 0 })
-  totalReferrals: number;
+  totalReferrals!: number;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   // Relations
   @Column({ type: "uuid" })
-  referrerId: string;
+  referrerId!: string;
 
   @Column({ type: "uuid" })
-  referredUserId: string;
+  referredUserId!: string;
 
   @ManyToOne(() => User, (user) => user.referrals, { onDelete: "CASCADE" })
   @JoinColumn({ name: "referrerId" })
-  referrer: User;
+  referrer!: User;
 
   @ManyToOne(() => User, { onDelete: "CASCADE" })
   @JoinColumn({ name: "referredUserId" })
-  referredUser: User;
+  referredUser!: User;
 }

@@ -14,40 +14,40 @@ import { User } from "./User";
 @Index(["userId"], { unique: true })
 export class NodeStats {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
 
   @Column({ type: "boolean", default: false })
-  isActive: boolean;
+  isActive!: boolean;
 
   @Column({ type: "bigint", default: 0 })
-  uptime: number;
+  uptime!: number;
 
   @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
-  hashRate: number;
+  hashRate!: number;
 
   @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
-  dailyEarnings: number;
+  dailyEarnings!: number;
 
   @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
-  totalEarnings: number;
+  totalEarnings!: number;
 
   @Column({ type: "decimal", precision: 5, scale: 2, default: 100 })
-  efficiency: number;
+  efficiency!: number;
 
   @Column({ type: "bigint", nullable: true })
-  startTime: number;
+  startTime!: number;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   // Relations
   @Column({ type: "uuid", unique: true })
-  userId: string;
+  userId!: string;
 
   @OneToOne(() => User, { onDelete: "CASCADE" })
   @JoinColumn({ name: "userId" })
-  user: User;
+  user!: User;
 }
