@@ -1,0 +1,64 @@
+Complete Text Color Guide for CordNode
+Objective: High contrast for readability, with tiered importance (headings, body, hints).
+
+1. Global Text Colors (Applied Everywhere)
+Primary Text (High Importance): #FFFFFF (Pure white – Titles, key stats)
+
+Secondary Text (Body/Descriptions): #CCCCCC (Light gray – Paragraphs, instructions)
+
+Tertiary Text (Hints/Disabled): #8A8A9E (Gray-blue – Placeholders, inactive labels)
+
+Error/Warning Text: #FF6B6B (Coral – Alerts, anti-cheat warnings)
+
+Success Text: #00D1B2 (Teal – Confirmation messages)
+
+Section-Specific Text Colors
+1. Dashboard (Main Hub)
+CORD Balance: #00D1B2 (Teal – Highlight earnings)
+
+Subtext (e.g., "Estimated daily yield"): #A0A0C0 (Muted blue-gray)
+
+Button Labels (e.g., "Start Mining"): #FFFFFF (White on colored buttons)
+
+2. Mining Page
+Active Mining Status: #00FF9D (Neon green – "Mining Now!")
+
+Hashrate Stats: #6A5ACD (Slate blue – Neutral emphasis)
+
+Idle State Text: #8A8A9E (Gray-blue – "Connect wallet to begin")
+
+3. Tasks & Quests
+Task Titles: #FFFFFF (White – High priority)
+
+Reward Amounts: #FFD700 (Gold – Stand out)
+
+Time Remaining (e.g., "2h left"): #FF9F43 (Orange – Urgency)
+
+4. Referral System
+Referral Code: #FF6B6B (Coral – Stand out against dark BG)
+
+Bonus Highlight (e.g., "+10% CORD"): #00D1B2 (Teal – Positive action)
+
+5. Profile & Leaderboard
+Username: #FFFFFF (White – Primary identity)
+
+Rank (Top 3): Gold/Silver/Bronze as in previous prompt
+
+Badge Descriptions: #CCCCCC (Light gray – Secondary details)
+
+6. Auth Pages (Login/Wallet Connect)
+Headline (e.g., "Connect Wallet"): #FFFFFF (Bold white)
+
+Legal/Disclaimer Text: #8A8A9E (Gray-blue – Low priority)
+
+7. Anti-Cheat/Alerts
+Warning Headers: #FF355E (Red-pink – Critical)
+
+Detailed Message: #CCCCCC (Light gray – Readable but subdued)
+
+Contrast & Accessibility Notes
+WCAG Compliance: All text meets AA/AAA contrast ratios against dark backgrounds.
+
+Discord Integration: Use Discord’s native #FFFFFF text for buttons/logos.
+
+Solana Wallet Text: Default to white (#FFFFFF) for wallet addresses.

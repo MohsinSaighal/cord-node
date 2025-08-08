@@ -288,7 +288,7 @@ function App() {
 
   return (
     <QueryProvider>
-      <div className="min-h-screen bg-slate-50 text-slate-800">
+      <div className="min-h-screen text-[#FFFFFF]" style={{ background: 'var(--bg-primary)' }}>
         {user && (
           <CleanHeader
             user={user}

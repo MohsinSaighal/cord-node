@@ -40,16 +40,16 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({
   ];
 
   return (
-    <header className="fixed top-0 w-full bg-white/95 backdrop-blur-lg border-b border-slate-200 z-50 shadow-sm">
+    <header className="fixed top-0 w-full backdrop-blur-lg border-b z-50 shadow-lg" style={{ background: 'rgba(30, 30, 45, 0.95)', borderColor: 'var(--brand-primary)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-sky-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'var(--gradient-brand)' }}>
               <span className="text-xl font-bold text-white">C</span>
             </div>
             <div className="hidden sm:block">
-              <span className="text-xl font-bold bg-gradient-to-r from-sky-600 to-teal-600 bg-clip-text text-transparent">
+              <span className="text-xl font-bold text-[#FFFFFF]">
                 CordNode
               </span>
             </div>
@@ -68,10 +68,13 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({
                   className={`
                     flex items-center space-x-2 px-4 py-2.5 rounded-xl font-medium transition-all duration-200
                     ${isActive
-                      ? "bg-gradient-to-r from-sky-500 to-teal-500 text-white shadow-lg"
-                      : "text-slate-600 hover:text-slate-800 hover:bg-slate-100"
+                      ? "text-white shadow-lg"
+                      : "text-[#CCCCCC] hover:text-[#FFFFFF]"
                     }
                   `}
+                  style={isActive ? { background: 'var(--gradient-brand)' } : { backgroundColor: 'transparent' }}
+                  onMouseEnter={(e) => !isActive && (e.currentTarget.style.backgroundColor = 'rgba(106, 90, 205, 0.1)')}
+                  onMouseLeave={(e) => !isActive && (e.currentTarget.style.backgroundColor = 'transparent')}
                 >
                   <Icon className="w-4 h-4" />
                   <span className="text-sm">{item.label}</span>
