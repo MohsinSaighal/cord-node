@@ -25,10 +25,9 @@ export const calculateMultiplier = (accountAge: number): number => {
 };
 
 export const calculateMiningRate = (user: UserData, antiCheatStatus?: AntiCheatStatus | null): number => {
-  // Base rate: 0.5 CP per minute, affected by multiplier and efficiency
-  const baseRate = 1; // CP per minute
-  const efficiency = 0.85 + (Math.random() * 0.15); // 85-100% efficiency
-  const standardRate = baseRate * user.multiplier * efficiency;
+  // Base rate: 0.5 CORD per minute, affected by multiplier
+  const baseRate = 0.5; // CORD per minute
+  const standardRate = baseRate * user.multiplier;
   
   // Apply anti-cheat efficiency reduction if applicable
   return applyAntiCheatEfficiency(standardRate, antiCheatStatus);

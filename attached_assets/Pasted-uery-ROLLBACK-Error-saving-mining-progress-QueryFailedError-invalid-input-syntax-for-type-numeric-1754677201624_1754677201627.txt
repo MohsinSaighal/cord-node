@@ -1,0 +1,65 @@
+uery: ROLLBACK
+Error saving mining progress: QueryFailedError: invalid input syntax for type numeric: "0.000000000.09713990631933793"
+    at PostgresQueryRunner.query (/home/newuser/cords/node_modules/typeorm/driver/src/driver/postgres/PostgresQueryRunner.ts:325:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async UpdateQueryBuilder.execute (/home/newuser/cords/node_modules/typeorm/query-builder/src/query-builder/UpdateQueryBuilder.ts:145:33)
+    at async updateSubject (/home/newuser/cords/node_modules/typeorm/persistence/src/persistence/SubjectExecutor.ts:618:38)
+    at async Promise.all (index 0)
+    at async SubjectExecutor.executeUpdateOperations (/home/newuser/cords/node_modules/typeorm/persistence/src/persistence/SubjectExecutor.ts:669:9)
+    at async SubjectExecutor.execute (/home/newuser/cords/node_modules/typeorm/persistence/src/persistence/SubjectExecutor.ts:148:9)
+    at async EntityPersistExecutor.execute (/home/newuser/cords/node_modules/typeorm/persistence/src/persistence/EntityPersistExecutor.ts:182:21)
+    at async MiningService.saveMiningProgress (/home/newuser/cords/server/services/MiningService.ts:108:7)
+    at async <anonymous> (/home/newuser/cords/server/routes.ts:184:22) {
+  query: 'UPDATE "mining_sessions" SET "earnings" = $1, "updatedAt" = CURRENT_TIMESTAMP WHERE "id" IN ($2) RETURNING "updatedAt"',
+  parameters: [
+    '0.000000000.09713990631933793',
+    '874f63eb-e974-4f86-b925-2c47c7933cc6'
+  ],
+  driverError: error: invalid input syntax for type numeric: "0.000000000.09713990631933793"
+      at /home/newuser/cords/node_modules/pg/lib/client.js:545:17
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async PostgresQueryRunner.query (/home/newuser/cords/node_modules/typeorm/driver/src/driver/postgres/PostgresQueryRunner.ts:254:25)
+      at async UpdateQueryBuilder.execute (/home/newuser/cords/node_modules/typeorm/query-builder/src/query-builder/UpdateQueryBuilder.ts:145:33)
+      at async updateSubject (/home/newuser/cords/node_modules/typeorm/persistence/src/persistence/SubjectExecutor.ts:618:38)
+      at async Promise.all (index 0)
+      at async SubjectExecutor.executeUpdateOperations (/home/newuser/cords/node_modules/typeorm/persistence/src/persistence/SubjectExecutor.ts:669:9)
+      at async SubjectExecutor.execute (/home/newuser/cords/node_modules/typeorm/persistence/src/persistence/SubjectExecutor.ts:148:9)
+      at async EntityPersistExecutor.execute (/home/newuser/cords/node_modules/typeorm/persistence/src/persistence/EntityPersistExecutor.ts:182:21)
+      at async MiningService.saveMiningProgress (/home/newuser/cords/server/services/MiningService.ts:108:7) {
+    length: 170,
+    severity: 'ERROR',
+    code: '22P02',
+    detail: undefined,
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: "unnamed portal parameter $1 = '...'",
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'numeric.c',
+    line: '6923',
+    routine: 'set_var_from_str'
+  },
+  length: 170,
+  severity: 'ERROR',
+  code: '22P02',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: "unnamed portal parameter $1 = '...'",
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'numeric.c',
+  line: '6923',
+  routine: 'set_var_from_str'
+}
+11:19:14 PM [express] POST /api/users/1129356891454197850/mining/874f63eb-e974-4f86-b925-2c47c7933cc6…

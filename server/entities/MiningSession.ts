@@ -25,13 +25,22 @@ export class MiningSession {
   @Column({ type: "timestamp", nullable: true })
   endTime!: Date;
 
-  @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
+  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
+    to: (value: number) => value,
+    from: (value: string) => parseFloat(value)
+  }})
   earnings!: number;
 
-  @Column({ type: "decimal", precision: 10, scale: 2, default: 0 })
+  @Column({ type: "decimal", precision: 10, scale: 2, default: 0, transformer: {
+    to: (value: number) => value,
+    from: (value: string) => parseFloat(value)
+  }})
   hashRate!: number;
 
-  @Column({ type: "decimal", precision: 5, scale: 2, default: 85 })
+  @Column({ type: "decimal", precision: 5, scale: 2, default: 85, transformer: {
+    to: (value: number) => value,
+    from: (value: string) => parseFloat(value)
+  }})
   efficiency!: number;
 
   @CreateDateColumn()

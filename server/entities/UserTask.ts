@@ -33,7 +33,10 @@ export class UserTask {
   @Column({ type: "timestamp", nullable: true })
   claimedAt!: Date;
 
-  @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
+  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
+    to: (value: number) => value,
+    from: (value: string) => parseFloat(value)
+  }})
   reward!: number;
 
   @CreateDateColumn()

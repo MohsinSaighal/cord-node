@@ -103,8 +103,9 @@ export class MiningService {
       user.monthlyEarnings += earningsToAdd;
       await this.userRepository.save(user);
 
-      // Update session earnings
-      session.earnings += earningsToAdd;
+      // Update session earnings - ensure proper number handling
+      const currentEarnings = parseFloat(session.earnings.toString());
+      session.earnings = currentEarnings + earningsToAdd;
       await this.miningSessionRepository.save(session);
 
       return {
