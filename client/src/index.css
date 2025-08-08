@@ -4,6 +4,41 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    /* Clean, attractive color scheme - white, blue, sea green */
+    --bg-primary: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+    --bg-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    --bg-card: rgba(255, 255, 255, 0.9);
+    --bg-card-dark: rgba(15, 23, 42, 0.9);
+    --bg-card-hover: rgba(255, 255, 255, 0.95);
+    --bg-card-hover-dark: rgba(15, 23, 42, 0.95);
+    
+    /* Primary colors - clean blues and sea greens */
+    --primary-blue: #0ea5e9;
+    --primary-blue-light: #38bdf8;
+    --primary-blue-dark: #0284c7;
+    
+    --sea-green: #10b981;
+    --sea-green-light: #34d399;
+    --sea-green-dark: #059669;
+    
+    --accent-teal: #14b8a6;
+    --accent-cyan: #06b6d4;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
+    --gradient-secondary: linear-gradient(135deg, #06b6d4 0%, #14b8a6 100%);
+    --gradient-accent: linear-gradient(135deg, #38bdf8 0%, #34d399 100%);
+  }
+  
+  .dark {
+    --bg-primary: var(--bg-dark);
+    --bg-card: var(--bg-card-dark);
+    --bg-card-hover: var(--bg-card-hover-dark);
+  }
+}
+
 @keyframes slide-in {
   from {
     transform: translateX(100%);
@@ -25,15 +60,28 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #1f2937;
+  background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #4b5563;
+  background: #cbd5e1;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
   background: #6b7280;
 }
 

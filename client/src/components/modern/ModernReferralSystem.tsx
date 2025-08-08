@@ -67,24 +67,22 @@ const ReferralCodeCard: React.FC<{
           <div className="text-sm text-slate-400 break-all">{referralUrl}</div>
         </div>
         
-        <SimpleButton
+        <button
           onClick={onCopy}
-          variant="primary"
-          size="lg"
-          className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700"
+          className="w-full bg-gradient-to-r from-sky-500 to-teal-500 text-white font-semibold py-4 px-6 rounded-2xl hover:from-sky-600 hover:to-teal-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center space-x-2"
         >
           {copied ? (
             <>
-              <Check className="w-5 h-5 mr-2" />
-              Copied!
+              <Check className="w-5 h-5" />
+              <span>Copied!</span>
             </>
           ) : (
             <>
-              <Copy className="w-5 h-5 mr-2" />
-              Copy Referral Link
+              <Copy className="w-5 h-5" />
+              <span>Copy Link</span>
             </>
           )}
-        </SimpleButton>
+        </button>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -198,7 +196,7 @@ export const ModernReferralSystem: React.FC<ModernReferralSystemProps> = ({ user
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-indigo-900/20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-emerald-50 pt-20">
       {/* Animated background */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/5 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-float" />

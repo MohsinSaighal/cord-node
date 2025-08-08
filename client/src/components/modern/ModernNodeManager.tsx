@@ -212,23 +212,23 @@ export const ModernNodeManager: React.FC<ModernNodeManagerProps> = ({ user, onUs
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900/20 to-purple-900/20">
-      {/* Animated background */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-sky-50 pt-20">
+      {/* Clean background elements */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-3/4 right-1/4 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }} />
-        <div className="absolute top-1/2 left-3/4 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '6s' }} />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/5 rounded-full blur-3xl animate-float" />
+        <div className="absolute top-3/4 right-1/4 w-80 h-80 bg-teal-500/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }} />
+        <div className="absolute top-1/2 left-3/4 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '6s' }} />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-12 text-center animate-slide-up">
-          <h1 className="text-6xl font-bold text-white mb-4">
-            <GradientText className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500">
-              Node Manager
-            </GradientText>
+          <h1 className="text-6xl font-bold mb-4">
+            <span className="bg-gradient-to-r from-sky-600 to-teal-600 bg-clip-text text-transparent">
+              Mining Control
+            </span>
           </h1>
-          <p className="text-xl text-slate-300 max-w-2xl mx-auto">
+          <p className="text-xl text-slate-600 max-w-2xl mx-auto">
             Control your mining operations with real-time database persistence and advanced monitoring
           </p>
         </div>

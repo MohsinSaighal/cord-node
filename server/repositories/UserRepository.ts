@@ -12,14 +12,14 @@ export class UserRepository {
   async findById(id: string): Promise<User | null> {
     return await this.repository.findOne({
       where: { id },
-      relations: ["tasks", "epochStats", "referrals"],
+      relations: ["userTasks", "epochStats", "referrals"],
     });
   }
 
   async findByUsername(username: string): Promise<User | null> {
     return await this.repository.findOne({
       where: { username },
-      relations: ["tasks", "epochStats", "referrals"],
+      relations: ["userTasks", "epochStats", "referrals"],
     });
   }
 
@@ -81,8 +81,8 @@ export class UserRepository {
         .where('id = :id', { id })
         .execute();
 
-    // 4. Return the updated user with relations
-    return this.findById(id);
+    // 4. Return the updated user without problematic relations
+    return this.repository.findOne({ where: { id } });
 }
 
   async delete(id: string): Promise<boolean> {
