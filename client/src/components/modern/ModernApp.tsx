@@ -25,6 +25,7 @@ import { useTasks } from '@/hooks/useTasks';
 import { useApi } from '@/hooks/useApi';
 import { cn } from '@/lib/utils';
 import type { UserData } from '../../types';
+import { BadgeOfHonorPurchase } from './BadgeOfHonorPurchase';
 
 interface ModernAppProps {
   user: UserData;
@@ -414,7 +415,7 @@ export const ModernApp: React.FC<ModernAppProps> = ({ user, onUserUpdate }) => {
                 Rank #{user.rank || 'Unranked'}
               </Badge>
               {user.hasBadgeOfHonor && (
-                <Badge className="px-4 py-2 text-sm border-purple-500/30 text-purple-400">
+                <Badge className="px-4 py-2 text-sm border" style={{ borderColor: 'var(--reward-gold)', color: 'var(--reward-gold)', backgroundColor: 'rgba(255, 193, 7, 0.1)' }}>
                   Badge of Honor
                 </Badge>
               )}
@@ -474,6 +475,11 @@ export const ModernApp: React.FC<ModernAppProps> = ({ user, onUserUpdate }) => {
           
           {/* Sidebar */}
           <div className="space-y-8">
+            {/* Badge of Honor Purchase */}
+            {!user.hasBadgeOfHonor && (
+              <BadgeOfHonorPurchase user={user} onUserUpdate={onUserUpdate} />
+            )}
+            
             {/* Quick Actions */}
             <AnimatedCard 
               className="p-6 bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50"
