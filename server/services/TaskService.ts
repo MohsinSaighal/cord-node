@@ -3,16 +3,19 @@ import { Task } from "../entities/Task";
 import { UserTask } from "../entities/UserTask";
 import { User } from "../entities/User";
 import { Repository } from "typeorm";
+import { ReferralService } from "./ReferralService";
 
 export class TaskService {
   private taskRepository: Repository<Task>;
   private userTaskRepository: Repository<UserTask>;
   private userRepository: Repository<User>;
+  private referralService: ReferralService;
 
   constructor() {
     this.taskRepository = AppDataSource.getRepository(Task);
     this.userTaskRepository = AppDataSource.getRepository(UserTask);
     this.userRepository = AppDataSource.getRepository(User);
+    this.referralService = new ReferralService();
   }
 
   async getAllTasks(): Promise<Task[]> {
@@ -58,6 +61,87 @@ export class TaskService {
     });
   }
 
+  private async handleDailyCheckIn(userId: string, rewardAmount: number): Promise<{
+    success: boolean;
+    error?: string;
+    newBalance?: number;
+    reward?: number;
+  }> {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        return { success: false, error: "User not found" };
+      }
+
+      // Check if it's a new day
+      const now = Date.now();
+      const lastLogin = user.lastLoginTime || 0;
+      const isNewDay = !this.isSameDay(lastLogin, now);
+
+      if (!isNewDay && user.dailyCheckInClaimed) {
+        return {
+          success: false,
+          error: "Daily check-in already claimed today"
+        };
+      }
+
+      // Calculate reward with multiplier
+      const finalReward = rewardAmount * user.multiplier;
+
+      // Update user
+      user.currentBalance += finalReward;
+      user.totalEarned += finalReward;
+      user.dailyCheckInClaimed = true;
+      user.lastLoginTime = now;
+      user.tasksCompleted += 1;
+      await this.userRepository.save(user);
+
+      // Create/update user task
+      let userTask = await this.userTaskRepository.findOne({
+        where: { userId, taskId: 'daily-checkin' }
+      });
+
+      if (userTask) {
+        userTask.completed = true;
+        userTask.claimedAt = new Date();
+        userTask.reward = finalReward;
+        userTask.progress = 1;
+      } else {
+        userTask = this.userTaskRepository.create({
+          userId,
+          taskId: 'daily-checkin',
+          completed: true,
+          claimedAt: new Date(),
+          reward: finalReward,
+          progress: 1,
+        });
+      }
+      await this.userTaskRepository.save(userTask);
+
+      return {
+        success: true,
+        newBalance: user.currentBalance,
+        reward: finalReward
+      };
+
+    } catch (error) {
+      console.error('Error handling daily check-in:', error);
+      return {
+        success: false,
+        error: "Failed to process daily check-in"
+      };
+    }
+  }
+
+  private isSameDay(timestamp1: number, timestamp2: number): boolean {
+    const date1 = new Date(timestamp1);
+    const date2 = new Date(timestamp2);
+    return date1.toDateString() === date2.toDateString();
+  }
+
   async completeTask(userId: string, taskId: string, rewardAmount: number): Promise<{
     success: boolean;
     error?: string;
@@ -65,6 +149,11 @@ export class TaskService {
     reward?: number;
   }> {
     try {
+      // Special handling for daily check-in
+      if (taskId === 'daily-checkin') {
+        return await this.handleDailyCheckIn(userId, rewardAmount);
+      }
+
       // Check if task already completed
       const existingUserTask = await this.userTaskRepository.findOne({
         where: { userId, taskId },
@@ -113,10 +202,10 @@ export class TaskService {
       user.currentBalance += finalReward;
       user.totalEarned += finalReward;
       user.tasksCompleted += 1;
-      
-
-      
       await this.userRepository.save(user);
+
+      // Distribute referral reward if user has referrer
+      await this.referralService.distributeReferralReward(userId, finalReward);
 
       return {
         success: true,

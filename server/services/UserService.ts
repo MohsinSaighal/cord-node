@@ -1,12 +1,15 @@
 import { UserRepository } from "../repositories/UserRepository";
 import { User } from "../entities/User";
 import { generateReferralCode } from "../utils/referralUtils";
+import { ReferralService } from "./ReferralService";
 
 export class UserService {
   private userRepository: UserRepository;
+  private referralService: ReferralService;
 
   constructor() {
     this.userRepository = new UserRepository();
+    this.referralService = new ReferralService();
   }
 
   async createUser(userData: {
@@ -26,6 +29,11 @@ export class UserService {
       joinDate: userData.joinDate || new Date(),
       lastLoginTime: Date.now(),
     });
+
+    // Process referral if user joined through referral code
+    if (userData.referredBy) {
+      await this.referralService.processNewUserReferral(user.id, userData.referredBy);
+    }
 
     return user;
   }

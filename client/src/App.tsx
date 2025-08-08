@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Header from "./components/Header";
+import { ModernApp } from "./components/modern/ModernApp";
 import Dashboard from "./components/Dashboard";
 import NodeManager from "./components/NodeManager";
 import Tasks from "./components/Tasks";
@@ -193,7 +194,7 @@ function App() {
 
     switch (currentTab) {
       case "dashboard":
-        return <Dashboard user={user} onUserUpdate={handleUserUpdate} />;
+        return <ModernApp user={user} onUserUpdate={handleUserUpdate} />;
       case "node":
         return <NodeManager user={user} onUserUpdate={handleUserUpdate} />;
       case "tasks":
@@ -211,7 +212,7 @@ function App() {
           />
         );
       default:
-        return <Dashboard user={user} onUserUpdate={handleUserUpdate} />;
+        return <ModernApp user={user} onUserUpdate={handleUserUpdate} />;
     }
   };
 
@@ -229,7 +230,7 @@ function App() {
           />
         )}
 
-        <main className={user ? "pt-14 sm:pt-20" : ""}>{renderContent()}</main>
+        <main className={user ? "" : ""}>{renderContent()}</main>
 
         {showAuthModal && (
           <AuthModal

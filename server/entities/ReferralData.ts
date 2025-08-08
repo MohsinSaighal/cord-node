@@ -20,7 +20,10 @@ export class ReferralData {
   @Column({ type: "varchar", length: 50, unique: true })
   code!: string;
 
-  @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
+  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
+    to: (value: number) => value,
+    from: (value: string) => parseFloat(value)
+  }})
   totalEarnings!: number;
 
   @Column({ type: "integer", default: 0 })
@@ -33,10 +36,10 @@ export class ReferralData {
   updatedAt!: Date;
 
   // Relations
-  @Column({ type: "uuid" })
+  @Column({ type: "text" })
   referrerId!: string;
 
-  @Column({ type: "uuid" })
+  @Column({ type: "text" })
   referredUserId!: string;
 
   @ManyToOne(() => User, (user) => user.referrals, { onDelete: "CASCADE" })

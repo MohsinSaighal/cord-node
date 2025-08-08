@@ -5,6 +5,7 @@ import { TaskService } from "./services/TaskService";
 import { MiningService } from "./services/MiningService";
 import { SettingsService } from "./services/SettingsService";
 import { BadgePurchaseService } from "./services/BadgePurchaseService";
+import { ReferralService } from "./services/ReferralService";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const userService = new UserService();
@@ -12,6 +13,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const miningService = new MiningService();
   const settingsService = new SettingsService();
   const badgePurchaseService = new BadgePurchaseService();
+  const referralService = new ReferralService();
 
   // Seed default tasks
   await taskService.seedTasks();
@@ -308,6 +310,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(purchases);
     } catch (error) {
       res.status(500).json({ error: "Failed to get purchases" });
+    }
+  });
+
+  // Referral routes
+  app.get("/api/referrals/:userId/stats", async (req, res) => {
+    try {
+      const stats = await referralService.getReferralStats(req.params.userId);
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get referral stats" });
+    }
+  });
+
+  app.post("/api/referrals/process", async (req, res) => {
+    try {
+      const { userId, referralCode } = req.body;
+      const result = await referralService.processNewUserReferral(userId, referralCode);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to process referral" });
     }
   });
 
