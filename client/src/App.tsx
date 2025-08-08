@@ -6,7 +6,7 @@ import { ModernTasks } from "./components/modern/ModernTasks";
 import { ModernLeaderboard } from "./components/modern/ModernLeaderboard";
 import { ModernReferralSystem } from "./components/modern/ModernReferralSystem";
 import { ModernSettings } from "./components/modern/ModernSettings";
-import { CleanAuthModal } from "./components/modern/CleanAuthModal";
+import AuthModal from "./components/AuthModal";
 import { CleanHeader } from "./components/modern/CleanHeader";
 import WelcomePopup from "./components/WelcomePopup";
 import { QueryProvider } from "./providers/QueryProvider";
@@ -303,7 +303,7 @@ function App() {
         <main className={user ? "" : ""}>{renderContent()}</main>
 
         {showAuthModal && (
-          <CleanAuthModal
+          <AuthModal
             onClose={() => setShowAuthModal(false)}
             onLogin={handleLogin}
           />

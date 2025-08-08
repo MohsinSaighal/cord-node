@@ -239,13 +239,13 @@ state=${state}`;
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-gray-900 rounded-2xl p-8 max-w-md w-full border border-gray-800">
+    <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-2xl p-8 max-w-md w-full border border-slate-200 shadow-2xl">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-white">Connect Discord</h2>
+          <h2 className="text-2xl font-bold text-slate-800">Connect Discord</h2>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+            className="p-2 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -259,14 +259,14 @@ state=${state}`;
               className="w-full h-full object-contain"
             />
           </div>
-          <p className="text-gray-300 mb-6">
+          <p className="text-slate-600 mb-6">
             Connect your Discord account to start earning rewards based on your
             account age!
           </p>
         </div>
 
         {error && (
-          <div className="bg-red-600/20 border border-red-600/30 rounded-lg p-4 mb-6">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
             <div className="flex items-start space-x-3">
               <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
               <div className="flex-1">
@@ -392,9 +392,9 @@ state=${state}`;
           disabled={isConnecting || connectionStep !== "idle"}
           className={`w-full py-3 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center space-x-2 ${
             isConnecting || connectionStep !== "idle"
-              ? "bg-gray-700 cursor-not-allowed"
-              : "bg-[#5865F2] hover:bg-[#4752C4] text-white"
-          } ${connectionStep === "success" ? "bg-green-600" : ""}`}
+              ? "bg-slate-400 cursor-not-allowed text-white"
+              : "bg-gradient-to-r from-sky-500 to-teal-500 hover:from-sky-600 hover:to-teal-600 text-white"
+          } ${connectionStep === "success" ? "bg-emerald-600" : ""}`}
         >
           {isConnecting || connectionStep !== "idle" ? (
             <>
@@ -413,7 +413,7 @@ state=${state}`;
           )}
         </button>
 
-        <p className="text-gray-500 text-xs text-center mt-4">
+        <p className="text-slate-500 text-xs text-center mt-4">
           By connecting, you agree to our Terms of Service and Privacy Policy
         </p>
 
