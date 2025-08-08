@@ -27,10 +27,11 @@ Preferred communication style: Simple, everyday language.
 
 ## Database Design
 - **Primary Database**: PostgreSQL via Neon serverless platform
-- **ORM**: Drizzle ORM with type-safe schema definitions
-- **Connection**: Neon serverless connection pooling with WebSocket support
-- **Schema Management**: Migration-based schema evolution in `/migrations` directory
-- **Real-time Features**: Database functions for mining sessions, referral processing, and leaderboard calculations
+- **ORM**: TypeORM with entity-based schema definitions and automatic migrations
+- **Connection**: PostgreSQL connection with proper TypeORM configuration
+- **Schema Management**: Entity-based schema with automatic synchronization
+- **Decimal Handling**: Proper numeric(15,2) precision for balance and earnings with transformers
+- **Relations**: Full entity relationships for users, tasks, mining sessions, and settings
 
 ## Authentication System
 - **Provider**: Supabase Auth with Discord OAuth integration

@@ -47,10 +47,16 @@ export class User {
   @Column({ type: "boolean", default: false })
   hasBadgeOfHonor!: boolean;
 
-  @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
+  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
+    to: (value: number) => value,
+    from: (value: string) => parseFloat(value)
+  }})
   totalEarned!: number;
 
-  @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
+  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
+    to: (value: number) => value,
+    from: (value: string) => parseFloat(value)
+  }})
   currentBalance!: number;
 
   @Column({ type: "boolean", default: false })
@@ -71,10 +77,16 @@ export class User {
   @Column({ type: "boolean", default: false })
   dailyCheckInClaimed!: boolean;
 
-  @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
+  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
+    to: (value: number) => value,
+    from: (value: string) => parseFloat(value)
+  }})
   weeklyEarnings!: number;
 
-  @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
+  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
+    to: (value: number) => value,
+    from: (value: string) => parseFloat(value)
+  }})
   monthlyEarnings!: number;
 
   @Column({ type: "varchar", length: 50, nullable: true, unique: true })
@@ -83,7 +95,10 @@ export class User {
   @Column({ type: "varchar", length: 50, nullable: true })
   referredBy!: string;
 
-  @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
+  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
+    to: (value: number) => value,
+    from: (value: string) => parseFloat(value)
+  }})
   referralEarnings!: number;
 
   @Column({ type: "integer", default: 0 })
@@ -95,10 +110,16 @@ export class User {
   @Column({ type: "bigint", nullable: true })
   epochJoinDate!: number;
 
-  @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
+  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
+    to: (value: number) => value,
+    from: (value: string) => parseFloat(value)
+  }})
   totalEpochEarnings!: number;
 
-  @Column({ type: "decimal", precision: 15, scale: 8, nullable: true })
+  @Column({ type: "decimal", precision: 15, scale: 2, nullable: true, transformer: {
+    to: (value: number) => value,
+    from: (value: string) => parseFloat(value)
+  }})
   lastSavedBalance!: number;
 
   @CreateDateColumn()

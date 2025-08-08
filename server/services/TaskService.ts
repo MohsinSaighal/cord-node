@@ -113,6 +113,9 @@ export class TaskService {
       user.currentBalance += finalReward;
       user.totalEarned += finalReward;
       user.tasksCompleted += 1;
+      
+
+      
       await this.userRepository.save(user);
 
       return {
