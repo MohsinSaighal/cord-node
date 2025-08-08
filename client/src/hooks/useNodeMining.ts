@@ -257,6 +257,15 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
     }
   }, [user, onUserUpdate, currentSession, nodeStats, saveMiningProgress]);
 
+  // Function to force save any pending mining progress (for logout)
+  const forceSaveMiningProgress = useCallback(async () => {
+    if (currentSession && nodeStats.isActive && accumulatedEarningsRef.current > 0) {
+      console.log('Force saving mining progress before logout:', accumulatedEarningsRef.current.toFixed(4));
+      await saveMiningProgress(accumulatedEarningsRef.current);
+      accumulatedEarningsRef.current = 0;
+    }
+  }, [currentSession, nodeStats.isActive, saveMiningProgress]);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -318,6 +327,9 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
     toggleMining,
     isStarting,
     nodeStats,
-    currentSession
+    currentSession,
+    startNode,
+    stopNode,
+    forceSaveMiningProgress
   };
 };

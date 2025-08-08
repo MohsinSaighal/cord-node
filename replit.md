@@ -3,6 +3,10 @@
 CordNode is a Discord-based mining simulation platform built as a full-stack web application. The platform gamifies account age and activity by allowing users to connect their Discord accounts and mine virtual "CORD" tokens based on their account's characteristics. It features real-time mining mechanics, task completion systems, referral programs, leaderboards, epoch-based competitions, and Badge of Honor purchases. The application integrates Solana wallet connectivity for blockchain functionality and includes comprehensive anti-cheat systems to maintain platform integrity.
 
 ## Recent Updates (August 2025)
+- ✅ **Fixed Critical Logout Balance Bug**: Users' mining progress is now properly saved before logout, preventing balance reset from ~10k to 300 CORD
+- ✅ **Enhanced Logout System**: Implemented comprehensive logout fix that saves user data to both localStorage and database before session termination
+- ✅ **Mining Progress Auto-Save**: Added force save functionality for pending mining progress during logout operations
+- ✅ **Badge of Honor Purchase System**: Complete Solana payment integration with wallet connectivity for purchasing premium badges
 - ✅ **Fixed TypeORM Property Error**: Resolved "tasks" property error by updating user repository relations and queries
 - ✅ **Complete Clean UI Redesign**: Beautiful modern interface with clean white/blue/sea green color palette
 - ✅ **New CleanAuthModal**: Professional Discord connection modal with modern design and feature highlights

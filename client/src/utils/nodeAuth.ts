@@ -225,8 +225,28 @@ export const handleOAuthCallback = async (
 };
 
 // Sign out
-export const signOut = async (): Promise<void> => {
+export const signOut = async (finalUserData?: UserData): Promise<void> => {
   try {
+    // Save final user data before logout if provided
+    if (finalUserData) {
+      console.log('Saving final user data before logout:', {
+        balance: finalUserData.currentBalance,
+        totalEarned: finalUserData.totalEarned
+      });
+      
+      // Store the final state in localStorage as backup
+      storeUserSession(finalUserData);
+      
+      // Try to save to database
+      try {
+        await apiClient.updateUser(finalUserData.id, finalUserData);
+        console.log('Successfully saved user data to database before logout');
+      } catch (updateError) {
+        console.error('Failed to save user data to database before logout:', updateError);
+        // Keep in localStorage as fallback
+      }
+    }
+    
     await apiClient.logout();
     clearUserSession();
   } catch (error) {

@@ -21,6 +21,7 @@ import {
 } from "./utils/referral";
 import { useAntiCheat } from "./hooks/useAntiCheat";
 import { getStoredSession, getUserFromDatabase, updateUserInDatabase } from "./utils/supabaseAuth";
+import { signOut } from "./utils/nodeAuth";
 // Solana wallet adapters temporarily removed during migration
 function App() {
   const { user, loading, setUser, setLoading, updateUser, logout } =
@@ -129,10 +130,20 @@ function App() {
   };
 
   const handleLogout = async () => {
+    console.log("Logging out user...");
+    
     try {
-      logout();
+      // Pass current user data to store for proper balance preservation
+      if (user) {
+        await signOut(user);
+      } else {
+        await signOut();
+      }
+      logout(); // Clear from user store
     } catch (error) {
       console.error("Error signing out:", error);
+      // Fallback logout
+      logout();
     }
   };
 
