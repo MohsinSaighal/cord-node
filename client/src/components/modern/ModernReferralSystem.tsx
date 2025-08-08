@@ -134,46 +134,47 @@ const ReferralHistory: React.FC<{
 }> = ({ referrals }) => {
   if (referrals.length === 0) {
     return (
-      <AnimatedCard className="p-8 text-center bg-gradient-to-br from-slate-800/30 to-slate-900/50 border-slate-700/30">
-        <Users className="w-16 h-16 text-slate-500 mx-auto mb-4" />
-        <h3 className="text-xl font-bold text-slate-300 mb-2">No referrals yet</h3>
-        <p className="text-slate-500">Share your referral code to start earning commissions!</p>
+      <AnimatedCard className="p-8 text-center border" style={{ background: 'var(--bg-secondary)', borderColor: 'var(--brand-primary)' }}>
+        <Users className="w-16 h-16 mx-auto mb-4" style={{ color: 'var(--text-tertiary)' }} />
+        <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--text-secondary)' }}>No referrals yet</h3>
+        <p style={{ color: 'var(--text-tertiary)' }}>Share your referral code to start earning commissions!</p>
       </AnimatedCard>
     );
   }
 
   return (
-    <AnimatedCard className="p-6 bg-gradient-to-br from-slate-800/30 to-slate-900/50 border-slate-700/30" delay={2}>
+    <AnimatedCard className="p-6 border" style={{ background: 'var(--bg-secondary)', borderColor: 'var(--brand-primary)' }} delay={2}>
       <div className="flex items-center mb-6">
-        <UserPlus className="w-6 h-6 text-green-400 mr-3" />
-        <h3 className="text-2xl font-bold text-white">Referral History</h3>
+        <UserPlus className="w-6 h-6 mr-3" style={{ color: 'var(--brand-secondary)' }} />
+        <h3 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Referral History</h3>
       </div>
 
       <div className="space-y-4">
         {referrals.map((referral, index) => (
-          <div key={index} className="flex items-center justify-between p-4 rounded-xl bg-slate-700/30 border border-slate-600/20 hover-lift">
+          <div key={index} className="flex items-center justify-between p-4 rounded-xl border hover-lift" style={{ background: 'var(--bg-tertiary)', borderColor: 'var(--brand-primary)' }}>
             <div className="flex items-center space-x-4">
               {referral.referred?.avatar && (
                 <img
                   src={referral.referred.avatar}
                   alt={referral.referred.username}
-                  className="w-10 h-10 rounded-full border-2 border-slate-600/50"
+                  className="w-10 h-10 rounded-full border-2"
+                  style={{ borderColor: 'var(--brand-primary)' }}
                 />
               )}
               
               <div>
-                <div className="font-bold text-white">{referral.referred?.username || 'Unknown User'}</div>
-                <div className="text-sm text-slate-400">
+                <div className="font-bold" style={{ color: 'var(--text-primary)' }}>{referral.referred?.username || 'Unknown User'}</div>
+                <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
                   Joined {new Date(referral.created_at).toLocaleDateString()}
                 </div>
               </div>
             </div>
             
             <div className="text-right">
-              <div className="font-bold text-green-400">
+              <div className="font-bold" style={{ color: 'var(--brand-secondary)' }}>
                 +{referral.bonus_amount} CORD
               </div>
-              <div className="text-xs text-slate-500">Welcome bonus</div>
+              <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Welcome bonus</div>
             </div>
           </div>
         ))}
@@ -197,23 +198,21 @@ export const ModernReferralSystem: React.FC<ModernReferralSystemProps> = ({ user
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-emerald-50 pt-20">
+    <div className="min-h-screen pt-20" style={{ background: 'var(--bg-primary)' }}>
       {/* Animated background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/5 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-2/3 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-1/2 left-3/4 w-72 h-72 bg-pink-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }} />
+        <div className="absolute top-1/4 left-1/5 w-80 h-80 rounded-full blur-3xl animate-float" style={{ background: 'rgba(106, 90, 205, 0.1)' }} />
+        <div className="absolute top-2/3 right-1/4 w-96 h-96 rounded-full blur-3xl animate-float" style={{ background: 'rgba(0, 209, 178, 0.1)', animationDelay: '2s' }} />
+        <div className="absolute top-1/2 left-3/4 w-72 h-72 rounded-full blur-3xl animate-float" style={{ background: 'rgba(255, 107, 107, 0.1)', animationDelay: '4s' }} />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12 animate-slide-up">
-          <h1 className="text-6xl font-bold text-white mb-4">
-            <GradientText className="bg-gradient-to-r from-purple-400 via-pink-500 to-indigo-600">
-              Referral Program
-            </GradientText>
+          <h1 className="text-6xl font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+            Referral Program
           </h1>
-          <p className="text-xl text-slate-300 max-w-2xl mx-auto">
+          <p className="text-xl max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
             Invite friends and earn 10% of their mining rewards forever. The more you refer, the more you earn.
           </p>
         </div>

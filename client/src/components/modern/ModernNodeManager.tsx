@@ -130,53 +130,50 @@ const MiningStatusPanel: React.FC<{
 
       {/* Mining Stats */}
       <div className="grid grid-cols-3 gap-6 mb-8">
-        <div className="text-center p-4 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-600/10 border border-cyan-500/20 hover-lift">
+        <div className="text-center p-4 rounded-xl border hover-lift" style={{ background: 'var(--bg-secondary)', borderColor: 'var(--brand-secondary)' }}>
           <div className="flex items-center justify-center mb-3">
-            <Activity className="w-6 h-6 text-cyan-400 mr-2" />
-            <span className="text-slate-300 text-sm">Current Rate</span>
+            <Activity className="w-6 h-6 mr-2" style={{ color: 'var(--brand-secondary)' }} />
+            <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Current Rate</span>
           </div>
-          <div className="text-3xl font-bold mb-1">
-            <GradientText className="bg-gradient-to-r from-cyan-400 to-blue-500">
-              {(0.5 * efficiency).toFixed(2)}
-            </GradientText>
+          <div className="text-3xl font-bold mb-1" style={{ color: 'var(--brand-secondary)' }}>
+            {(0.5 * efficiency).toFixed(2)}
           </div>
-          <div className="text-xs text-slate-400">CORD per minute</div>
+          <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>CORD per minute</div>
         </div>
 
-        <div className="text-center p-4 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-600/10 border border-purple-500/20 hover-lift">
+        <div className="text-center p-4 rounded-xl border hover-lift" style={{ background: 'var(--bg-secondary)', borderColor: 'var(--brand-primary)' }}>
           <div className="flex items-center justify-center mb-3">
-            <Clock className="w-6 h-6 text-purple-400 mr-2" />
-            <span className="text-slate-300 text-sm">Uptime</span>
+            <Clock className="w-6 h-6 mr-2" style={{ color: 'var(--brand-primary)' }} />
+            <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Uptime</span>
           </div>
-          <div className="text-3xl font-bold mb-1 text-white">
+          <div className="text-3xl font-bold mb-1" style={{ color: 'var(--text-primary)' }}>
             {formatUptime(uptime)}
           </div>
-          <div className="text-xs text-slate-400">Hours:Minutes:Seconds</div>
+          <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Hours:Minutes:Seconds</div>
         </div>
 
-        <div className="text-center p-4 rounded-xl bg-gradient-to-br from-orange-500/10 to-yellow-600/10 border border-orange-500/20 hover-lift">
+        <div className="text-center p-4 rounded-xl border hover-lift" style={{ background: 'var(--bg-secondary)', borderColor: 'var(--reward-gold)' }}>
           <div className="flex items-center justify-center mb-3">
-            <Award className="w-6 h-6 text-orange-400 mr-2" />
-            <span className="text-slate-300 text-sm">Session Earned</span>
+            <Award className="w-6 h-6 mr-2" style={{ color: 'var(--reward-gold)' }} />
+            <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Session Earned</span>
           </div>
-          <div className="text-3xl font-bold mb-1">
-            <GradientText className="bg-gradient-to-r from-orange-400 to-yellow-500">
-              {earnings.toFixed(2)}
-            </GradientText>
+          <div className="text-3xl font-bold mb-1" style={{ color: 'var(--reward-gold)' }}>
+            {earnings.toFixed(2)}
           </div>
-          <div className="text-xs text-slate-400">CORD tokens</div>
+          <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>CORD tokens</div>
         </div>
       </div>
 
       {/* Efficiency Meter */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-slate-300 font-medium">Mining Efficiency</span>
-          <span className="text-cyan-400 font-bold">{Math.round(efficiency * 100)}%</span>
+          <span className="font-medium" style={{ color: 'var(--text-secondary)' }}>Mining Efficiency</span>
+          <span className="font-bold" style={{ color: 'var(--brand-secondary)' }}>{Math.round(efficiency * 100)}%</span>
         </div>
         <Progress 
           value={efficiency * 100} 
-          className="h-3 bg-slate-700/50"
+          className="h-3"
+          style={{ backgroundColor: 'var(--inactive)' }}
         />
       </div>
     </AnimatedCard>
@@ -217,12 +214,12 @@ export const ModernNodeManager: React.FC<ModernNodeManagerProps> = ({ user, onUs
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-sky-50 pt-20">
+    <div className="min-h-screen pt-20" style={{ background: 'var(--bg-primary)' }}>
       {/* Clean background elements */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/5 rounded-full blur-3xl animate-float" />
-        <div className="absolute top-3/4 right-1/4 w-80 h-80 bg-teal-500/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }} />
-        <div className="absolute top-1/2 left-3/4 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '6s' }} />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl animate-float" style={{ background: 'rgba(106, 90, 205, 0.05)' }} />
+        <div className="absolute top-3/4 right-1/4 w-80 h-80 rounded-full blur-3xl animate-float" style={{ background: 'rgba(0, 209, 178, 0.05)', animationDelay: '3s' }} />
+        <div className="absolute top-1/2 left-3/4 w-64 h-64 rounded-full blur-3xl animate-float" style={{ background: 'rgba(255, 107, 107, 0.05)', animationDelay: '6s' }} />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-8">
