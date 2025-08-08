@@ -45,6 +45,37 @@ export class MiningService {
   }
 
   async endMiningSession(sessionId: string, finalEarnings: number): Promise<void> {
+    // Get the session to find the user
+    const session = await this.miningSessionRepository.findOne({
+      where: { id: sessionId },
+    });
+
+    if (!session) {
+      throw new Error("Mining session not found");
+    }
+
+    // Get current session earnings
+    const currentSessionEarnings = parseFloat(session.earnings.toString());
+    
+    // Calculate any remaining earnings that haven't been added to user balance
+    const remainingEarnings = finalEarnings - currentSessionEarnings;
+    
+    // If there are remaining earnings, add them to user balance
+    if (remainingEarnings > 0) {
+      const user = await this.userRepository.findOne({
+        where: { id: session.userId },
+      });
+
+      if (user) {
+        user.currentBalance += remainingEarnings;
+        user.totalEarned += remainingEarnings;
+        user.weeklyEarnings += remainingEarnings;
+        user.monthlyEarnings += remainingEarnings;
+        await this.userRepository.save(user);
+      }
+    }
+
+    // Update session with end time and final earnings
     await this.miningSessionRepository.update(sessionId, {
       endTime: new Date(),
       earnings: finalEarnings,
