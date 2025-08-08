@@ -1,78 +1,77 @@
 import { useState, useEffect } from 'react';
 import { LeaderboardEntry, UserData } from '../types';
-import { getAppState, saveAppState } from '../utils/storage';
+import { apiClient } from './useApi';
 
 export const useLeaderboard = (currentUser: UserData | null) => {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [selectedPeriod, setSelectedPeriod] = useState<'daily' | 'weekly' | 'monthly' | 'all-time'>('all-time');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const generateLeaderboard = (): LeaderboardEntry[] => {
-      const appState = getAppState();
+    loadLeaderboard();
+    
+    // Refresh leaderboard every 30 seconds
+    const interval = setInterval(loadLeaderboard, 30000);
+    return () => clearInterval(interval);
+  }, [selectedPeriod]);
+
+  const loadLeaderboard = async () => {
+    try {
+      setLoading(true);
       
-      // Add current user to app state if not exists
-      if (currentUser) {
-        const existingUserIndex = appState.users.findIndex(u => u.id === currentUser.id);
-        if (existingUserIndex >= 0) {
-          appState.users[existingUserIndex] = currentUser;
-        } else {
-          appState.users.push(currentUser);
+      // Get leaderboard data from API
+      const users = await apiClient.getLeaderboard(100);
+
+      // Calculate daily earnings for users who are actively mining
+      const entries: LeaderboardEntry[] = users.map((user, index) => {
+        let displayEarnings = user.totalEarned;
+        
+        // For daily period, calculate approximate daily earnings
+        if (selectedPeriod === 'daily') {
+          // Estimate daily earnings based on recent activity
+          const accountAge = user.accountAge;
+          const multiplier = Math.min(10, 1 + (accountAge * 0.5));
+          const baseRate = 0.5; // CP per minute
+          const dailyRate = baseRate * multiplier * 60 * 24; // 24 hours
+          
+          // If user is active, show estimated daily rate, otherwise show 0
+          displayEarnings = user.isNodeActive ? dailyRate * (0.8 + Math.random() * 0.4) : 0;
+        } else if (selectedPeriod === 'weekly') {
+          displayEarnings = user.weeklyEarnings || 0;
+        } else if (selectedPeriod === 'monthly') {
+          displayEarnings = user.monthlyEarnings || 0;
         }
-        saveAppState(appState);
-      }
 
-      // Generate additional demo users if needed
-      while (appState.users.length < 20) {
-        const accountAge = Math.floor(Math.random() * 8) + 2;
-        const baseEarnings = 5000 + Math.random() * 15000;
-        const weeklyEarnings = Math.random() * 2000;
-        
-        const demoUser: UserData = {
-          id: Math.random().toString(36).substr(2, 9),
-          username: `User${Math.floor(Math.random() * 9999)}`,
-          discriminator: Math.floor(Math.random() * 9999).toString().padStart(4, '0'),
-          avatar: `https://images.pexels.com/photos/${Math.floor(Math.random() * 1000000)}/pexels-photo-${Math.floor(Math.random() * 1000000)}.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&dpr=1`,
-          accountAge,
-          joinDate: new Date(Date.now() - accountAge * 365 * 24 * 60 * 60 * 1000),
-          multiplier: Math.min(10, 1 + (accountAge * 0.5)),
-          totalEarned: baseEarnings,
-          currentBalance: baseEarnings * 0.8,
-          isNodeActive: Math.random() > 0.3,
-          tasksCompleted: Math.floor(Math.random() * 50),
-          rank: 0,
-          lastLoginTime: Date.now() - Math.random() * 86400000,
-          dailyCheckInClaimed: Math.random() > 0.5,
-          weeklyEarnings,
-          monthlyEarnings: weeklyEarnings * 4
+        return {
+          rank: index + 1,
+          username: user.username,
+          avatar: user.avatar,
+          totalEarned: displayEarnings,
+          accountAge: user.accountAge,
+          isActive: user.isNodeActive,
+          weeklyEarnings: user.weeklyEarnings || 0
         };
-        
-        appState.users.push(demoUser);
-      }
+      });
 
-      // Convert to leaderboard entries and sort
-      const entries: LeaderboardEntry[] = appState.users.map(user => ({
-        rank: 0,
-        username: user.username,
-        avatar: user.avatar,
-        totalEarned: selectedPeriod === 'weekly' ? user.weeklyEarnings : 
-                    selectedPeriod === 'monthly' ? user.monthlyEarnings : user.totalEarned,
-        accountAge: user.accountAge,
-        isActive: user.isNodeActive,
-        weeklyEarnings: user.weeklyEarnings
-      }));
-
-      // Sort by earnings and assign ranks
-      return entries
+      // Re-sort by display earnings and update ranks
+      const sortedEntries = entries
         .sort((a, b) => b.totalEarned - a.totalEarned)
         .map((entry, index) => ({ ...entry, rank: index + 1 }));
-    };
 
-    setLeaderboard(generateLeaderboard());
-  }, [currentUser, selectedPeriod]);
+      setLeaderboard(sortedEntries);
+    } catch (error) {
+      console.error('Error loading leaderboard:', error);
+      setLeaderboard([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return {
     leaderboard,
     selectedPeriod,
-    setSelectedPeriod
+    setSelectedPeriod,
+    loading,
+    refreshLeaderboard: loadLeaderboard
   };
 };

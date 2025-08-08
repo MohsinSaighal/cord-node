@@ -3,6 +3,9 @@ import { DataSource } from "typeorm";
 import {
   User,
   Task,
+  UserTask,
+  MiningSession,
+  UserSettings,
   Epoch,
   UserEpochStats,
   ReferralData,
@@ -21,7 +24,7 @@ export const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   synchronize: process.env.NODE_ENV === "development", // Auto-sync in development
   logging: process.env.NODE_ENV === "development",
-  entities: [User, Task, Epoch, UserEpochStats, ReferralData, NodeStats],
+  entities: [User, Task, UserTask, MiningSession, UserSettings, Epoch, UserEpochStats, ReferralData, NodeStats],
   migrations: ["server/migrations/*.ts"],
   subscribers: ["server/subscribers/*.ts"],
   ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,

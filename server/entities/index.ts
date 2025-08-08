@@ -1,5 +1,8 @@
 export { User } from "./User";
 export { Task } from "./Task";
+export { UserTask } from "./UserTask";
+export { MiningSession } from "./MiningSession";
+export { UserSettings } from "./UserSettings";
 export { Epoch } from "./Epoch";
 export { UserEpochStats } from "./UserEpochStats";
 export { ReferralData } from "./ReferralData";

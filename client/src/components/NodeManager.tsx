@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Settings, Activity, Zap, TrendingUp, Server, AlertCircle, Play, Square, Bell, Database, Clock, CheckCircle } from 'lucide-react';
 import { UserData } from '../types';
-import { useSupabaseNodeMining } from '../hooks/useSupabaseNodeMining';
+import { useNodeMining } from '../hooks/useNodeMining';
 import { useAntiCheat } from '../hooks/useAntiCheat';
 import { getPenaltyDescription } from '../utils/antiCheat';
 
@@ -11,7 +11,7 @@ interface NodeManagerProps {
 }
 
 const NodeManager: React.FC<NodeManagerProps> = ({ user, onUserUpdate }) => {
-  const { nodeStats, isStarting, startNode, stopNode, currentSession } = useSupabaseNodeMining(user, onUserUpdate);
+  const { nodeStats, isStarting, startNode, stopNode, currentSession } = useNodeMining(user, onUserUpdate);
   const { antiCheatStatus, loading: antiCheatLoading } = useAntiCheat(user);
 
   const formatUptime = (seconds: number) => {

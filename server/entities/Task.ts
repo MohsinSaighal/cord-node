@@ -1,6 +1,6 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
@@ -13,10 +13,10 @@ import { User } from "./User";
 export type TaskType = "daily" | "weekly" | "social" | "achievement";
 
 @Entity("tasks")
-@Index(["userId", "type"])
+@Index(["type"])
 @Index(["expiresAt"])
 export class Task {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn({ type: "varchar", length: 255 })
   id!: string;
 
   @Column({ type: "varchar", length: 255 })
@@ -58,11 +58,6 @@ export class Task {
   @UpdateDateColumn()
   updatedAt!: Date;
 
-  // Relations
-  @Column({ type: "uuid" })
-  userId!: string;
-
-  @ManyToOne(() => User, (user) => user.tasks, { onDelete: "CASCADE" })
-  @JoinColumn({ name: "userId" })
-  user!: User;
+  // Tasks are global templates
+  // User-specific progress is tracked in UserTask entity
 }

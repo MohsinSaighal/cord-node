@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy, Medal, Crown, TrendingUp, Users, Award, Search, Loader } from 'lucide-react';
 import { UserData } from '../types';
-import { useSupabaseLeaderboard } from '../hooks/useSupabaseLeaderboard';
+import { useLeaderboard } from '../hooks/useLeaderboard';
 import { supabase } from '../lib/supabase';
 
 interface LeaderboardProps {
@@ -9,7 +9,7 @@ interface LeaderboardProps {
 }
 
 const Leaderboard: React.FC<LeaderboardProps> = ({ currentUser }) => {
-  const { leaderboard, selectedPeriod, setSelectedPeriod, loading } = useSupabaseLeaderboard(currentUser);
+  const { leaderboard, selectedPeriod, setSelectedPeriod, loading } = useLeaderboard(currentUser || null);
   const [searchTerm, setSearchTerm] = useState('');
   const [totalMiners, setTotalMiners] = useState(0);
   const [filteredLeaderboard, setFilteredLeaderboard] = useState(leaderboard);
@@ -20,11 +20,9 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ currentUser }) => {
   useEffect(() => {
     const fetchTotalMiners = async () => {
       try {
-        const { data, error } = await supabase.rpc('get_current_leaderboard_stats');
-        if (error) {
-          console.error('Error fetching leaderboard stats:', error);
-          return;
-        }
+        // Using mock data for now - replace with API call if needed
+        const data = { totalMiners: leaderboard.length, activeMiners: leaderboard.filter(u => u.isActive).length };
+        // No error handling needed for mock data
         
         if (data && data.totalMiners) {
           setActiveMiners(data.activeMiners)

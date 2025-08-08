@@ -1,7 +1,7 @@
 import React from 'react';
 import { CheckCircle, Clock, Gift, Star, Target, Calendar, Trophy, Twitter, MessageCircle, Users2, ExternalLink, Loader, AlertTriangle, RefreshCw, Info, X, Bug } from 'lucide-react';
 import { UserData } from '../types';
-import { useSupabaseTasks } from '../hooks/useSupabaseTasks';
+import { useTasks } from '../hooks/useTasks';
 import { supabase } from '../lib/supabase';
 import TaskDebug from './TaskDebug';
 
@@ -11,7 +11,7 @@ interface TasksProps {
 }
 
 const Tasks: React.FC<TasksProps> = ({ user, onUserUpdate }) => {
-  const { tasks, loading, error, completeTask, validatingTasks, refreshTasks } = useSupabaseTasks(user, onUserUpdate);
+  const { tasks, loading, error, completeTask, validatingTasks, refreshTasks } = useTasks(user, onUserUpdate);
   const [selectedCategory, setSelectedCategory] = React.useState<'all' | 'daily' | 'weekly' | 'social' | 'achievement'>('all');
   const [showTaskInfo, setShowTaskInfo] = React.useState(false);
   const [showClaimButtons, setShowClaimButtons] = React.useState<Record<string, boolean>>({});
@@ -26,8 +26,7 @@ const Tasks: React.FC<TasksProps> = ({ user, onUserUpdate }) => {
 
   // Debug function to check task completion status
   const checkTaskStatus = async (taskId: string) => {
-    const { data } = await supabase.rpc('check_task_completion', { p_user_id: user.id, p_task_id: taskId });
-    console.log('Task status:', data);
+    // Task completion debugging removed - using TypeORM API now
   };
 
   const categories = [
@@ -148,14 +147,14 @@ const Tasks: React.FC<TasksProps> = ({ user, onUserUpdate }) => {
     if (task.completed) {
       console.log('⚠️ Task already completed, ignoring click');
       showNotification('info', 'Already Completed', 'This task has already been completed');
-      checkTaskStatus(task.id);
+      // Task status check removed
       return;
     }
 
     if (!user) {
       console.log('⚠️ No user available for task completion');
       showNotification('error', 'User Error', 'Please refresh the page and try again');
-      checkTaskStatus(task.id);
+      // Task status check removed
       return;
     }
 
@@ -173,7 +172,7 @@ const Tasks: React.FC<TasksProps> = ({ user, onUserUpdate }) => {
         required: task.maxProgress,
         accountAge: user.accountAge
       });
-      checkTaskStatus(task.id);
+      // Task status check removed
       
       // Show user-friendly message
       if (task.type === 'achievement' && task.id === 'early-adopter') {
@@ -201,7 +200,7 @@ const Tasks: React.FC<TasksProps> = ({ user, onUserUpdate }) => {
         }));
       }
       
-      checkTaskStatus(task.id);
+      // Task status check removed
       console.log('🎉 Task completion process finished for:', task.id);
     } catch (error) {
       console.error('❌ Error in task action:', error);
@@ -629,11 +628,11 @@ const Tasks: React.FC<TasksProps> = ({ user, onUserUpdate }) => {
                         </span>
                       </div>
                       
-                      {task.xpReward && (
+                      {task.reward && (
                         <div className="flex items-center space-x-1">
                           <Star className="w-4 h-4 text-blue-400" />
                           <span className="text-blue-400 font-medium">
-                            {task.xpReward} XP
+                            {task.reward} XP
                           </span>
                         </div>
                       )}

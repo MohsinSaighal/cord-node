@@ -5,12 +5,16 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  OneToOne,
   Index,
   PrimaryColumn,
 } from "typeorm";
 import { Task } from "./Task";
 import { UserEpochStats } from "./UserEpochStats";
 import { ReferralData } from "./ReferralData";
+import { UserTask } from "./UserTask";
+import { MiningSession } from "./MiningSession";
+import { UserSettings } from "./UserSettings";
 
 @Entity("users")
 @Index(["username"], { unique: true })
@@ -103,9 +107,16 @@ export class User {
   @UpdateDateColumn()
   updatedAt!: Date;
 
-  // Relations
-  @OneToMany(() => Task, (task) => task.user)
-  tasks!: Task[];
+  // Relations - Tasks are global, user progress tracked in UserTask
+
+  @OneToMany(() => UserTask, (userTask) => userTask.user)
+  userTasks!: UserTask[];
+
+  @OneToMany(() => MiningSession, (session) => session.user)
+  miningSessions!: MiningSession[];
+
+  @OneToOne(() => UserSettings, (settings) => settings.user)
+  settings!: UserSettings;
 
   @OneToMany(() => UserEpochStats, (epochStats) => epochStats.user)
   epochStats!: UserEpochStats[];

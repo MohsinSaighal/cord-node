@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Settings as SettingsIcon, Bell, Shield, Palette, Save, User, Loader, LogOut, RefreshCw } from 'lucide-react';
 import { UserData } from '../types';
-import { useSupabaseSettings } from '../hooks/useSupabaseSettings';
+import { useSettings } from '../hooks/useSettings';
 import { signOut } from '../utils/supabaseAuth';
 
 interface SettingsProps {
@@ -11,7 +11,7 @@ interface SettingsProps {
 }
 
 const Settings: React.FC<SettingsProps> = ({ user, onUserUpdate, onLogout }) => {
-  const { settings, setSettings, saveSettings, loading, refreshSettings } = useSupabaseSettings(user);
+  const { settings, setSettings, saveSettings, loading, refreshSettings } = useSettings(user);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [saving, setSaving] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
