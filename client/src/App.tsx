@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Header from "./components/Header";
 import { ModernApp } from "./components/modern/ModernApp";
-import Dashboard from "./components/Dashboard";
-import NodeManager from "./components/NodeManager";
-import Tasks from "./components/Tasks";
-import Leaderboard from "./components/Leaderboard";
-import ReferralSystem from "./components/ReferralSystem";
-import Settings from "./components/Settings";
+import { ModernNodeManager } from "./components/modern/ModernNodeManager";
+import { ModernTasks } from "./components/modern/ModernTasks";
+import { ModernLeaderboard } from "./components/modern/ModernLeaderboard";
+import { ModernReferralSystem } from "./components/modern/ModernReferralSystem";
+import { ModernSettings } from "./components/modern/ModernSettings";
 import AuthModal from "./components/AuthModal";
 import WelcomePopup from "./components/WelcomePopup";
 import { QueryProvider } from "./providers/QueryProvider";
@@ -266,16 +265,16 @@ function App() {
       case "dashboard":
         return <ModernApp user={user} onUserUpdate={handleUserUpdate} />;
       case "node":
-        return <NodeManager user={user} onUserUpdate={handleUserUpdate} />;
+        return <ModernNodeManager user={user} onUserUpdate={handleUserUpdate} />;
       case "tasks":
-        return <Tasks user={user} onUserUpdate={handleUserUpdate} />;
+        return <ModernTasks user={user} onUserUpdate={handleUserUpdate} />;
       case "leaderboard":
-        return <Leaderboard currentUser={user} />;
+        return <ModernLeaderboard currentUser={user} />;
       case "referrals":
-        return <ReferralSystem user={user} onUserUpdate={handleUserUpdate} />;
+        return <ModernReferralSystem user={user} onUserUpdate={handleUserUpdate} />;
       case "settings":
         return (
-          <Settings
+          <ModernSettings
             user={user}
             onUserUpdate={handleUserUpdate}
             onLogout={handleLogout}
