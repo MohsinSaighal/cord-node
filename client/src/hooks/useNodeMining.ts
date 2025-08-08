@@ -302,11 +302,22 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
     setTimeout(() => notification.remove(), 4000);
   };
 
+  const toggleMining = useCallback(() => {
+    if (nodeStats.isActive) {
+      stopNode();
+    } else {
+      startNode();
+    }
+  }, [nodeStats.isActive, startNode, stopNode]);
+
   return {
-    nodeStats,
+    isActive: nodeStats.isActive,
+    earnings: nodeStats.dailyEarnings,
+    timeActive: nodeStats.uptime,
+    efficiency: nodeStats.efficiency / 100,
+    toggleMining,
     isStarting,
-    startNode,
-    stopNode,
+    nodeStats,
     currentSession
   };
 };

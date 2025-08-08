@@ -63,7 +63,7 @@ const MiningStatusPanel: React.FC<{
   };
 
   return (
-    <AnimatedCard className="relative overflow-hidden p-8 bg-gradient-to-br from-slate-800/40 to-slate-900/60 border-slate-700/30 backdrop-blur-xl">
+    <AnimatedCard className="relative overflow-hidden p-8 backdrop-blur-xl border" style={{ background: 'var(--bg-secondary)', borderColor: 'var(--brand-primary)' }}>
       <FloatingParticles />
       
       {/* Status Header */}
@@ -85,18 +85,23 @@ const MiningStatusPanel: React.FC<{
           </div>
           
           <div>
-            <h2 className="text-3xl font-bold text-white mb-1">Mining Node</h2>
+            <h2 className="text-3xl font-bold mb-1" style={{ color: 'var(--text-primary)' }}>Mining Node</h2>
             <div className="flex items-center space-x-3">
               <Badge className={cn(
-                "px-3 py-1 text-sm font-medium",
+                "px-3 py-1 text-sm font-medium border",
                 isActive 
-                  ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/30" 
-                  : "bg-slate-700/50 text-slate-300 border-slate-600/50"
-              )}>
+                  ? "text-[#00FF9D]" 
+                  : ""
+              )}
+              style={{
+                backgroundColor: isActive ? 'rgba(0, 255, 157, 0.1)' : 'var(--inactive)',
+                borderColor: isActive ? 'var(--mining-active)' : 'var(--inactive)',
+                color: isActive ? 'var(--mining-active)' : 'var(--text-tertiary)'
+              }}>
                 {isActive ? 'ONLINE' : 'OFFLINE'}
               </Badge>
               
-              <div className="flex items-center space-x-1 text-purple-400 text-sm">
+              <div className="flex items-center space-x-1 text-sm" style={{ color: 'var(--brand-primary)' }}>
                 <Database className="w-4 h-4" />
                 <span>TypeORM Connected</span>
               </div>

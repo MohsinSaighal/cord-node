@@ -53,23 +53,24 @@ const ReferralCodeCard: React.FC<{
   const referralUrl = `${window.location.origin}?ref=${referralCode}`;
 
   return (
-    <AnimatedCard className="p-8 bg-gradient-to-br from-purple-500/10 to-pink-600/10 border-purple-500/20 backdrop-blur-xl">
+    <AnimatedCard className="p-8 border backdrop-blur-xl" style={{ background: 'var(--bg-secondary)', borderColor: 'var(--brand-primary)' }}>
       <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold text-white mb-2">Your Referral Code</h2>
-        <p className="text-slate-300">Share this code and earn 10% of all your referrals' earnings forever</p>
+        <h2 className="text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Your Referral Code</h2>
+        <p style={{ color: 'var(--text-secondary)' }}>Share this code and earn 10% of all your referrals' earnings forever</p>
       </div>
 
-      <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700/30 mb-6">
+      <div className="rounded-2xl p-6 border mb-6" style={{ background: 'var(--bg-tertiary)', borderColor: 'var(--brand-primary)' }}>
         <div className="text-center mb-4">
-          <div className="text-4xl font-mono font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 mb-2">
+          <div className="text-4xl font-mono font-bold mb-2" style={{ color: 'var(--brand-accent)' }}>
             {referralCode}
           </div>
-          <div className="text-sm text-slate-400 break-all">{referralUrl}</div>
+          <div className="text-sm break-all" style={{ color: 'var(--text-tertiary)' }}>{referralUrl}</div>
         </div>
         
         <button
           onClick={onCopy}
-          className="w-full bg-gradient-to-r from-sky-500 to-teal-500 text-white font-semibold py-4 px-6 rounded-2xl hover:from-sky-600 hover:to-teal-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center space-x-2"
+          className="w-full font-semibold py-4 px-6 rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center space-x-2"
+          style={{ background: 'var(--gradient-brand)', color: 'var(--text-primary)' }}
         >
           {copied ? (
             <>

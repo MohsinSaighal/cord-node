@@ -21,9 +21,9 @@ export const SimpleButton: React.FC<SimpleButtonProps> = ({
   className
 }) => {
   const variants = {
-    primary: 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white',
-    secondary: 'bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 border border-slate-600/50',
-    danger: 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white'
+    primary: 'text-white shadow-lg hover:shadow-xl transform hover:scale-105',
+    secondary: 'border text-[#CCCCCC] hover:text-[#FFFFFF]',
+    danger: 'text-white shadow-lg hover:shadow-xl transform hover:scale-105'
   };
 
   const sizes = {
@@ -39,12 +39,19 @@ export const SimpleButton: React.FC<SimpleButtonProps> = ({
       className={cn(
         'rounded-lg font-medium transition-all duration-300 hover-lift',
         'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none',
-        'focus:outline-none focus:ring-2 focus:ring-green-500/50',
+        'focus:outline-none focus:ring-2',
         variants[variant],
         sizes[size],
         loading && 'animate-pulse',
         className
       )}
+      style={{
+        background: variant === 'primary' ? 'var(--gradient-brand)' 
+                 : variant === 'danger' ? 'linear-gradient(135deg, #FF355E 0%, #FF6B6B 100%)'
+                 : 'var(--bg-tertiary)',
+        borderColor: variant === 'secondary' ? 'var(--brand-primary)' : 'transparent',
+        boxShadow: variant !== 'secondary' ? '0 4px 15px rgba(106, 90, 205, 0.3)' : 'none'
+      }}
     >
       <div className="flex items-center justify-center space-x-2">
         {loading && (
