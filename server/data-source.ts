@@ -10,6 +10,7 @@ import {
   UserEpochStats,
   ReferralData,
   NodeStats,
+  BadgePurchase,
 } from "./entities";
 import dotenv from "dotenv";
 dotenv.config();
@@ -24,7 +25,7 @@ export const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL,
   synchronize: process.env.NODE_ENV === "development", // Auto-sync in development
   logging: process.env.NODE_ENV === "development",
-  entities: [User, Task, UserTask, MiningSession, UserSettings, Epoch, UserEpochStats, ReferralData, NodeStats],
+  entities: [User, Task, UserTask, MiningSession, UserSettings, Epoch, UserEpochStats, ReferralData, NodeStats, BadgePurchase],
   migrations: ["server/migrations/*.ts"],
   subscribers: ["server/subscribers/*.ts"],
   ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,

@@ -1,6 +1,13 @@
 # Overview
 
-CordNode is a Discord-based mining simulation platform built as a full-stack web application. The platform gamifies account age and activity by allowing users to connect their Discord accounts and mine virtual "CORD" tokens based on their account's characteristics. It features real-time mining mechanics, task completion systems, referral programs, leaderboards, and epoch-based competitions. The application integrates Solana wallet connectivity for future blockchain functionality and includes comprehensive anti-cheat systems to maintain platform integrity.
+CordNode is a Discord-based mining simulation platform built as a full-stack web application. The platform gamifies account age and activity by allowing users to connect their Discord accounts and mine virtual "CORD" tokens based on their account's characteristics. It features real-time mining mechanics, task completion systems, referral programs, leaderboards, epoch-based competitions, and Badge of Honor purchases. The application integrates Solana wallet connectivity for blockchain functionality and includes comprehensive anti-cheat systems to maintain platform integrity.
+
+## Recent Updates (August 2025)
+- ✅ **Fixed Critical Mining Stop Bug**: Mining node stop now correctly adds final earnings to user balance
+- ✅ **Fixed Database Schema Issues**: Migrated all decimal fields to numeric(15,2) with proper transformers
+- ✅ **Added Badge Purchase System**: Complete API for SOL-based Badge of Honor purchases with transaction tracking
+- ✅ **Corrected Mining Rates**: Base rate set to 0.5 CORD/min with proper multiplier calculations
+- ✅ **Enhanced Balance Updates**: All mining rewards now properly update user balances in real-time
 
 # User Preferences
 

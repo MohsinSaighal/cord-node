@@ -211,13 +211,13 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
         saveIntervalRef.current = null;
       }
 
-      // Save any remaining earnings
+      // Save any remaining earnings and get final total
+      let finalEarnings = nodeStats.dailyEarnings;
       if (accumulatedEarningsRef.current > 0) {
         await saveMiningProgress(accumulatedEarningsRef.current);
+        finalEarnings += accumulatedEarningsRef.current; // Add the final accumulated amount
         accumulatedEarningsRef.current = 0;
       }
-
-      const finalEarnings = nodeStats.dailyEarnings;
       
       // Update user status
       const updatedUser = {

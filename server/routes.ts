@@ -4,12 +4,14 @@ import { UserService } from "./services/UserService";
 import { TaskService } from "./services/TaskService";
 import { MiningService } from "./services/MiningService";
 import { SettingsService } from "./services/SettingsService";
+import { BadgePurchaseService } from "./services/BadgePurchaseService";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const userService = new UserService();
   const taskService = new TaskService();
   const miningService = new MiningService();
   const settingsService = new SettingsService();
+  const badgePurchaseService = new BadgePurchaseService();
 
   // Seed default tasks
   await taskService.seedTasks();
@@ -221,6 +223,91 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(settings);
     } catch (error) {
       res.status(500).json({ error: "Failed to update user settings" });
+    }
+  });
+
+  // Badge purchase routes
+  app.post("/api/badge-purchases", async (req, res) => {
+    try {
+      const { userId, walletAddress, transactionHash, amountSol, amountUsd } = req.body;
+      
+      // Validate required fields
+      if (!userId || !walletAddress || !transactionHash || !amountSol || !amountUsd) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const purchase = await badgePurchaseService.createBadgePurchase({
+        userId,
+        walletAddress,
+        transactionHash,
+        amountSol: parseFloat(amountSol),
+        amountUsd: parseFloat(amountUsd)
+      });
+
+      res.status(201).json(purchase);
+    } catch (error) {
+      if (error instanceof Error && error.message === "Transaction hash already exists") {
+        return res.status(409).json({ error: error.message });
+      }
+      res.status(500).json({ error: "Failed to create badge purchase" });
+    }
+  });
+
+  app.put("/api/badge-purchases/:transactionHash/status", async (req, res) => {
+    try {
+      const { status } = req.body;
+      
+      if (!['pending', 'completed', 'failed'].includes(status)) {
+        return res.status(400).json({ error: "Invalid status" });
+      }
+
+      const purchase = await badgePurchaseService.updatePurchaseStatus(
+        req.params.transactionHash,
+        status
+      );
+
+      if (!purchase) {
+        return res.status(404).json({ error: "Purchase not found" });
+      }
+
+      res.json(purchase);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update purchase status" });
+    }
+  });
+
+  app.get("/api/users/:userId/badge-purchases", async (req, res) => {
+    try {
+      const purchases = await badgePurchaseService.getUserPurchases(req.params.userId);
+      res.json(purchases);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get user purchases" });
+    }
+  });
+
+  app.get("/api/badge-purchases/:transactionHash", async (req, res) => {
+    try {
+      const purchase = await badgePurchaseService.getPurchaseByTransaction(
+        req.params.transactionHash
+      );
+      
+      if (!purchase) {
+        return res.status(404).json({ error: "Purchase not found" });
+      }
+
+      res.json(purchase);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get purchase" });
+    }
+  });
+
+  app.get("/api/badge-purchases", async (req, res) => {
+    try {
+      const limit = parseInt(req.query.limit as string) || 50;
+      const purchases = await badgePurchaseService.getAllPurchases(limit);
+      res.json(purchases);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get purchases" });
     }
   });
 
