@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { UserData } from "../types";
 // Wallet components temporarily removed during migration
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
 interface HeaderProps {
   user: UserData;
@@ -78,6 +79,7 @@ const Header: React.FC<HeaderProps> = ({
               );
             })}
           </nav>
+          <WalletMultiButton />
 
           {/* User Profile */}
           <div className="flex items-center space-x-2 sm:space-x-4">
@@ -117,7 +119,9 @@ const Header: React.FC<HeaderProps> = ({
             >
               <LogOut className="w-4 h-4" />
             </button>
-           {/* Wallet button temporarily disabled during migration */}
+            <WalletMultiButton />
+
+            {/* Wallet button temporarily disabled during migration */}
 
             {/* Mobile Menu Button */}
             <button

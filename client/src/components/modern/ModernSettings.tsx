@@ -273,8 +273,7 @@ export const ModernSettings: React.FC<ModernSettingsProps> = ({ user, onUserUpda
                     variant="secondary"
                     onClick={handleExportData}
                   >
-                    <Download className="w-4 h-4 mr-2" />
-                    Export Data
+                    <Download className="w-5 h-5 mr-2" />
                   </SimpleButton>
                 }
               />
@@ -312,7 +311,7 @@ export const ModernSettings: React.FC<ModernSettingsProps> = ({ user, onUserUpda
             icon={<AlertTriangle className="w-6 h-6 text-orange-400" />}
             gradient="from-orange-500/10 to-red-500/10 border-orange-500/20"
           >
-            <div className="space-y-4">
+            <div className="space-y-6">
               <SettingItem
                 label="Sign Out"
                 description="Sign out of your CordNode account"
@@ -322,8 +321,7 @@ export const ModernSettings: React.FC<ModernSettingsProps> = ({ user, onUserUpda
                     variant="secondary"
                     onClick={handleLogout}
                   >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Sign Out
+                    <LogOut className="w-5 h-5 mr-2" />
                   </SimpleButton>
                 }
               />
@@ -338,8 +336,7 @@ export const ModernSettings: React.FC<ModernSettingsProps> = ({ user, onUserUpda
                     variant="danger"
                     onClick={handleDeleteAccount}
                   >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Delete Account
+                    <Trash2 className="w-5 h-5 mr-2" />
                   </SimpleButton>
                 }
               />

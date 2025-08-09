@@ -397,7 +397,7 @@ export const ModernApp: React.FC<ModernAppProps> = ({ user, onUserUpdate }) => {
         <div className="absolute top-1/2 left-3/4 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }} />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-8">
+      <div className="relative z-10 container mx-auto px-4 py-24">
         {/* Header */}
         <div className="mb-12 animate-slide-up">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">

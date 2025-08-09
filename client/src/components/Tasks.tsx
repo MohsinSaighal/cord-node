@@ -684,7 +684,7 @@ const Tasks: React.FC<TasksProps> = ({ user, onUserUpdate }) => {
                         </>
                       ) : (
                         <>
-                          <ExternalLink className="w-4 h-4" />
+                          <ExternalLink className="w-2 h-4" />
                           <span>Visit Link</span>
                         </>
                       )}

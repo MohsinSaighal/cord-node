@@ -12,6 +12,7 @@ import {
   Settings,
 } from "lucide-react";
 import { UserData } from "../../types";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
 interface CleanHeaderProps {
   user: UserData;
@@ -40,18 +41,25 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({
   ];
 
   return (
-    <header className="fixed top-0 w-full backdrop-blur-lg border-b z-50 shadow-lg" style={{ background: 'rgba(30, 30, 45, 0.95)', borderColor: 'var(--brand-primary)' }}>
+    <header
+      className="fixed top-0 w-full backdrop-blur-lg border-b z-50 shadow-lg"
+      style={{
+        background: "rgba(30, 30, 45, 0.95)",
+        borderColor: "var(--brand-primary)",
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'var(--gradient-brand)' }}>
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"
+              style={{ background: "var(--gradient-brand)" }}
+            >
               <span className="text-xl font-bold text-white">C</span>
             </div>
             <div className="hidden sm:block">
-              <span className="text-xl font-bold text-[#FFFFFF]">
-                CordNode
-              </span>
+              <span className="text-xl font-bold text-[#FFFFFF]">CordNode</span>
             </div>
           </div>
 
@@ -60,38 +68,54 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentTab === item.id;
-              
+
               return (
                 <button
                   key={item.id}
                   onClick={() => setCurrentTab(item.id)}
                   className={`
                     flex items-center space-x-2 px-4 py-2.5 rounded-xl font-medium transition-all duration-200
-                    ${isActive
-                      ? "text-white shadow-lg"
-                      : "text-[#CCCCCC] hover:text-[#FFFFFF]"
+                    ${
+                      isActive
+                        ? "text-white shadow-lg"
+                        : "text-[#CCCCCC] hover:text-[#FFFFFF]"
                     }
                   `}
-                  style={isActive ? { background: 'var(--gradient-brand)' } : { backgroundColor: 'transparent' }}
-                  onMouseEnter={(e) => !isActive && (e.currentTarget.style.backgroundColor = 'rgba(106, 90, 205, 0.1)')}
-                  onMouseLeave={(e) => !isActive && (e.currentTarget.style.backgroundColor = 'transparent')}
+                  style={
+                    isActive
+                      ? { background: "var(--gradient-brand)" }
+                      : { backgroundColor: "transparent" }
+                  }
+                  onMouseEnter={(e) =>
+                    !isActive &&
+                    (e.currentTarget.style.backgroundColor =
+                      "rgba(106, 90, 205, 0.1)")
+                  }
+                  onMouseLeave={(e) =>
+                    !isActive &&
+                    (e.currentTarget.style.backgroundColor = "transparent")
+                  }
                 >
                   <Icon className="w-4 h-4" />
                   <span className="text-sm">{item.label}</span>
                 </button>
               );
             })}
+
+            {/* Fixed Wallet Button */}
+             <div className="flex-shrink-0">
+  <WalletMultiButton />
+</div>
           </nav>
 
           {/* User Profile & Mobile Menu */}
           <div className="flex items-center space-x-4">
             {/* User Balance - Desktop */}
-            <div className="hidden md:flex items-center space-x-4 bg-gradient-to-r from-slate-50 to-slate-100 rounded-2xl px-4 py-2 border border-slate-200">
+            <div className="hidden md:flex items-center space-x-4 bg-gradient-to-r from-slate-50 to-slate-100 rounded-2xl px-2 py-2 border border-slate-200">
               <div className="text-right">
-                <div className="text-sm font-bold bg-gradient-to-r from-sky-600 to-teal-600 bg-clip-text text-transparent">
-                  {user.currentBalance?.toFixed(2) || '0.00'} CORD
+                <div className="text-sm  font-bold bg-gradient-to-r from-sky-600 to-teal-600 bg-clip-text text-transparent">
+                  {user.currentBalance?.toFixed(2) || "0.00"}
                 </div>
-                <div className="text-xs text-slate-500">Balance</div>
               </div>
             </div>
 
@@ -105,8 +129,10 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({
                 />
               )}
               <div className="hidden md:block">
-                <div className="text-sm font-semibold text-slate-800">{user.username}</div>
-                <div className="text-xs text-slate-500">
+                <div className="text-sm font-semibold text-white">
+                  {user.username}
+                </div>
+                <div className="text-xs text-slate-300">
                   {user.accountAge}y • {user.multiplier}x
                 </div>
               </div>
@@ -131,9 +157,11 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({
           <div className="lg:hidden bg-white border-t border-slate-200 py-4">
             {/* Mobile Balance */}
             <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl mx-4 mb-4">
-              <span className="text-sm font-semibold text-slate-700">Balance</span>
+              <span className="text-sm font-semibold text-slate-700">
+                Balance
+              </span>
               <span className="text-sm font-bold bg-gradient-to-r from-sky-600 to-teal-600 bg-clip-text text-transparent">
-                {user.currentBalance?.toFixed(2) || '0.00'} CORD
+                {user.currentBalance?.toFixed(2) || "0.00"} CORD
               </span>
             </div>
 
@@ -142,7 +170,7 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = currentTab === item.id;
-                
+
                 return (
                   <button
                     key={item.id}
@@ -152,9 +180,10 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({
                     }}
                     className={`
                       w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition-all duration-200
-                      ${isActive
-                        ? "bg-gradient-to-r from-sky-500 to-teal-500 text-white shadow-lg"
-                        : "text-slate-600 hover:text-slate-800 hover:bg-slate-100"
+                      ${
+                        isActive
+                          ? "bg-gradient-to-r from-sky-500 to-teal-500 text-white shadow-lg"
+                          : "text-slate-600 hover:text-slate-800 hover:bg-slate-100"
                       }
                     `}
                   >
@@ -163,7 +192,7 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({
                   </button>
                 );
               })}
-              
+
               {/* Logout Button */}
               <button
                 onClick={onLogout}

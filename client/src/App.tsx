@@ -20,10 +20,41 @@ import {
   storeReferralCode,
 } from "./utils/referral";
 import { useAntiCheat } from "./hooks/useAntiCheat";
-import { getStoredSession, getUserFromDatabase, updateUserInDatabase } from "./utils/supabaseAuth";
+import {
+  getStoredSession,
+  getUserFromDatabase,
+  updateUserInDatabase,
+} from "./utils/supabaseAuth";
 import { signOut } from "./utils/nodeAuth";
-// Solana wallet adapters temporarily removed during migration
+import {
+  ConnectionProvider,
+  WalletProvider,
+} from "@solana/wallet-adapter-react";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+  // Add other wallet adapters you want to support
+} from "@solana/wallet-adapter-wallets";
+import {
+  WalletModalProvider,
+  WalletMultiButton, // You might use this button in your UI
+} from "@solana/wallet-adapter-react-ui";
+import { clusterApiUrl } from "@solana/web3.js";
+
+// Import the wallet adapter styles
+import "@solana/wallet-adapter-react-ui/styles.css";
 function App() {
+  const endpoint =
+    "https://solana-mainnet.g.alchemy.com/v2/NsnP2tXE9zCuu7hjj4zpABQ--AraC4pB";
+  const wallets = useMemo(
+    () => [
+      new PhantomWalletAdapter(),
+      new SolflareWalletAdapter(),
+      // Add other wallet adapters here
+    ],
+    []
+  );
   const { user, loading, setUser, setLoading, updateUser, logout } =
     useUserStore();
   const {
@@ -49,7 +80,7 @@ function App() {
   const initializeApp = async () => {
     try {
       setLoading(true);
-      
+
       // Check for referral code in URL first
       const referralCode = getReferralCodeFromUrl();
       if (referralCode) {
@@ -131,7 +162,7 @@ function App() {
 
   const handleLogout = async () => {
     console.log("Logging out user...");
-    
+
     try {
       // Pass current user data to store for proper balance preservation
       if (user) {
@@ -180,29 +211,36 @@ function App() {
           {/* Animated background elements */}
           <div className="fixed inset-0 pointer-events-none">
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-float" />
-            <div className="absolute top-3/4 right-1/4 w-64 h-64 bg-sky-500/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
-            <div className="absolute top-1/2 left-3/4 w-80 h-80 bg-teal-500/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }} />
+            <div
+              className="absolute top-3/4 right-1/4 w-64 h-64 bg-sky-500/5 rounded-full blur-3xl animate-float"
+              style={{ animationDelay: "2s" }}
+            />
+            <div
+              className="absolute top-1/2 left-3/4 w-80 h-80 bg-teal-500/5 rounded-full blur-3xl animate-float"
+              style={{ animationDelay: "4s" }}
+            />
           </div>
 
           <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
             <div className="max-w-2xl w-full animate-slide-up">
               {/* Main Card */}
               <div className="bg-white/90 backdrop-blur-lg border border-slate-200/50 rounded-3xl p-8 sm:p-12 shadow-2xl hover-lift">
-                
                 {/* Logo Section */}
                 <div className="text-center mb-10">
                   <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-sky-500 to-teal-600 rounded-2xl shadow-lg mb-6 animate-pulse">
                     <span className="text-3xl font-bold text-white">C</span>
                   </div>
-                  
+
                   <h1 className="text-5xl sm:text-6xl font-bold mb-4">
                     <span className="bg-gradient-to-r from-sky-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent">
                       CordNode
                     </span>
                   </h1>
-                  
+
                   <p className="text-xl text-slate-600 leading-relaxed max-w-lg mx-auto">
-                    Transform your Discord legacy into valuable rewards. The longer your account history, the greater your mining potential.
+                    Transform your Discord legacy into valuable rewards. The
+                    longer your account history, the greater your mining
+                    potential.
                   </p>
                 </div>
 
@@ -212,24 +250,36 @@ function App() {
                     <div className="w-12 h-12 bg-gradient-to-br from-sky-500 to-sky-600 rounded-xl flex items-center justify-center mx-auto mb-3">
                       <span className="text-white text-xl">⚡</span>
                     </div>
-                    <h3 className="font-bold text-slate-800 mb-2">Mine CORD Tokens</h3>
-                    <p className="text-sm text-slate-600">Earn rewards based on your Discord account age</p>
+                    <h3 className="font-bold text-slate-800 mb-2">
+                      Mine CORD Tokens
+                    </h3>
+                    <p className="text-sm text-slate-600">
+                      Earn rewards based on your Discord account age
+                    </p>
                   </div>
-                  
+
                   <div className="text-center p-4 rounded-xl bg-white/60 border border-slate-200/50 hover-lift">
                     <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center mx-auto mb-3">
                       <span className="text-white text-xl">🎯</span>
                     </div>
-                    <h3 className="font-bold text-slate-800 mb-2">Complete Tasks</h3>
-                    <p className="text-sm text-slate-600">Daily challenges and social activities</p>
+                    <h3 className="font-bold text-slate-800 mb-2">
+                      Complete Tasks
+                    </h3>
+                    <p className="text-sm text-slate-600">
+                      Daily challenges and social activities
+                    </p>
                   </div>
-                  
+
                   <div className="text-center p-4 rounded-xl bg-white/60 border border-slate-200/50 hover-lift">
                     <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center mx-auto mb-3">
                       <span className="text-white text-xl">🏆</span>
                     </div>
-                    <h3 className="font-bold text-slate-800 mb-2">Climb Rankings</h3>
-                    <p className="text-sm text-slate-600">Compete with miners worldwide</p>
+                    <h3 className="font-bold text-slate-800 mb-2">
+                      Climb Rankings
+                    </h3>
+                    <p className="text-sm text-slate-600">
+                      Compete with miners worldwide
+                    </p>
                   </div>
                 </div>
 
@@ -237,11 +287,17 @@ function App() {
                 <div className="bg-gradient-to-r from-slate-100/50 to-slate-50/50 rounded-2xl p-6 mb-8 border border-slate-200/50">
                   <div className="grid grid-cols-3 gap-4 text-center">
                     <div>
-                      <div className="text-2xl font-bold text-emerald-600">1,250+</div>
-                      <div className="text-sm text-slate-600">Active Miners</div>
+                      <div className="text-2xl font-bold text-emerald-600">
+                        1,250+
+                      </div>
+                      <div className="text-sm text-slate-600">
+                        Active Miners
+                      </div>
                     </div>
                     <div>
-                      <div className="text-2xl font-bold text-sky-600">125K+</div>
+                      <div className="text-2xl font-bold text-sky-600">
+                        125K+
+                      </div>
                       <div className="text-sm text-slate-600">CORD Mined</div>
                     </div>
                     <div>
@@ -262,9 +318,10 @@ function App() {
                     <span>⚡</span>
                   </div>
                 </button>
-                
+
                 <p className="text-center text-slate-600 text-sm mt-4">
-                  Secure OAuth connection • No password required • Start earning instantly
+                  Secure OAuth connection • No password required • Start earning
+                  instantly
                 </p>
               </div>
             </div>
@@ -277,13 +334,17 @@ function App() {
       case "dashboard":
         return <ModernApp user={user} onUserUpdate={handleUserUpdate} />;
       case "node":
-        return <ModernNodeManager user={user} onUserUpdate={handleUserUpdate} />;
+        return (
+          <ModernNodeManager user={user} onUserUpdate={handleUserUpdate} />
+        );
       case "tasks":
         return <ModernTasks user={user} onUserUpdate={handleUserUpdate} />;
       case "leaderboard":
         return <ModernLeaderboard currentUser={user} />;
       case "referrals":
-        return <ModernReferralSystem user={user} onUserUpdate={handleUserUpdate} />;
+        return (
+          <ModernReferralSystem user={user} onUserUpdate={handleUserUpdate} />
+        );
       case "settings":
         return (
           <ModernSettings
@@ -298,37 +359,46 @@ function App() {
   };
 
   return (
-    <QueryProvider>
-      <div className="min-h-screen text-[#FFFFFF]" style={{ background: 'var(--bg-primary)' }}>
-        {user && (
-          <CleanHeader
-            user={user}
-            currentTab={currentTab}
-            setCurrentTab={setCurrentTab}
-            onLogout={handleLogout}
-            isMobileMenuOpen={isMobileMenuOpen}
-            setIsMobileMenuOpen={setIsMobileMenuOpen}
-          />
-        )}
+    <ConnectionProvider endpoint={endpoint}>
+      <WalletProvider wallets={wallets} autoConnect>
+        <WalletModalProvider>
+          <QueryProvider>
+            <div
+              className="min-h-screen text-[#FFFFFF]"
+              style={{ background: "var(--bg-primary)" }}
+            >
+              {user && (
+                <CleanHeader
+                  user={user}
+                  currentTab={currentTab}
+                  setCurrentTab={setCurrentTab}
+                  onLogout={handleLogout}
+                  isMobileMenuOpen={isMobileMenuOpen}
+                  setIsMobileMenuOpen={setIsMobileMenuOpen}
+                />
+              )}
 
-        <main className={user ? "" : ""}>{renderContent()}</main>
+              <main className={user ? "" : ""}>{renderContent()}</main>
 
-        {showAuthModal && (
-          <AuthModal
-            onClose={() => setShowAuthModal(false)}
-            onLogin={handleLogin}
-          />
-        )}
+              {showAuthModal && (
+                <AuthModal
+                  onClose={() => setShowAuthModal(false)}
+                  onLogin={handleLogin}
+                />
+              )}
 
-        {showWelcomePopup && !!user && (
-          <WelcomePopup
-            user={user}
-            isNewUser={isNewUser}
-            onClose={() => setShowWelcomePopup(false)}
-          />
-        )}
-      </div>
-    </QueryProvider>
+              {showWelcomePopup && !!user && (
+                <WelcomePopup
+                  user={user}
+                  isNewUser={isNewUser}
+                  onClose={() => setShowWelcomePopup(false)}
+                />
+              )}
+            </div>
+          </QueryProvider>
+        </WalletModalProvider>
+      </WalletProvider>
+    </ConnectionProvider>
   );
 }
 

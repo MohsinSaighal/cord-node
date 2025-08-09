@@ -20,6 +20,16 @@ import { useAntiCheat } from "../hooks/useAntiCheat";
 import { calculateMiningRate } from "../utils/calculations";
 import EpochDisplay from "./EpochDisplay";
 import { apiClient } from "../hooks/useApi";
+import {
+  SystemProgram,
+  LAMPORTS_PER_SOL,
+  Transaction,
+  PublicKey,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 // Solana and Supabase imports removed during migration
 interface DashboardProps {
   user: UserData;
@@ -58,7 +68,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
     timestamps: [],
     values: [],
   });
-  // Wallet functionality temporarily disabled during migration
+  const { connection } = useConnection();
+  const { publicKey, sendTransaction } = useWallet();
 
   const [currentBalance, setCurrentBalance] = useState(user.currentBalance);
   const [totalEarned, setTotalEarned] = useState(user.totalEarned);
@@ -118,8 +129,28 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
   const handlePhantomPayment = async () => {
     try {
       setIsPaying(true);
-      addNotification("info", "Payment System", "Wallet payment temporarily disabled during migration");
-      
+      if (!connection || !publicKey) {
+        addNotification("warning", "Payment Error", "Wallet not connected");
+        return;
+      }
+      setIsPaying(true);
+
+      const SOLANA_RECIPIENT_ADDRESS =
+        "6zcYb8ZpqvesFkY5rqgEvQDFM2H2vw3nREJmyR3obuQL";
+      const recipientPubKey = new PublicKey(SOLANA_RECIPIENT_ADDRESS);
+      const amountInLamports = LAMPORTS_PER_SOL * 0.02;
+
+      const transferTransaction = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: publicKey,
+          toPubkey: recipientPubKey,
+          lamports: amountInLamports,
+        })
+      );
+
+      const signature = await sendTransaction(transferTransaction, connection);
+      console.log("Transaction sent, signature:", signature);
+
       // TODO: Implement new payment system
       // For now, just simulate the badge purchase
       const updatedUser = {
@@ -129,7 +160,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
         tasksCompleted: user.tasksCompleted + 1,
         hasBadgeOfHonor: true,
       };
-      
+
       // Update user via new API
       await apiClient.updateUser(user.id, updatedUser);
       setCurrentBalance(updatedUser.currentBalance);
@@ -228,7 +259,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
             lastSavedBalance: currentBalance,
             hasBadgeOfHonor: user.hasBadgeOfHonor,
           };
-          
+
           const updateUserData = async () => {
             try {
               onUserUpdate(updatedUser);
@@ -237,7 +268,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
               console.error("Error updating user data:", error);
             }
           };
-          
+
           updateUserData();
         }
       }
@@ -281,8 +312,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
       change: user.isNodeActive
         ? antiCheatStatus && antiCheatStatus.penaltyLevel > 0
           ? `${(antiCheatStatus.efficiencyMultiplier * 100).toFixed(
-            0
-          )}% efficiency`
+              0
+            )}% efficiency`
           : "Mining Active"
         : "Node Inactive",
     },
@@ -329,9 +360,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
       return Array.from({ length: 20 }, (_, i) => {
         const height = user.isNodeActive
           ? Math.max(
-            30,
-            Math.min(100, 50 + Math.sin(i * 0.5) * 30 + Math.random() * 20)
-          )
+              30,
+              Math.min(100, 50 + Math.sin(i * 0.5) * 30 + Math.random() * 20)
+            )
           : Math.random() * 20;
         return height;
       });
@@ -348,9 +379,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-10">
       {notifications.length > 0 && (
-        <div className="fixed top-16 sm:top-20 right-2 sm:right-4 z-40 space-y-2 max-w-xs sm:max-w-sm">
+        <div className="fixed top-18 sm:top-20 right-2 sm:right-4 z-40 space-y-2 max-w-xs sm:max-w-sm">
           {notifications.map((notification) => (
             <div
               key={notification.id}
@@ -473,8 +504,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
             <button
               onClick={handlePhantomPayment}
               disabled={isPaying}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r from-purple-400 to-blue-600 text-white font-medium hover:from-purple-500 hover:to-blue-700 transition-colors ${isPaying ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r from-purple-400 to-blue-600 text-white font-medium hover:from-purple-500 hover:to-blue-700 transition-colors ${
+                isPaying ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
               {isPaying ? (
                 <>
@@ -543,10 +575,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
               {getEarningsChartBars().map((height, i) => (
                 <div
                   key={i}
-                  className={`flex-1 rounded-t transition-all duration-500 ${user.isNodeActive
+                  className={`flex-1 rounded-t transition-all duration-500 ${
+                    user.isNodeActive
                       ? "bg-gradient-to-t from-cyan-500 to-purple-600"
                       : "bg-gradient-to-t from-gray-600 to-gray-500 opacity-50"
-                    }`}
+                  }`}
                   style={{ height: `${height}%` }}
                 ></div>
               ))}
@@ -681,12 +714,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
             >
               <div className="flex items-center space-x-3 min-w-0 flex-1">
                 <div
-                  className={`w-2 h-2 rounded-full flex-shrink-0 ${activity.type === "success"
+                  className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                    activity.type === "success"
                       ? "bg-green-400"
                       : activity.type === "warning"
-                        ? "bg-yellow-400"
-                        : "bg-blue-400"
-                    }`}
+                      ? "bg-yellow-400"
+                      : "bg-blue-400"
+                  }`}
                 ></div>
                 <div className="min-w-0 flex-1">
                   <span className="text-white text-sm sm:text-base block truncate">
