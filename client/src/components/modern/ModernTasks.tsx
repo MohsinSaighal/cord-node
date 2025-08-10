@@ -201,7 +201,7 @@ const TaskCard: React.FC<{
       )}
 
       {/* Reward & Action */}
-  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         {/* Reward section */}
         <div className="flex items-center flex-wrap gap-2 sm:gap-3">
           <Gift className="w-5 h-5 text-purple-400 flex-shrink-0" />
@@ -224,10 +224,9 @@ const TaskCard: React.FC<{
               size="sm"
               className="w-full sm:w-auto bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 px-4 sm:px-6 whitespace-nowrap"
             >
-                              <div className="flex items-center">
-
-              <Award className="w-4 h-4 mr-2 flex-shrink-0" />
-              <span>Claim Reward</span>
+              <div className="flex items-center">
+                <Award className="w-4 h-4 mr-2 flex-shrink-0" />
+                <span>Claim Reward</span>
               </div>
             </SimpleButton>
           ) : task.socialUrl ? (
@@ -314,8 +313,7 @@ export const ModernTasks: React.FC<ModernTasksProps> = ({
 
   const handleCompleteTask = async (taskId: string) => {
     const result = await completeTask(taskId);
-     
-    }
+  };
 
   if (loading) {
     return (
@@ -358,13 +356,13 @@ export const ModernTasks: React.FC<ModernTasksProps> = ({
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-12">
           <StatsCard
             title="Completed Tasks"
             value={completedTasks}
             subtitle={`of ${tasks?.length || 0} total`}
-            icon={<CheckCircle className="w-6 h-6" />}
-            gradient="from-green-400 to-emerald-600"
+            icon={<CheckCircle className="w-5 h-5 md:w-6 md:h-6" />}
+            gradient="from-emerald-500 to-green-400"
             delay={0}
             trend={completedTasks > 0 ? 15 : undefined}
           />
@@ -373,8 +371,8 @@ export const ModernTasks: React.FC<ModernTasksProps> = ({
             title="Total Rewards"
             value={`${totalRewards} CORD`}
             subtitle="Earned from tasks"
-            icon={<Award className="w-6 h-6" />}
-            gradient="from-purple-400 to-pink-600"
+            icon={<Award className="w-5 h-5 md:w-6 md:h-6" />}
+            gradient="from-purple-600 to-fuchsia-400"
             delay={1}
           />
 
@@ -384,8 +382,8 @@ export const ModernTasks: React.FC<ModernTasksProps> = ({
               (completedTasks / (tasks?.length || 1)) * 100
             )}%`}
             subtitle="Tasks completed"
-            icon={<Target className="w-6 h-6" />}
-            gradient="from-cyan-400 to-blue-600"
+            icon={<Target className="w-5 h-5 md:w-6 md:h-6" />}
+            gradient="from-blue-700 to-cyan-400"
             delay={2}
           />
 
@@ -393,8 +391,8 @@ export const ModernTasks: React.FC<ModernTasksProps> = ({
             title="Streak"
             value="3 days"
             subtitle="Daily task streak"
-            icon={<Star className="w-6 h-6" />}
-            gradient="from-orange-400 to-yellow-600"
+            icon={<Star className="w-5 h-5 md:w-6 md:h-6" />}
+            gradient="from-orange-500 to-amber-300"
             delay={3}
             trend={8}
           />

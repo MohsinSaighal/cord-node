@@ -66,7 +66,7 @@ const MiningStatusPanel: React.FC<{
 
   return (
     <AnimatedCard
-      className="relative overflow-hidden p-8 backdrop-blur-xl border"
+      className="relative overflow-hidden p-4 md:p-8 backdrop-blur-xl border"
       style={{
         background: "var(--bg-secondary)",
         borderColor: "var(--brand-primary)",
@@ -75,11 +75,11 @@ const MiningStatusPanel: React.FC<{
       <FloatingParticles />
 
       {/* Status Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 md:mb-8 gap-4">
+        <div className="flex items-center space-x-3 md:space-x-4">
           <div
             className={cn(
-              "relative p-4 rounded-2xl transition-all duration-300",
+              "relative p-3 md:p-4 rounded-xl md:rounded-2xl transition-all duration-300",
               isActive
                 ? "bg-gradient-to-br from-cyan-500/20 to-purple-600/20 animate-pulse"
                 : "bg-slate-700/30"
@@ -87,26 +87,26 @@ const MiningStatusPanel: React.FC<{
           >
             <Zap
               className={cn(
-                "w-8 h-8 transition-colors duration-300",
+                "w-6 h-6 md:w-8 md:h-8 transition-colors duration-300",
                 isActive ? "text-cyan-400" : "text-slate-400"
               )}
             />
             {isActive && (
-              <div className="absolute inset-0 rounded-2xl bg-cyan-500/20 animate-pulse" />
+              <div className="absolute inset-0 rounded-xl md:rounded-2xl bg-cyan-500/20 animate-pulse" />
             )}
           </div>
 
           <div>
             <h2
-              className="text-3xl font-bold mb-1"
+              className="text-2xl md:text-3xl font-bold mb-1"
               style={{ color: "var(--text-primary)" }}
             >
               Mining Node
             </h2>
-            <div className="flex items-center space-x-3">
+            <div className="flex flex-wrap items-center gap-2">
               <Badge
                 className={cn(
-                  "px-3 py-1 text-sm font-medium border",
+                  "px-2 py-0.5 md:px-3 md:py-1 text-xs md:text-sm font-medium border",
                   isActive ? "text-[#00FF9D]" : ""
                 )}
                 style={{
@@ -125,10 +125,10 @@ const MiningStatusPanel: React.FC<{
               </Badge>
 
               <div
-                className="flex items-center space-x-1 text-sm"
+                className="flex items-center space-x-1 text-xs md:text-sm"
                 style={{ color: "var(--brand-primary)" }}
               >
-                <Database className="w-4 h-4" />
+                <Database className="w-3 h-3 md:w-4 md:h-4" />
                 <span>TypeORM Connected</span>
               </div>
             </div>
@@ -141,17 +141,17 @@ const MiningStatusPanel: React.FC<{
           variant={isActive ? "danger" : "primary"}
           size="lg"
           className={cn(
-            "px-8 py-4 text-lg font-bold transition-all duration-300",
+            "w-full md:w-auto px-4 py-3 md:px-8 md:py-4 text-base md:text-lg font-bold transition-all duration-300",
             isActive
               ? "bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700"
               : "bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700"
           )}
         >
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center justify-center space-x-2">
             {isActive ? (
-              <Square className="w-5 h-5" />
+              <Square className="w-4 h-4 md:w-5 md:h-5" />
             ) : (
-              <Play className="w-5 h-5" />
+              <Play className="w-4 h-4 md:w-5 md:h-5" />
             )}
             <span>{isActive ? "Stop Node" : "Start Mining"}</span>
           </div>
@@ -159,28 +159,28 @@ const MiningStatusPanel: React.FC<{
       </div>
 
       {/* Mining Stats */}
-      <div className="grid grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8">
         <div
-          className="text-center p-4 rounded-xl border hover-lift"
+          className="text-center p-3 md:p-4 rounded-lg md:rounded-xl border hover-lift"
           style={{
             background: "var(--bg-secondary)",
             borderColor: "var(--brand-secondary)",
           }}
         >
-          <div className="flex items-center justify-center mb-3">
+          <div className="flex items-center justify-center mb-2 md:mb-3">
             <Activity
-              className="w-6 h-6 mr-2"
+              className="w-5 h-5 md:w-6 md:h-6 mr-1 md:mr-2"
               style={{ color: "var(--brand-secondary)" }}
             />
             <span
-              className="text-sm"
+              className="text-xs md:text-sm"
               style={{ color: "var(--text-secondary)" }}
             >
               Current Rate
             </span>
           </div>
           <div
-            className="text-3xl font-bold mb-1"
+            className="text-xl md:text-3xl font-bold mb-1"
             style={{ color: "var(--brand-secondary)" }}
           >
             {(0.5 * efficiency).toFixed(2)}
@@ -191,26 +191,26 @@ const MiningStatusPanel: React.FC<{
         </div>
 
         <div
-          className="text-center p-4 rounded-xl border hover-lift"
+          className="text-center p-3 md:p-4 rounded-lg md:rounded-xl border hover-lift"
           style={{
             background: "var(--bg-secondary)",
             borderColor: "var(--brand-primary)",
           }}
         >
-          <div className="flex items-center justify-center mb-3">
+          <div className="flex items-center justify-center mb-2 md:mb-3">
             <Clock
-              className="w-6 h-6 mr-2"
+              className="w-5 h-5 md:w-6 md:h-6 mr-1 md:mr-2"
               style={{ color: "var(--brand-primary)" }}
             />
             <span
-              className="text-sm"
+              className="text-xs md:text-sm"
               style={{ color: "var(--text-secondary)" }}
             >
               Uptime
             </span>
           </div>
           <div
-            className="text-3xl font-bold mb-1"
+            className="text-xl md:text-3xl font-bold mb-1"
             style={{ color: "var(--text-primary)" }}
           >
             {formatUptime(uptime)}
@@ -221,26 +221,26 @@ const MiningStatusPanel: React.FC<{
         </div>
 
         <div
-          className="text-center p-4 rounded-xl border hover-lift"
+          className="text-center p-3 md:p-4 rounded-lg md:rounded-xl border hover-lift"
           style={{
             background: "var(--bg-secondary)",
             borderColor: "var(--reward-gold)",
           }}
         >
-          <div className="flex items-center justify-center mb-3">
+          <div className="flex items-center justify-center mb-2 md:mb-3">
             <Award
-              className="w-6 h-6 mr-2"
+              className="w-5 h-5 md:w-6 md:h-6 mr-1 md:mr-2"
               style={{ color: "var(--reward-gold)" }}
             />
             <span
-              className="text-sm"
+              className="text-xs md:text-sm"
               style={{ color: "var(--text-secondary)" }}
             >
               Session Earned
             </span>
           </div>
           <div
-            className="text-3xl font-bold mb-1"
+            className="text-xl md:text-3xl font-bold mb-1"
             style={{ color: "var(--reward-gold)" }}
           >
             {earnings.toFixed(2)}
@@ -252,16 +252,16 @@ const MiningStatusPanel: React.FC<{
       </div>
 
       {/* Efficiency Meter */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-3">
+      <div className="mb-4 md:mb-6">
+        <div className="flex items-center justify-between mb-2 md:mb-3">
           <span
-            className="font-medium"
+            className="font-medium text-sm md:text-base"
             style={{ color: "var(--text-secondary)" }}
           >
             Mining Efficiency
           </span>
           <span
-            className="font-bold"
+            className="font-bold text-sm md:text-base"
             style={{ color: "var(--brand-secondary)" }}
           >
             {Math.round(efficiency * 100)}%
@@ -269,7 +269,7 @@ const MiningStatusPanel: React.FC<{
         </div>
         <Progress
           value={efficiency * 100}
-          className="h-3"
+          className="h-2 md:h-3"
           style={{ backgroundColor: "var(--inactive)" }}
         />
       </div>
@@ -286,7 +286,7 @@ export const ModernNodeManager: React.FC<ModernNodeManagerProps> = ({
   const { antiCheatStatus, loading: antiCheatLoading } = useAntiCheat(user);
   const [uptime, setUptime] = useState(0);
   const [sessionEarnings, setSessionEarnings] = useState(0);
-  console.log("currentSession", currentSession);
+
   useEffect(() => {
     if (nodeStats.isActive && currentSession) {
       const interval = setInterval(() => {
@@ -316,24 +316,24 @@ export const ModernNodeManager: React.FC<ModernNodeManagerProps> = ({
 
   return (
     <div
-      className="min-h-screen pt-20"
+      className="min-h-screen pt-12 md:pt-20"
       style={{ background: "var(--bg-primary)" }}
     >
       {/* Clean background elements */}
       <div className="fixed inset-0 pointer-events-none">
         <div
-          className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl animate-float"
+          className="absolute top-1/4 left-1/4 w-64 md:w-96 h-64 md:h-96 rounded-full blur-3xl animate-float"
           style={{ background: "rgba(106, 90, 205, 0.05)" }}
         />
         <div
-          className="absolute top-3/4 right-1/4 w-80 h-80 rounded-full blur-3xl animate-float"
+          className="absolute top-3/4 right-1/4 w-64 md:w-80 h-64 md:h-80 rounded-full blur-3xl animate-float"
           style={{
             background: "rgba(0, 209, 178, 0.05)",
             animationDelay: "3s",
           }}
         />
         <div
-          className="absolute top-1/2 left-3/4 w-64 h-64 rounded-full blur-3xl animate-float"
+          className="absolute top-1/2 left-3/4 w-48 md:w-64 h-48 md:h-64 rounded-full blur-3xl animate-float"
           style={{
             background: "rgba(255, 107, 107, 0.05)",
             animationDelay: "6s",
@@ -341,27 +341,27 @@ export const ModernNodeManager: React.FC<ModernNodeManagerProps> = ({
         />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-8">
+      <div className="relative z-10 container mx-auto px-4 py-6 md:py-8">
         {/* Header */}
-        <div className="mb-12 text-center animate-slide-up">
-          <h1 className="text-6xl font-bold mb-4">
+        <div className="mb-8 md:mb-12 text-center animate-slide-up">
+          <h1 className="text-4xl md:text-6xl font-bold mb-3 md:mb-4">
             <span className="bg-gradient-to-r from-sky-600 to-teal-600 bg-clip-text text-transparent">
               Mining Control
             </span>
           </h1>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+          <p className="text-sm md:text-xl text-slate-600 max-w-2xl mx-auto">
             Control your mining operations with real-time database persistence
             and advanced monitoring
           </p>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12">
           <StatsCard
             title="Node Status"
             value={nodeStats.isActive ? "Active" : "Inactive"}
             subtitle="Current mining state"
-            icon={<Server className="w-6 h-6" />}
+            icon={<Server className="w-5 h-5 md:w-6 md:h-6" />}
             gradient="from-cyan-400 to-cyan-600"
             delay={0}
           />
@@ -372,7 +372,7 @@ export const ModernNodeManager: React.FC<ModernNodeManagerProps> = ({
               (nodeStats.uptime % 3600) / 60
             )}m`}
             subtitle="All-time running"
-            icon={<Clock className="w-6 h-6" />}
+            icon={<Clock className="w-5 h-5 md:w-6 md:h-6" />}
             gradient="from-purple-400 to-purple-600"
             delay={1}
           />
@@ -381,7 +381,7 @@ export const ModernNodeManager: React.FC<ModernNodeManagerProps> = ({
             title="Security Level"
             value={antiCheatStatus?.penaltyLevel || "Clean"}
             subtitle="Anti-cheat status"
-            icon={<Shield className="w-6 h-6" />}
+            icon={<Shield className="w-5 h-5 md:w-6 md:h-6" />}
             gradient="from-green-400 to-green-600"
             delay={2}
           />
@@ -398,35 +398,35 @@ export const ModernNodeManager: React.FC<ModernNodeManagerProps> = ({
         />
 
         {/* Additional Info Panels */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mt-8 md:mt-12">
           {/* Performance Metrics */}
           <AnimatedCard
-            className="p-6 bg-gradient-to-br from-slate-800/30 to-slate-900/50 border-slate-700/30"
+            className="p-4 md:p-6 bg-gradient-to-br from-slate-800/30 to-slate-900/50 border-slate-700/30"
             delay={3}
           >
-            <div className="flex items-center mb-6">
-              <TrendingUp className="w-6 h-6 text-green-400 mr-3" />
-              <h3 className="text-xl font-bold text-white">
+            <div className="flex items-center mb-4 md:mb-6">
+              <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-green-400 mr-2 md:mr-3" />
+              <h3 className="text-lg md:text-xl font-bold text-white">
                 Performance Metrics
               </h3>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 rounded-lg bg-slate-700/30">
-                <span className="text-slate-300">Average Rate</span>
-                <span className="text-green-400 font-bold">
+            <div className="space-y-3 md:space-y-4">
+              <div className="flex justify-between items-center p-2 md:p-3 rounded-lg bg-slate-700/30">
+                <span className="text-xs md:text-base text-slate-300">Average Rate</span>
+                <span className="text-sm md:text-base text-green-400 font-bold">
                   {(0.5 * user.multiplier).toFixed(2)} CORD/min
                 </span>
               </div>
-              <div className="flex justify-between items-center p-3 rounded-lg bg-slate-700/30">
-                <span className="text-slate-300">Multiplier</span>
-                <span className="text-purple-400 font-bold">
+              <div className="flex justify-between items-center p-2 md:p-3 rounded-lg bg-slate-700/30">
+                <span className="text-xs md:text-base text-slate-300">Multiplier</span>
+                <span className="text-sm md:text-base text-purple-400 font-bold">
                   {user.multiplier}x
                 </span>
               </div>
-              <div className="flex justify-between items-center p-3 rounded-lg bg-slate-700/30">
-                <span className="text-slate-300">Account Age Bonus</span>
-                <span className="text-cyan-400 font-bold">
+              <div className="flex justify-between items-center p-2 md:p-3 rounded-lg bg-slate-700/30">
+                <span className="text-xs md:text-base text-slate-300">Account Age Bonus</span>
+                <span className="text-sm md:text-base text-cyan-400 font-bold">
                   {user.accountAge} years
                 </span>
               </div>
@@ -435,30 +435,30 @@ export const ModernNodeManager: React.FC<ModernNodeManagerProps> = ({
 
           {/* System Status */}
           <AnimatedCard
-            className="p-6 bg-gradient-to-br from-slate-800/30 to-slate-900/50 border-slate-700/30"
+            className="p-4 md:p-6 bg-gradient-to-br from-slate-800/30 to-slate-900/50 border-slate-700/30"
             delay={4}
           >
-            <div className="flex items-center mb-6">
-              <Settings className="w-6 h-6 text-orange-400 mr-3" />
-              <h3 className="text-xl font-bold text-white">System Status</h3>
+            <div className="flex items-center mb-4 md:mb-6">
+              <Settings className="w-5 h-5 md:w-6 md:h-6 text-orange-400 mr-2 md:mr-3" />
+              <h3 className="text-lg md:text-xl font-bold text-white">System Status</h3>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 rounded-lg bg-slate-700/30">
-                <span className="text-slate-300">Database</span>
-                <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+            <div className="space-y-3 md:space-y-4">
+              <div className="flex justify-between items-center p-2 md:p-3 rounded-lg bg-slate-700/30">
+                <span className="text-xs md:text-base text-slate-300">Database</span>
+                <Badge className="text-xs md:text-sm bg-green-500/20 text-green-400 border-green-500/30">
                   Connected
                 </Badge>
               </div>
-              <div className="flex justify-between items-center p-3 rounded-lg bg-slate-700/30">
-                <span className="text-slate-300">Anti-Cheat</span>
-                <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">
+              <div className="flex justify-between items-center p-2 md:p-3 rounded-lg bg-slate-700/30">
+                <span className="text-xs md:text-base text-slate-300">Anti-Cheat</span>
+                <Badge className="text-xs md:text-sm bg-blue-500/20 text-blue-400 border-blue-500/30">
                   Active
                 </Badge>
               </div>
-              <div className="flex justify-between items-center p-3 rounded-lg bg-slate-700/30">
-                <span className="text-slate-300">API Status</span>
-                <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+              <div className="flex justify-between items-center p-2 md:p-3 rounded-lg bg-slate-700/30">
+                <span className="text-xs md:text-base text-slate-300">API Status</span>
+                <Badge className="text-xs md:text-sm bg-green-500/20 text-green-400 border-green-500/30">
                   Online
                 </Badge>
               </div>

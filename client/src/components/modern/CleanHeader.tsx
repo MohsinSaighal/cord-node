@@ -103,9 +103,9 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({
             })}
 
             {/* Fixed Wallet Button */}
-             <div className="flex-shrink-0">
-  <WalletMultiButton />
-</div>
+            <div className="flex-shrink-0">
+              <WalletMultiButton />
+            </div>
           </nav>
 
           {/* User Profile & Mobile Menu */}
@@ -192,7 +192,9 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({
                   </button>
                 );
               })}
-
+              <div className="flex-shrink-0">
+                <WalletMultiButton />
+              </div>
               {/* Logout Button */}
               <button
                 onClick={onLogout}
