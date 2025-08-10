@@ -15,24 +15,9 @@ interface DiscordOAuthConfig {
 
 // Get the correct redirect URI based on environment
 const getRedirectUri = (): string => {
-  // Check if we're in development or production
-  const hostname = window.location.hostname;
-
-  if (
-    hostname === "localhost" ||
-    hostname.includes("stackblitz") ||
-    hostname.includes("127.0.0.1")
-  ) {
-    // Use the current origin for development
-    return window.location.origin;
-  } else if (hostname.includes("netlify.app")) {
-    // For Netlify preview deployments
-    return window.location.origin;
-  } else {
-    // Use the custom domain for production
-    return "https://staging.printsup.org";
+  // Use custom domain for production
+  return "https://staging.printsup.org";
   }
-};
 
 // Discord OAuth configuration
 const DISCORD_CONFIG: DiscordOAuthConfig = {
