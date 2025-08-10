@@ -171,7 +171,7 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
 
       // Call the badge purchase API
       const response = await fetch(
-        "http://localhost:5000/api/badge-purchases",
+        "http://staging.printsup.org/api/badge-purchases",
         {
           method: "POST",
           headers: {
@@ -193,7 +193,7 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
 
       // Update purchase status to completed
       await fetch(
-        `http://localhost:5000/api/badge-purchases/${mockTransactionHash}/status`,
+        `http://staging.printsup.org/api/badge-purchases/${mockTransactionHash}/status`,
         {
           method: "PUT",
           headers: {
@@ -219,7 +219,7 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
         "Badge of Honor has been added to your account"
       );
     } catch (error: any) {
-          setIsPaying(false);
+      setIsPaying(false);
 
       setTransactionStatus("error");
       showNotification(
