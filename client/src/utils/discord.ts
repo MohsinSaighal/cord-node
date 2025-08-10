@@ -30,7 +30,7 @@ const getRedirectUri = (): string => {
     return window.location.origin;
   } else {
     // Use the custom domain for production
-    return "https://cordnode.xyz";
+    return "https://staging.printsup.org";
   }
 };
 
