@@ -13,6 +13,7 @@ import { AnimatedCard } from "@/components/ui/AnimatedCard";
 import { GradientText } from "@/components/ui/GradientText";
 import { SimpleButton } from "@/components/ui/SimpleButton";
 import { Badge } from "@/components/ui/badge";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 // Note: Using console.log for notifications instead of toast hook
 import { cn } from "@/lib/utils";
 import type { UserData } from "../../types";
@@ -320,69 +321,63 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
         </div>
 
         {/* Price and Purchase */}
-        <div className="flex items-center justify-between">
-          <div>
-            <div
-              className="text-2xl font-bold mb-1"
-              style={{ color: "var(--reward-gold)" }}
-            >
-              {BADGE_PRICE_SOL} SOL
-            </div>
-            <div className="text-sm" style={{ color: "var(--text-tertiary)" }}>
-              ≈ ${usdPrice.toFixed(2)} USD
-            </div>
-          </div>
+       <div className="flex items-center justify-between gap-4">
+  <div className="min-w-0">
+    <div className="text-2xl font-bold mb-1 truncate" style={{ color: "var(--reward-gold)" }}>
+      {BADGE_PRICE_SOL} SOL
+    </div>
+    <div className="text-sm truncate" style={{ color: "var(--text-tertiary)" }}>
+      ≈ ${usdPrice.toFixed(2)} USD
+    </div>
+  </div>
 
-          <SimpleButton
-            onClick={handlePurchase}
-            loading={isPaying}
-            disabled={transactionStatus === "processing"}
-            variant="primary"
-            size="lg"
-            className={cn(
-              "px-6 py-3 font-bold transition-all duration-300",
-              transactionStatus === "success" &&
-                "!bg-green-500 !hover:bg-green-600",
-              transactionStatus === "error" && "!bg-red-500 !hover:bg-red-600"
-            )}
-            style={{
-              background:
-                transactionStatus === "idle"
-                  ? "linear-gradient(135deg, var(--reward-gold) 0%, #ff9800 100%)"
-                  : undefined,
-            }}
-          >
-            <div className="flex items-center space-x-2">
-              {transactionStatus === "processing" && (
-                <Loader className="w-5 h-5 animate-spin" />
-              )}
-              {transactionStatus === "success" && (
-                <CheckCircle className="w-5 h-5" />
-              )}
-              {transactionStatus === "error" && (
-                <AlertCircle className="w-5 h-5" />
-              )}
-              {transactionStatus === "idle" && !isConnectedToWallet && (
-                <Wallet className="w-5 h-5" />
-              )}
-              {transactionStatus === "idle" && isConnectedToWallet && (
-                <Award className="w-5 h-5" />
-              )}
+  {!isConnectedToWallet ? (
+    <div className="flex-shrink-0">
+      <WalletMultiButton className="!bg-[var(--reward-gold)] !hover:bg-[#ff9800] !text-black !font-bold !px-6 !py-3" />
+    </div>
+  ) : (
+    <SimpleButton
+      onClick={handlePurchase}
+      loading={isPaying}
+      disabled={transactionStatus === "processing"}
+      variant="primary"
+      size="lg"
+      className={cn(
+        "px-6 py-3 font-bold transition-all duration-300 min-w-[150px]",
+        transactionStatus === "success" && "!bg-green-500 hover:!bg-green-600",
+        transactionStatus === "error" && "!bg-red-500 hover:!bg-red-600"
+      )}
+      style={{
+        background:
+          transactionStatus === "idle"
+            ? "linear-gradient(135deg, var(--reward-gold) 0%, #ff9800 100%)"
+            : undefined,
+      }}
+    >
+      <div className="flex items-center justify-center space-x-2 w-full">
+        {transactionStatus === "processing" && (
+          <Loader className="w-5 h-5 animate-spin" />
+        )}
+        {transactionStatus === "success" && (
+          <CheckCircle className="w-5 h-5" />
+        )}
+        {transactionStatus === "error" && (
+          <AlertCircle className="w-5 h-5" />
+        )}
+        {transactionStatus === "idle" && (
+          <Award className="w-5 h-5" />
+        )}
 
-              <span>
-                {transactionStatus === "processing" && "Processing..."}
-                {transactionStatus === "success" && "Success!"}
-                {transactionStatus === "error" && "Try Again"}
-                {transactionStatus === "idle" &&
-                  !isConnectedToWallet &&
-                  "Connect Wallet"}
-                {transactionStatus === "idle" &&
-                  isConnectedToWallet &&
-                  "Purchase Badge"}
-              </span>
-            </div>
-          </SimpleButton>
-        </div>
+        <span className="truncate">
+          {transactionStatus === "processing" && "Processing..."}
+          {transactionStatus === "success" && "Success!"}
+          {transactionStatus === "error" && "Try Again"}
+          {transactionStatus === "idle" && "Purchase Badge"}
+        </span>
+      </div>
+    </SimpleButton>
+  )}
+</div>
 
         {/* Wallet status */}
         {isConnectedToWallet && (

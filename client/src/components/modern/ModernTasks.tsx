@@ -341,7 +341,7 @@ export const ModernTasks: React.FC<ModernTasksProps> = ({
         />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-8">
+      <div className="relative z-10 container mx-auto px-4 py-24">
         {/* Header */}
         <div className="text-center mb-12 animate-slide-up">
           <h1 className="text-6xl font-bold text-white mb-4">
