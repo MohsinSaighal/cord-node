@@ -226,7 +226,7 @@ export const ModernLeaderboard: React.FC<ModernLeaderboardProps> = ({ currentUse
         <div className="absolute top-1/2 left-3/4 w-36 sm:w-56 md:w-72 h-36 sm:h-56 md:h-72 bg-indigo-500/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '6s' }} />
       </div>
 
-      <div className="relative z-10 container mx-auto px-3 sm:px-4 py-6 sm:py-8">
+      <div className="relative z-10 container mx-auto px-3 sm:px-24 py-24 sm:py-24">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12 animate-slide-up">
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-3 sm:mb-4">
