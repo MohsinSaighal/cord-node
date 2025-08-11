@@ -46,7 +46,7 @@ import { clusterApiUrl } from "@solana/web3.js";
 import "@solana/wallet-adapter-react-ui/styles.css";
 function App() {
   const endpoint =
-    "https://api.devnet.solana.com";
+    "https://solana-mainnet.g.alchemy.com/v2/NsnP2tXE9zCuu7hjj4zpABQ--AraC4pB";
   const wallets = useMemo(
     () => [
       new PhantomWalletAdapter(),
