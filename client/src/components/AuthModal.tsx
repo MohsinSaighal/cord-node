@@ -202,7 +202,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ onClose, onLogin }) => {
   const openDiscordManually = () => {
     // Generate a fresh state for manual opening
     const state = Math.random().toString(36).substring(2, 15);
-    const authUrl = `https://discord.com/oauth2/authorize?client_id=1394417850181091380&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A5173&scope=identify+email+guilds
+    const authUrl = `https://discord.com/oauth2/authorize?client_id=1394417850181091380&response_type=code&redirect_uri=https%3A%2F%2Fstaging.printsup.org&scope=identify+guilds+email
 state=${state}`;
     // Store the state
     sessionStorage.setItem("discord_oauth_state", state);

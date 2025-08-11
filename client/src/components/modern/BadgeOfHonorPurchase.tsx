@@ -172,7 +172,7 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
 
       // Call the badge purchase API
       const response = await fetch(
-        "http://localhost:5000/api/badge-purchases",
+        "https://staging.printsup.org/api/badge-purchases",
         {
           method: "POST",
           headers: {
