@@ -14,7 +14,6 @@ import { GradientText } from "@/components/ui/GradientText";
 import { SimpleButton } from "@/components/ui/SimpleButton";
 import { Badge } from "@/components/ui/badge";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-// Note: Using console.log for notifications instead of toast hook
 import { cn } from "@/lib/utils";
 import type { UserData } from "../../types";
 import {
@@ -25,6 +24,7 @@ import {
   sendAndConfirmTransaction,
 } from "@solana/web3.js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import BadgeImage from  "../../assets/Badge.gif"; // Adjust the path as necessary
 interface BadgeOfHonorPurchaseProps {
   user: UserData;
   onUserUpdate: (user: UserData) => void;
@@ -41,24 +41,22 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
   onUserUpdate,
 }) => {
   const [isPaying, setIsPaying] = useState(false);
-  const [solPrice, setSolPrice] = useState<number>(50); // Default fallback
+  const [solPrice, setSolPrice] = useState<number>(50);
   const [isConnectedToWallet, setIsConnectedToWallet] = useState(false);
   const [transactionStatus, setTransactionStatus] = useState<
     "idle" | "processing" | "success" | "error"
   >("idle");
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
-  // Simple notification function
+
   const showNotification = (
     title: string,
     description: string,
     variant?: "destructive"
   ) => {
     console.log(`${title}: ${description}`);
-    // In a full implementation, you'd integrate with your notification system
   };
 
-  // Fetch SOL price
   useEffect(() => {
     const fetchSolPrice = async () => {
       try {
@@ -69,18 +67,15 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
         setSolPrice(data.solana.usd);
       } catch (error) {
         console.error("Failed to fetch SOL price:", error);
-        setSolPrice(50); // Fallback price
+        setSolPrice(50);
       }
     };
 
     fetchSolPrice();
-
-    // Update price every 5 minutes
     const interval = setInterval(fetchSolPrice, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
-  // Check wallet connection
   useEffect(() => {
     const checkWalletConnection = () => {
       if (typeof window !== "undefined" && "solana" in window) {
@@ -91,7 +86,6 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
 
     checkWalletConnection();
 
-    // Listen for wallet connection changes
     if (typeof window !== "undefined" && "solana" in window) {
       const solanaWallet = (window as any).solana;
       solanaWallet?.on?.("connect", () => setIsConnectedToWallet(true));
@@ -154,23 +148,11 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
     const signature = await sendTransaction(transferTransaction, connection);
     console.log("Transaction sent, signature:", signature);
     try {
-      // Simulate Solana transaction processing
-      // In a real implementation, this would interact with the Solana network
-
       const solanaWallet = (window as any).solana;
       if (!solanaWallet) {
         throw new Error("Wallet not available");
       }
 
-      // Create a mock transaction hash for demonstration
-      const mockTransactionHash = `badge_${Date.now()}_${Math.random()
-        .toString(36)
-        .substr(2, 9)}`;
-
-      // Simulate transaction processing delay
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-
-      // Call the badge purchase API
       const response = await fetch(
         "https://staging.printsup.org/api/badge-purchases",
         {
@@ -192,7 +174,6 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
         throw new Error("Failed to create badge purchase record");
       }
 
-      // Update user with badge
       const updatedUser = {
         ...user,
         hasBadgeOfHonor: true,
@@ -207,7 +188,6 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
       );
     } catch (error: any) {
       setIsPaying(false);
-
       setTransactionStatus("error");
       showNotification(
         "Purchase Failed",
@@ -220,11 +200,42 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
     }
   };
 
-  if (user.hasBadgeOfHonor) {
-    return null; // Don't show purchase option if user already has the badge
-  }
-
   const usdPrice = BADGE_PRICE_SOL * solPrice;
+  console.log("user",user)
+
+  if (user.hasBadgeOfHonor) {
+    return (
+      <AnimatedCard
+        className="p-6 border relative overflow-hidden"
+        style={{
+          background:
+            "linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%)",
+          borderColor: "var(--reward-gold)",
+        }}
+        delay={4}
+      >
+        <div className="flex flex-col items-center justify-center text-center">
+          <img
+            src={BadgeImage} 
+            alt="Badge of Honor" 
+            className="w-32 h-32 mb-4"
+          />
+          <h3 className="text-xl font-bold mb-2" style={{ color: "var(--reward-gold)" }}>
+            You Own the Badge of Honor!
+          </h3>
+          <p className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
+            Thank you for supporting our community. Enjoy your premium benefits!
+          </p>
+          <div className="flex items-center space-x-2">
+            <CheckCircle className="w-5 h-5 text-green-500" />
+            <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
+              Active Badge Holder
+            </span>
+          </div>
+        </div>
+      </AnimatedCard>
+    );
+  }
 
   return (
     <AnimatedCard
@@ -236,7 +247,6 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
       }}
       delay={4}
     >
-      {/* Decorative elements */}
       <div className="absolute top-0 right-0 w-32 h-32 opacity-10">
         <Crown
           className="w-full h-full"
@@ -282,7 +292,6 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
           </Badge>
         </div>
 
-        {/* Benefits */}
         <div className="mb-6 space-y-3">
           {[
             { icon: <Star className="w-4 h-4" />, text: "5% Mining Bonus" },
@@ -306,7 +315,6 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
           ))}
         </div>
 
-        {/* Price and Purchase */}
         <div className="flex items-center justify-between gap-4">
           <div className="min-w-0">
             <div
@@ -370,7 +378,6 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
           )}
         </div>
 
-        {/* Wallet status */}
         {isConnectedToWallet && (
           <div
             className="mt-4 p-3 rounded-lg"

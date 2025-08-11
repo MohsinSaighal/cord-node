@@ -476,9 +476,7 @@ export const ModernApp: React.FC<ModernAppProps> = ({ user, onUserUpdate }) => {
           {/* Sidebar */}
           <div className="space-y-8">
             {/* Badge of Honor Purchase */}
-            {!user.hasBadgeOfHonor && (
               <BadgeOfHonorPurchase user={user} onUserUpdate={onUserUpdate} />
-            )}
             
             {/* Quick Actions */}
             <AnimatedCard 
