@@ -172,7 +172,7 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
 
       // Call the badge purchase API
       const response = await fetch(
-        "http://staging.printsup.org/api/badge-purchases",
+        "http://localhost:5000/api/badge-purchases",
         {
           method: "POST",
           headers: {
@@ -181,7 +181,7 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
           body: JSON.stringify({
             userId: user.id,
             walletAddress: solanaWallet.publicKey?.toString() || "mock_address",
-            transactionHash: mockTransactionHash,
+            transactionHash: signature,
             amountSol: BADGE_PRICE_SOL,
             amountUsd: BADGE_PRICE_SOL * solPrice,
           }),
@@ -191,20 +191,6 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
       if (!response.ok) {
         throw new Error("Failed to create badge purchase record");
       }
-
-      // Update purchase status to completed
-      await fetch(
-        `http://staging.printsup.org/api/badge-purchases/${mockTransactionHash}/status`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            status: "completed",
-          }),
-        }
-      );
 
       // Update user with badge
       const updatedUser = {
@@ -321,63 +307,68 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
         </div>
 
         {/* Price and Purchase */}
-       <div className="flex items-center justify-between gap-4">
-  <div className="min-w-0">
-    <div className="text-2xl font-bold mb-1 truncate" style={{ color: "var(--reward-gold)" }}>
-      {BADGE_PRICE_SOL} SOL
-    </div>
-    <div className="text-sm truncate" style={{ color: "var(--text-tertiary)" }}>
-      ≈ ${usdPrice.toFixed(2)} USD
-    </div>
-  </div>
+        <div className="flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            <div
+              className="text-2xl font-bold mb-1 truncate"
+              style={{ color: "var(--reward-gold)" }}
+            >
+              {BADGE_PRICE_SOL} SOL
+            </div>
+            <div
+              className="text-sm truncate"
+              style={{ color: "var(--text-tertiary)" }}
+            >
+              ≈ ${usdPrice.toFixed(2)} USD
+            </div>
+          </div>
 
-  {!isConnectedToWallet ? (
-    <div className="flex-shrink-0">
-      <WalletMultiButton className="!bg-[var(--reward-gold)] !hover:bg-[#ff9800] !text-black !font-bold !px-6 !py-3" />
-    </div>
-  ) : (
-    <SimpleButton
-      onClick={handlePurchase}
-      loading={isPaying}
-      disabled={transactionStatus === "processing"}
-      variant="primary"
-      size="lg"
-      className={cn(
-        "px-6 py-3 font-bold transition-all duration-300 min-w-[150px]",
-        transactionStatus === "success" && "!bg-green-500 hover:!bg-green-600",
-        transactionStatus === "error" && "!bg-red-500 hover:!bg-red-600"
-      )}
-      style={{
-        background:
-          transactionStatus === "idle"
-            ? "linear-gradient(135deg, var(--reward-gold) 0%, #ff9800 100%)"
-            : undefined,
-      }}
-    >
-      <div className="flex items-center justify-center space-x-2 w-full">
-        {transactionStatus === "processing" && (
-          <Loader className="w-5 h-5 animate-spin" />
-        )}
-        {transactionStatus === "success" && (
-          <CheckCircle className="w-5 h-5" />
-        )}
-        {transactionStatus === "error" && (
-          <AlertCircle className="w-5 h-5" />
-        )}
-        {transactionStatus === "idle" && (
-          <Award className="w-5 h-5" />
-        )}
+          {!isConnectedToWallet ? (
+            <div className="flex-shrink-0">
+              <WalletMultiButton className="!bg-[var(--reward-gold)] !hover:bg-[#ff9800] !text-black !font-bold !px-6 !py-3" />
+            </div>
+          ) : (
+            <SimpleButton
+              onClick={handlePurchase}
+              loading={isPaying}
+              disabled={transactionStatus === "processing"}
+              variant="primary"
+              size="lg"
+              className={cn(
+                "px-6 py-3 font-bold transition-all duration-300 min-w-[150px]",
+                transactionStatus === "success" &&
+                  "!bg-green-500 hover:!bg-green-600",
+                transactionStatus === "error" && "!bg-red-500 hover:!bg-red-600"
+              )}
+              style={{
+                background:
+                  transactionStatus === "idle"
+                    ? "linear-gradient(135deg, var(--reward-gold) 0%, #ff9800 100%)"
+                    : undefined,
+              }}
+            >
+              <div className="flex items-center justify-center space-x-2 w-full">
+                {transactionStatus === "processing" && (
+                  <Loader className="w-5 h-5 animate-spin" />
+                )}
+                {transactionStatus === "success" && (
+                  <CheckCircle className="w-5 h-5" />
+                )}
+                {transactionStatus === "error" && (
+                  <AlertCircle className="w-5 h-5" />
+                )}
+                {transactionStatus === "idle" && <Award className="w-5 h-5" />}
 
-        <span className="truncate">
-          {transactionStatus === "processing" && "Processing..."}
-          {transactionStatus === "success" && "Success!"}
-          {transactionStatus === "error" && "Try Again"}
-          {transactionStatus === "idle" && "Purchase Badge"}
-        </span>
-      </div>
-    </SimpleButton>
-  )}
-</div>
+                <span className="truncate">
+                  {transactionStatus === "processing" && "Processing..."}
+                  {transactionStatus === "success" && "Success!"}
+                  {transactionStatus === "error" && "Try Again"}
+                  {transactionStatus === "idle" && "Purchase Badge"}
+                </span>
+              </div>
+            </SimpleButton>
+          )}
+        </div>
 
         {/* Wallet status */}
         {isConnectedToWallet && (

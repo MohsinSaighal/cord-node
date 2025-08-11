@@ -21,7 +21,7 @@ export class BadgePurchaseService {
   }): Promise<BadgePurchase> {
     // Check if transaction hash already exists
     const existingPurchase = await this.badgePurchaseRepository.findOne({
-      where: { transactionHash: data.transactionHash }
+      where: { transactionHash: data.transactionHash },
     });
 
     if (existingPurchase) {
@@ -34,18 +34,26 @@ export class BadgePurchaseService {
       transactionHash: data.transactionHash,
       amountSol: data.amountSol,
       amountUsd: data.amountUsd,
-      status: 'pending'
+      status: "completed",
     });
+    const user = await this.userRepository.findOne({
+      where: { id: badgePurchase.userId },
+    });
+    if (user) {
+      console.log("here")
+      user.hasBadgeOfHonor = true;
+      await this.userRepository.save(user);
+    }
 
     return await this.badgePurchaseRepository.save(badgePurchase);
   }
 
   async updatePurchaseStatus(
-    transactionHash: string, 
+    transactionHash: string,
     status: BadgePurchaseStatus
   ): Promise<BadgePurchase | null> {
     const purchase = await this.badgePurchaseRepository.findOne({
-      where: { transactionHash }
+      where: { transactionHash },
     });
 
     if (!purchase) {
@@ -55,9 +63,9 @@ export class BadgePurchaseService {
     purchase.status = status;
 
     // If completed, update user's badge status
-    if (status === 'completed') {
+    if (status === "completed") {
       const user = await this.userRepository.findOne({
-        where: { id: purchase.userId }
+        where: { id: purchase.userId },
       });
 
       if (user) {
@@ -72,14 +80,16 @@ export class BadgePurchaseService {
   async getUserPurchases(userId: string): Promise<BadgePurchase[]> {
     return await this.badgePurchaseRepository.find({
       where: { userId },
-      order: { purchaseDate: "DESC" }
+      order: { purchaseDate: "DESC" },
     });
   }
 
-  async getPurchaseByTransaction(transactionHash: string): Promise<BadgePurchase | null> {
+  async getPurchaseByTransaction(
+    transactionHash: string
+  ): Promise<BadgePurchase | null> {
     return await this.badgePurchaseRepository.findOne({
       where: { transactionHash },
-      relations: ["user"]
+      relations: ["user"],
     });
   }
 
@@ -87,7 +97,7 @@ export class BadgePurchaseService {
     return await this.badgePurchaseRepository.find({
       relations: ["user"],
       order: { purchaseDate: "DESC" },
-      take: limit
+      take: limit,
     });
   }
 }
