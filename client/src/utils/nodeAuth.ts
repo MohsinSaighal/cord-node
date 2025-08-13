@@ -211,10 +211,7 @@ export const handleOAuthCallback = async (
       hasBadgeOfHonor: user.hasBadgeOfHonor,
     };
 
-    // Clear stored referral code after successful use
-    if (referralCode) {
-      clearStoredReferralCode();
-    }
+ 
 
     storeUserSession(userData);
     return userData;

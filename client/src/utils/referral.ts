@@ -40,26 +40,10 @@ export const storeReferralCode = (code: string): void => {
 };
 
 // Get stored referral code
-export const getStoredReferralCode = (): string | null => {
-  // Check if referral is expired (older than 24 hours)
-  const timestamp = localStorage.getItem('referralTimestamp');
-  if (timestamp) {
-    const age = Date.now() - parseInt(timestamp);
-    if (age > 24 * 60 * 60 * 1000) { // 24 hours
-      clearStoredReferralCode();
-      return null;
-    }
-  }
-
-  const code = sessionStorage.getItem('pendingReferral') || localStorage.getItem('pendingReferral');
-  console.log('Retrieved stored referral code:', code);
-  return code;
+export const getStoredReferralCode = () => {
+  return localStorage.getItem('pendingReferral');
 };
-
 // Clear stored referral code
-export const clearStoredReferralCode = (): void => {
-  console.log('Clearing stored referral code');
-  sessionStorage.removeItem('pendingReferral');
+export const clearStoredReferralCode = () => {
   localStorage.removeItem('pendingReferral');
-  localStorage.removeItem('referralTimestamp');
 };

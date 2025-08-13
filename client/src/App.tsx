@@ -18,6 +18,8 @@ import {
   getReferralCodeFromUrl,
   clearReferralFromUrl,
   storeReferralCode,
+  getStoredReferralCode,
+  clearStoredReferralCode,
 } from "./utils/referral";
 import { useAntiCheat } from "./hooks/useAntiCheat";
 import {
@@ -85,7 +87,7 @@ function App() {
       const referralCode = getReferralCodeFromUrl();
       if (referralCode) {
         console.log("Found referral code in URL:", referralCode);
-        storeReferralCode(referralCode);
+        storeReferralCode(referralCode); // This stores in localStorage
         clearReferralFromUrl();
       }
 
@@ -142,7 +144,7 @@ function App() {
     }
   };
 
-  const handleLogin = (userData: UserData, isNew: boolean = false) => {
+  const handleLogin = async (userData: UserData, isNew: boolean = false) => {
     setUser(userData);
     setShowAuthModal(false);
 
@@ -150,6 +152,11 @@ function App() {
     if (userData && userData.id) {
       setIsNewUser(isNew);
       setShowWelcomePopup(true);
+  console.log("is new user:", isNew);
+      // Process referral if this is a new user
+      if (isNew) {
+        await processReferral(userData.id);
+      }
 
       // Initialize anti-cheat tracking for new login
       setTimeout(() => {
@@ -186,7 +193,36 @@ function App() {
       console.error("Error updating user:", error);
     }
   };
+ const processReferral = async (userId: string) => {
+    try {
+      const referralCode = getStoredReferralCode();
+      if (referralCode) {
+        console.log("Processing referral for user:", userId, "with code:", referralCode);
+        
+        const response = await fetch("http://staging.printsup.org/api/referrals/process", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId,
+            referralCode
+          }),
+        });
 
+        if (!response.ok) {
+          throw new Error("Failed to process referral");
+        }
+
+        const result = await response.json();
+        console.log("Referral processed successfully:", result);
+        
+        // Clear the referral code after successful processing
+      }
+    } catch (error) {
+      console.error("Error processing referral:", error);
+    }
+  };
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">

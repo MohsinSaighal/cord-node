@@ -10,9 +10,7 @@ import {
   Zap,
 } from "lucide-react";
 import { AnimatedCard } from "@/components/ui/AnimatedCard";
-import { GradientText } from "@/components/ui/GradientText";
 import { SimpleButton } from "@/components/ui/SimpleButton";
-import { Badge } from "@/components/ui/badge";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { cn } from "@/lib/utils";
 import type { UserData } from "../../types";
@@ -24,7 +22,8 @@ import {
   sendAndConfirmTransaction,
 } from "@solana/web3.js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import BadgeImage from  "../../assets/Badge.gif"; // Adjust the path as necessary
+import BadgeImage from "../../assets/Badge.gif";
+
 interface BadgeOfHonorPurchaseProps {
   user: UserData;
   onUserUpdate: (user: UserData) => void;
@@ -201,203 +200,127 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
   };
 
   const usdPrice = BADGE_PRICE_SOL * solPrice;
-  console.log("user",user)
 
   if (user.hasBadgeOfHonor) {
     return (
-      <AnimatedCard
-        className="p-6 border relative overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%)",
-          borderColor: "var(--reward-gold)",
-        }}
-        delay={4}
-      >
+      <div className="bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6">
         <div className="flex flex-col items-center justify-center text-center">
           <img
-            src={BadgeImage} 
-            alt="Badge of Honor" 
-            className="w-32 h-32 mb-4"
+            src={BadgeImage}
+            alt="Badge of Honor"
+            className="w-32 h-32 mb-4 rounded-full"
           />
-          <h3 className="text-xl font-bold mb-2" style={{ color: "var(--reward-gold)" }}>
+          <h3 className="text-xl font-bold text-white mb-2">
             You Own the Badge of Honor!
           </h3>
-          <p className="text-sm mb-4" style={{ color: "var(--text-secondary)" }}>
+          <p className="text-sm text-slate-400 mb-4">
             Thank you for supporting our community. Enjoy your premium benefits!
           </p>
-          <div className="flex items-center space-x-2">
-            <CheckCircle className="w-5 h-5 text-green-500" />
-            <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
-              Active Badge Holder
-            </span>
+          <div className="flex items-center space-x-2 bg-slate-700/30 px-4 py-2 rounded-lg">
+            <CheckCircle className="w-5 h-5 text-emerald-400" />
+            <span className="text-sm text-slate-300">Active Badge Holder</span>
           </div>
         </div>
-      </AnimatedCard>
+      </div>
     );
   }
 
   return (
-    <AnimatedCard
-      className="p-6 border relative overflow-hidden"
-      style={{
-        background:
-          "linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%)",
-        borderColor: "var(--reward-gold)",
-      }}
-      delay={4}
-    >
-      <div className="absolute top-0 right-0 w-32 h-32 opacity-10">
-        <Crown
-          className="w-full h-full"
-          style={{ color: "var(--reward-gold)" }}
-        />
+    <div className="bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-600 flex items-center justify-center">
+            <Award className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <div className="font-semibold text-lg text-white">Badge Of Honor</div>
+            <div className="text-sm text-slate-400">
+              Unlock premium benefits and stand out from the crowd.
+            </div>
+          </div>
+        </div>
+        <div className="px-3 py-1 bg-purple-500/20 text-purple-400 text-sm font-medium rounded-full border border-purple-500/30">
+          Premium
+        </div>
       </div>
 
-      <div className="relative z-10">
-        <div className="flex items-start justify-between mb-6">
-          <div className="flex items-center space-x-3">
-            <div
-              className="p-3 rounded-xl"
-              style={{ backgroundColor: "rgba(255, 193, 7, 0.1)" }}
-            >
-              <Award
-                className="w-8 h-8"
-                style={{ color: "var(--reward-gold)" }}
-              />
-            </div>
-
-            <div>
-              <h3
-                className="text-xl font-bold mb-1"
-                style={{ color: "var(--text-primary)" }}
-              >
-                Badge of Honor
-              </h3>
-              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                Unlock premium benefits and stand out from the crowd
-              </p>
-            </div>
-          </div>
-
-          <Badge
-            className="px-3 py-1 text-xs font-bold border"
-            style={{
-              borderColor: "var(--reward-gold)",
-              color: "var(--reward-gold)",
-              backgroundColor: "rgba(255, 193, 7, 0.1)",
-            }}
-          >
-            PREMIUM
-          </Badge>
-        </div>
-
-        <div className="mb-6 space-y-3">
-          {[
-            { icon: <Star className="w-4 h-4" />, text: "5% Mining Bonus" },
-            { icon: <Zap className="w-4 h-4" />, text: "Priority Support" },
-            {
-              icon: <Crown className="w-4 h-4" />,
-              text: "Exclusive Badge Display",
-            },
-          ].map((benefit, index) => (
-            <div key={index} className="flex items-center space-x-3">
-              <div style={{ color: "var(--brand-secondary)" }}>
-                {benefit.icon}
+      <div className="bg-slate-700/20 rounded-xl p-4 border border-slate-600/30 mb-6">
+        <div className="space-y-4">
+          <div className="text-lg font-semibold mb-3 text-white">Advantages</div>
+          <div className="space-y-3">
+            <div className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/50">
+              <div className="flex items-center space-x-3">
+                <Star className="w-4 h-4 text-yellow-400" />
+                <span className="text-sm text-slate-300">5% Mining Bonus</span>
               </div>
-              <span
-                className="text-sm"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                {benefit.text}
-              </span>
             </div>
-          ))}
-        </div>
-
-        <div className="flex items-center justify-between gap-4">
-          <div className="min-w-0">
-            <div
-              className="text-2xl font-bold mb-1 truncate"
-              style={{ color: "var(--reward-gold)" }}
-            >
-              {BADGE_PRICE_SOL} SOL
+            <div className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/50">
+              <div className="flex items-center space-x-3">
+                <Zap className="w-4 h-4 text-yellow-400" />
+                <span className="text-sm text-slate-300">Priority Support</span>
+              </div>
             </div>
-            <div
-              className="text-sm truncate"
-              style={{ color: "var(--text-tertiary)" }}
-            >
-              ≈ ${usdPrice.toFixed(2)} USD
+            <div className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/50">
+              <div className="flex items-center space-x-3">
+                <Crown className="w-4 h-4 text-yellow-400" />
+                <span className="text-sm text-slate-300">Exclusive Badge Display</span>
+              </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          {!isConnectedToWallet ? (
-            <div className="flex-shrink-0">
-              <WalletMultiButton className="!bg-[var(--reward-gold)] !hover:bg-[#ff9800] !text-black !font-bold !px-6 !py-3" />
-            </div>
-          ) : (
-            <SimpleButton
-              onClick={handlePurchase}
-              loading={isPaying}
-              disabled={transactionStatus === "processing"}
-              variant="primary"
-              size="lg"
-              className={cn(
-                "px-6 py-3 font-bold transition-all duration-300 min-w-[150px]",
-                transactionStatus === "success" &&
-                  "!bg-green-500 hover:!bg-green-600",
-                transactionStatus === "error" && "!bg-red-500 hover:!bg-red-600"
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <div className="text-2xl font-bold mb-1 text-white">{BADGE_PRICE_SOL} SOL</div>
+          <div className="text-sm text-slate-400">≈ ${usdPrice.toFixed(2)} USD</div>
+        </div>
+        
+        {!isConnectedToWallet ? (
+          <WalletMultiButton className="!bg-gradient-to-r !from-cyan-500 !to-blue-600 hover:!from-cyan-600 hover:!to-blue-700 !text-white !font-semibold !rounded-xl" />
+        ) : (
+          <button
+            onClick={handlePurchase}
+            disabled={isPaying || transactionStatus === "processing"}
+            className={cn(
+              "px-6 py-2 font-semibold rounded-xl transition-all duration-300",
+              transactionStatus === "success" && "!bg-emerald-500 hover:!bg-emerald-600",
+              transactionStatus === "error" && "!bg-red-500 hover:!bg-red-600",
+              transactionStatus === "idle" && "bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600"
+            )}
+          >
+            <div className="flex items-center justify-center space-x-2">
+              {transactionStatus === "processing" && (
+                <Loader className="w-5 h-5 animate-spin" />
               )}
-              style={{
-                background:
-                  transactionStatus === "idle"
-                    ? "linear-gradient(135deg, var(--reward-gold) 0%, #ff9800 100%)"
-                    : undefined,
-              }}
-            >
-              <div className="flex items-center justify-center space-x-2 w-full">
-                {transactionStatus === "processing" && (
-                  <Loader className="w-5 h-5 animate-spin" />
-                )}
-                {transactionStatus === "success" && (
-                  <CheckCircle className="w-5 h-5" />
-                )}
-                {transactionStatus === "error" && (
-                  <AlertCircle className="w-5 h-5" />
-                )}
-                {transactionStatus === "idle" && <Award className="w-5 h-5" />}
-
-                <span className="truncate">
-                  {transactionStatus === "processing" && "Processing..."}
-                  {transactionStatus === "success" && "Success!"}
-                  {transactionStatus === "error" && "Try Again"}
-                  {transactionStatus === "idle" && "Purchase Badge"}
-                </span>
-              </div>
-            </SimpleButton>
-          )}
-        </div>
-
-        {isConnectedToWallet && (
-          <div
-            className="mt-4 p-3 rounded-lg"
-            style={{ backgroundColor: "var(--bg-tertiary)" }}
-          >
-            <div className="flex items-center space-x-2">
-              <CheckCircle
-                className="w-4 h-4"
-                style={{ color: "var(--brand-secondary)" }}
-              />
-              <span
-                className="text-sm"
-                style={{ color: "var(--text-secondary)" }}
-              >
-                Wallet connected and ready
+              {transactionStatus === "success" && (
+                <CheckCircle className="w-5 h-5" />
+              )}
+              {transactionStatus === "error" && (
+                <AlertCircle className="w-5 h-5" />
+              )}
+              {transactionStatus === "idle" && <Award className="w-5 h-5" />}
+              <span>
+                {transactionStatus === "processing" && "Processing..."}
+                {transactionStatus === "success" && "Success!"}
+                {transactionStatus === "error" && "Try Again"}
+                {transactionStatus === "idle" && "Purchase Badge"}
               </span>
             </div>
-          </div>
+          </button>
         )}
       </div>
-    </AnimatedCard>
+
+      {isConnectedToWallet && (
+        <div className="mt-4 p-3 rounded-lg bg-slate-700/30 border border-slate-600/50">
+          <div className="flex items-center space-x-2">
+            <CheckCircle className="w-4 h-4 text-emerald-400" />
+            <span className="text-sm text-slate-300">
+              Wallet connected and ready
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };

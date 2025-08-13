@@ -380,36 +380,6 @@ export const handleOAuthCallback = async (
       );
     }
 
-    // Clear stored referral code after successful use
-    if (referralCode) {
-      clearStoredReferralCode();
-    }
-
-    // Create a Supabase auth session using anonymous auth with metadata
-    try {
-      console.log("Creating Supabase auth session...");
-      const { data: authData, error: authError } =
-        await supabase.auth.signInAnonymously({
-          options: {
-            data: {
-              discord_id: discordUser.id,
-              username: discordUser.username,
-            },
-          },
-        });
-
-      if (authError) {
-        console.error("Auth error:", authError);
-        // Continue anyway, we have the user data and local session
-      } else if (authData) {
-        console.log("Supabase auth session created successfully");
-      } else {
-        console.log("Supabase auth session created but no data returned");
-      }
-    } catch (authError) {
-      console.error("Error creating auth session:", authError);
-      // Continue anyway, we have the user data and local session
-    }
 
     return userData;
   } catch (error) {

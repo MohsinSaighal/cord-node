@@ -34,56 +34,56 @@ export class UserRepository {
     return await this.repository.save(user);
   }
 
- async update(id: string, userData: Partial<User>): Promise<User | null> {
+  async update(id: string, userData: Partial<User>): Promise<User | null> {
     // 1. Define all non-relation fields from your entity
     const updatableFields = [
-        'username',
-        'discriminator',
-        'avatar',
-        'accountAge',
-        'joinDate',
-        'multiplier',
-        'compensationClaimed',
-        'hasBadgeOfHonor',
-        'totalEarned',
-        'currentBalance',
-        'isNodeActive',
-        'tasksCompleted',
-        'rank',
-        'nodeStartTime',
-        'lastLoginTime',
-        'dailyCheckInClaimed',
-        'weeklyEarnings',
-        'monthlyEarnings',
-        'referralCode',
-        'referredBy',
-        'referralEarnings',
-        'totalReferrals',
-        'currentEpochId',
-        'epochJoinDate',
-        'totalEpochEarnings',
-        'lastSavedBalance'
+      "username",
+      "discriminator",
+      "avatar",
+      "accountAge",
+      "joinDate",
+      "multiplier",
+      "compensationClaimed",
+      "hasBadgeOfHonor",
+      "totalEarned",
+      "currentBalance",
+      "isNodeActive",
+      "tasksCompleted",
+      "rank",
+      "nodeStartTime",
+      "lastLoginTime",
+      "dailyCheckInClaimed",
+      "weeklyEarnings",
+      "monthlyEarnings",
+      "referralCode",
+      "referredBy",
+      "referralEarnings",
+      "totalReferrals",
+      "currentEpochId",
+      "epochJoinDate",
+      "totalEpochEarnings",
+      "lastSavedBalance",
     ];
 
     // 2. Create filtered update data
     const filteredData: Partial<User> = {};
-    Object.keys(userData).forEach(key => {
-        if (updatableFields.includes(key)) {
-            filteredData[key] = userData[key];
-        }
+    Object.keys(userData).forEach((key) => {
+      if (updatableFields.includes(key)) {
+        filteredData[key] = userData[key];
+      }
     });
 
     // 3. Perform update using query builder for maximum safety
     await this.repository
-        .createQueryBuilder()
-        .update(User)
-        .set(filteredData)
-        .where('id = :id', { id })
-        .execute();
+      .createQueryBuilder()
+      .update(User)
+      .set(filteredData)
+      .where("id = :id", { id })
+      .execute();
 
     // 4. Return the updated user without problematic relations
     return this.repository.findOne({ where: { id } });
-}
+  }
 
   async delete(id: string): Promise<boolean> {
     const result = await this.repository.delete(id);
