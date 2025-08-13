@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 
-import { ModernApp } from "./components/modern/ModernApp";
+import { NewDashboard } from "./components/modern/NewDashboard";
 import { ModernNodeManager } from "./components/modern/ModernNodeManager";
 import { ModernTasks } from "./components/modern/ModernTasks";
 import { ModernLeaderboard } from "./components/modern/ModernLeaderboard";
@@ -332,7 +332,7 @@ function App() {
 
     switch (currentTab) {
       case "dashboard":
-        return <ModernApp user={user} onUserUpdate={handleUserUpdate} />;
+        return <NewDashboard user={user} onUserUpdate={handleUserUpdate} />;
       case "node":
         return (
           <ModernNodeManager user={user} onUserUpdate={handleUserUpdate} />
@@ -354,7 +354,7 @@ function App() {
           />
         );
       default:
-        return <ModernApp user={user} onUserUpdate={handleUserUpdate} />;
+        return <NewDashboard user={user} onUserUpdate={handleUserUpdate} />;
     }
   };
 
