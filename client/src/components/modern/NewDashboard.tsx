@@ -185,7 +185,7 @@ export const NewDashboard: React.FC<NewDashboardProps> = ({
 
       setReferralStatus("loading");
       try {
-        const response = await fetch("http://staging.printsup.org/api/referrals/process", {
+        const response = await fetch("https://staging.printsup.org/api/referrals/process", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId: user.id, referralCode: referralCode.trim() }),
