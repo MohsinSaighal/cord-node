@@ -12,50 +12,34 @@ export class ReferralService {
     this.referralDataRepository = AppDataSource.getRepository(ReferralData);
   }
 
-  async processNewUserReferral(newUserId: string, referralCode: string): Promise<{
-    success: boolean;
-    referrerBonus?: number;
-    referredBonus?: number;
-    error?: string;
-    statusCode?: string;
-    httpStatus: number;
-  }> {
+  async processNewUserReferral(newUserId: string, referralCode: string) {
     try {
-      // First check if user has already used a referral code
       const newUser = await this.userRepository.findOne({
         where: { id: newUserId }
       });
 
       if (!newUser) {
-        return {
-          success: false,
-          error: "New user not found",
-          statusCode: "USER_NOT_FOUND",
-          httpStatus: 404
+        throw {
+          statusCode: 404,
+          message: "New user not found"
         };
       }
 
-      // Check if user already has a referrer
       if (newUser.referredBy) {
-        return {
-          success: false,
-          error: "You have already used a referral code",
-          statusCode: "REFERRAL_ALREADY_USED",
-          httpStatus: 400
+        throw {
+          statusCode: 400,
+          message: "You have already used a referral code"
         };
       }
 
-      // Find the referrer by referral code
       const referrer = await this.userRepository.findOne({
         where: { referralCode }
       });
 
       if (!referrer) {
-        return {
-          success: false,
-          error: "Invalid referral code",
-          statusCode: "INVALID_REFERRAL_CODE",
-          httpStatus: 400
+        throw {
+          statusCode: 400,
+          message: "Invalid referral code"
         };
       }
 
@@ -89,18 +73,18 @@ export class ReferralService {
       return {
         success: true,
         referrerBonus,
-        referredBonus: newUserWelcomeBonus,
-        statusCode: "SUCCESS",
-        httpStatus: 200
+        referredBonus: newUserWelcomeBonus
       };
 
-    } catch (error) {
-      console.error('Error processing referral:', error);
-      return {
-        success: false,
-        error: "Failed to process referral",
-        statusCode: "PROCESSING_ERROR",
-        httpStatus: 500
+    } catch (error:any) {
+      // Rethrow our custom errors
+      if (error.statusCode) {
+        throw error;
+      }
+      // Handle unexpected errors
+      throw {
+        statusCode: 500,
+        message: "Failed to process referral"
       };
     }
   }
