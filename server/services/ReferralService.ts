@@ -19,6 +19,26 @@ export class ReferralService {
     error?: string;
   }> {
     try {
+      // First check if user has already used a referral code
+      const newUser = await this.userRepository.findOne({
+        where: { id: newUserId }
+      });
+
+      if (!newUser) {
+        return {
+          success: false,
+          error: "New user not found"
+        };
+      }
+
+      // Check if user already has a referrer
+      if (newUser.referredBy) {
+        return {
+          success: false,
+          error: "You have already used a referral code"
+        };
+      }
+
       // Find the referrer by referral code
       const referrer = await this.userRepository.findOne({
         where: { referralCode }
@@ -31,21 +51,9 @@ export class ReferralService {
         };
       }
 
-      // Get the new user
-      const newUser = await this.userRepository.findOne({
-        where: { id: newUserId }
-      });
-
-      if (!newUser) {
-        return {
-          success: false,
-          error: "New user not found"
-        };
-      }
-
       // Calculate bonuses
-      const newUserWelcomeBonus = Math.floor(newUser.accountAge * 25 * newUser.multiplier * 2); // 2x welcome bonus
-      const referrerBonus = Math.floor(newUserWelcomeBonus * 0.1); // 10% to referrer
+      const newUserWelcomeBonus = Math.floor(newUser.accountAge * 25 * newUser.multiplier * 2);
+      const referrerBonus = Math.floor(newUserWelcomeBonus * 0.1);
 
       // Update referrer stats and balance
       referrer.currentBalance += referrerBonus;

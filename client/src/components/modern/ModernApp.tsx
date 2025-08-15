@@ -382,7 +382,9 @@ export const ModernApp: React.FC<ModernAppProps> = ({ user, onUserUpdate }) => {
     totalMined: 125000,
     userRank: user.rank || 0
   });
+ 
 
+  console.log("user",user)
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);

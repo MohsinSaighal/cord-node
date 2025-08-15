@@ -288,7 +288,7 @@ export const NewDashboard: React.FC<NewDashboardProps> = ({
               <QuickStatsItem
                 icon={Shield}
                 label="Badge Status"
-                value="No"
+                value={`${user.hasBadgeOfHonor ? 'Honor' : 'None'}`}
                 iconColor="text-slate-400"
               />
             </div>
