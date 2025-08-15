@@ -17,6 +17,8 @@ export class ReferralService {
     referrerBonus?: number;
     referredBonus?: number;
     error?: string;
+    statusCode?: string;
+    httpStatus: number;
   }> {
     try {
       // First check if user has already used a referral code
@@ -27,7 +29,9 @@ export class ReferralService {
       if (!newUser) {
         return {
           success: false,
-          error: "New user not found"
+          error: "New user not found",
+          statusCode: "USER_NOT_FOUND",
+          httpStatus: 404
         };
       }
 
@@ -35,7 +39,9 @@ export class ReferralService {
       if (newUser.referredBy) {
         return {
           success: false,
-          error: "You have already used a referral code"
+          error: "You have already used a referral code",
+          statusCode: "REFERRAL_ALREADY_USED",
+          httpStatus: 400
         };
       }
 
@@ -47,7 +53,9 @@ export class ReferralService {
       if (!referrer) {
         return {
           success: false,
-          error: "Invalid referral code"
+          error: "Invalid referral code",
+          statusCode: "INVALID_REFERRAL_CODE",
+          httpStatus: 400
         };
       }
 
@@ -81,14 +89,18 @@ export class ReferralService {
       return {
         success: true,
         referrerBonus,
-        referredBonus: newUserWelcomeBonus
+        referredBonus: newUserWelcomeBonus,
+        statusCode: "SUCCESS",
+        httpStatus: 200
       };
 
     } catch (error) {
       console.error('Error processing referral:', error);
       return {
         success: false,
-        error: "Failed to process referral"
+        error: "Failed to process referral",
+        statusCode: "PROCESSING_ERROR",
+        httpStatus: 500
       };
     }
   }
