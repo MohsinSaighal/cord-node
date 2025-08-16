@@ -206,7 +206,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
   console.log("hasVerifiedPurchase", hasVerifiedPurchase);
   useEffect(() => {
     const interval = setInterval(() => {
-      if (user.isNodeActive && user.nodeStartTime) {
+      if (user.is_node_active && user.nodeStartTime) {
         const miningRate = calculateMiningRate(user, antiCheatStatus);
         const earningsPerSecond = miningRate / 60;
 
@@ -275,7 +275,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
 
     return () => clearInterval(interval);
   }, [
-    user.isNodeActive,
+    user.is_node_active,
     user.nodeStartTime,
     user.multiplier,
     current_balance,
@@ -303,12 +303,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
     },
     {
       title: "CORD per Second",
-      value: user.isNodeActive
+      value: user.is_node_active
         ? `${cordPerSecond.toFixed(4)} CORD/s`
         : "0.0000 CORD/s",
       icon: Zap,
       color: "from-yellow-400 to-yellow-600",
-      change: user.isNodeActive
+      change: user.is_node_active
         ? antiCheatStatus && antiCheatStatus.penaltyLevel > 0
           ? `${(antiCheatStatus.efficiencyMultiplier * 100).toFixed(
               0
@@ -328,7 +328,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
       value: `${stats.efficiency.toFixed(1)}%`,
       icon: Activity,
       color: "from-cyan-400 to-cyan-600",
-      change: user.isNodeActive ? "Active" : "Inactive",
+      change: user.is_node_active ? "Active" : "Inactive",
     },
   ];
 
@@ -357,7 +357,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
   const getEarningsChartBars = () => {
     if (earningsHistory.values.length < 2) {
       return Array.from({ length: 20 }, (_, i) => {
-        const height = user.isNodeActive
+        const height = user.is_node_active
           ? Math.max(
               30,
               Math.min(100, 50 + Math.sin(i * 0.5) * 30 + Math.random() * 20)
@@ -544,7 +544,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
           <p className="text-gray-400 mt-2 text-sm sm:text-base">
             Total Earned: {Math.floor(total_earned).toLocaleString()} CORD
           </p>
-          {user.isNodeActive && (
+          {user.is_node_active && (
             <div className="mt-3 flex items-center justify-center space-x-2 text-sm text-green-400">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               <span>Live earnings: +{cordPerSecond.toFixed(4)} CORD/s</span>
@@ -565,7 +565,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
                 Current Rate
               </span>
               <span className="text-white font-semibold text-sm sm:text-base">
-                {user.isNodeActive
+                {user.is_node_active
                   ? `${cordPerSecond.toFixed(4)} CORD/s`
                   : "0 CORD/s"}
               </span>
@@ -575,7 +575,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
                 <div
                   key={i}
                   className={`flex-1 rounded-t transition-all duration-500 ${
-                    user.isNodeActive
+                    user.is_node_active
                       ? "bg-gradient-to-t from-cyan-500 to-purple-600"
                       : "bg-gradient-to-t from-gray-600 to-gray-500 opacity-50"
                   }`}
@@ -585,7 +585,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
             </div>
             <div className="mt-4 text-center">
               <span className="text-gray-400 text-xs sm:text-sm">
-                {user.isNodeActive
+                {user.is_node_active
                   ? "Real-time earnings data"
                   : "Node inactive - start mining to see live data"}
               </span>
@@ -679,12 +679,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
         <div className="space-y-3">
           {[
             {
-              action: user.isNodeActive
+              action: user.is_node_active
                 ? "Node is currently mining CORD"
                 : "Node stopped mining",
               time: "2 minutes ago",
-              type: user.isNodeActive ? "success" : "warning",
-              amount: user.isNodeActive
+              type: user.is_node_active ? "success" : "warning",
+              amount: user.is_node_active
                 ? `+${(sessionEarnings * 0.1).toFixed(2)} CORD`
                 : null,
             },

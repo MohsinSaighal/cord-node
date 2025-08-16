@@ -12,7 +12,7 @@ export const logoutWithSave = async (
     console.log('Starting logout with balance save...');
     
     // Save any pending mining progress if user is actively mining
-    if (forceSaveMiningProgress && currentUser.isNodeActive) {
+    if (forceSaveMiningProgress && currentUser.is_node_active) {
       console.log('Saving mining progress before logout...');
       await forceSaveMiningProgress();
       

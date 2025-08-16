@@ -64,8 +64,6 @@ export class User {
   @Column({ type: "boolean", default: false })
   daily_checkin_claimed!: boolean;
 
-  @Column({ type: "boolean", default: false, nullable: true })
-  isNodeActive!: boolean;
 
   @Column({ type: "numeric", precision: 15, scale: 2, default: 0 })
   weekly_earnings!: number;

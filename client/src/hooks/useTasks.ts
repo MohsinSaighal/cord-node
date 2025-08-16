@@ -91,7 +91,7 @@ export const useTasks = (user: UserData, onUserUpdate: (user: UserData) => void)
   const calculateTaskProgress = (taskId: string, dbProgress: number, user: UserData): number => {
     switch (taskId) {
       case 'mine-1-hour':
-        if (user.nodeStartTime && user.isNodeActive) {
+        if (user.nodeStartTime && user.is_node_active) {
           return Math.min(3600, Math.floor((Date.now() - user.nodeStartTime) / 1000));
         }
         return dbProgress;

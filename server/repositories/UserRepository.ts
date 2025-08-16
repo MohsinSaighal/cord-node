@@ -47,7 +47,7 @@ export class UserRepository {
       "hasbadgeofhonor",
       "total_earned",
       "current_balance",
-      "isNodeActive",
+      "is_node_active",
       "tasksCompleted",
       "rank",
       "nodeStartTime",

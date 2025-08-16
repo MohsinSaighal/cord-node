@@ -83,7 +83,7 @@ export const isNewDay = (last_login_time: number): boolean => {
 
 // Restored calculateOfflineEarnings function
 export const calculateOfflineEarnings = (user: UserData, offlineTime: number): number => {
-  if (!user.isNodeActive || offlineTime < 60000) return 0; // Must be offline for at least 1 minute
+  if (!user.is_node_active || offlineTime < 60000) return 0; // Must be offline for at least 1 minute
   
   const offlineMinutes = Math.min(offlineTime / 60000, 480); // Max 8 hours of offline earnings
   const miningRate = calculateMiningRate(user);
@@ -105,7 +105,7 @@ export const calculateInitialBalance = (account_age: number, multiplier: number)
 export const calculateTaskProgress = (taskId: string, dbProgress: number, user: UserData): number => {
   switch (taskId) {
     case 'mine-1-hour':
-      if (user.nodeStartTime && user.isNodeActive) {
+      if (user.nodeStartTime && user.is_node_active) {
         return Math.min(3600, Math.floor((Date.now() - user.nodeStartTime) / 1000));
       }
       return dbProgress;

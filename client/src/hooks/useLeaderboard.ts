@@ -35,7 +35,7 @@ export const useLeaderboard = (currentUser: UserData | null) => {
           const dailyRate = baseRate * multiplier * 60 * 24; // 24 hours
           
           // If user is active, show estimated daily rate, otherwise show 0
-          displayEarnings = user.isNodeActive ? dailyRate * (0.8 + Math.random() * 0.4) : 0;
+          displayEarnings = user.is_node_active ? dailyRate * (0.8 + Math.random() * 0.4) : 0;
         } else if (selectedPeriod === 'weekly') {
           displayEarnings = user.weekly_earnings || 0;
         } else if (selectedPeriod === 'monthly') {
@@ -48,7 +48,7 @@ export const useLeaderboard = (currentUser: UserData | null) => {
           avatar: user.avatar,
           total_earned: displayEarnings,
           account_age: user.account_age,
-          isActive: user.isNodeActive,
+          isActive: user.is_node_active,
           weekly_earnings: user.weekly_earnings || 0
         };
       });

@@ -10,7 +10,7 @@ export interface UserData {
   hasbadgeofhonor: boolean;
   total_earned: number;
   current_balance: number;
-  isNodeActive: boolean;
+  is_node_active: boolean;
   tasksCompleted: number;
   rank: number;
   nodeStartTime?: number;

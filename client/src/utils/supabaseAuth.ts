@@ -193,7 +193,7 @@ export const createOrUpdateUser = async (
         referralCode: userReferralCode,
         rank: Math.floor(Math.random() * 1000) + 1,
         last_login_time: new Date(Date.now()),
-        isNodeActive: false,
+        is_node_active: false,
         tasksCompleted: 0,
         daily_checkin_claimed: false,
         weekly_earnings: 0,

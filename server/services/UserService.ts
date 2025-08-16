@@ -77,14 +77,14 @@ export class UserService {
     if (!user) return null;
 
     return await this.userRepository.update(userId, {
-      isNodeActive: true,
+      is_node_active: true,
       nodeStartTime: Date.now(),
     });
   }
 
   async deactivateNode(userId: string): Promise<User | null> {
     return await this.userRepository.update(userId, {
-      isNodeActive: false,
+      is_node_active: false,
       nodeStartTime: null,
     });
   }

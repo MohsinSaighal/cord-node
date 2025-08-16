@@ -7,7 +7,7 @@ import { useAntiCheat } from './useAntiCheat';
 export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => void) => {
   const { antiCheatStatus } = useAntiCheat(user);
   const [nodeStats, setNodeStats] = useState<NodeStats>({
-    isActive: user.isNodeActive,
+    isActive: user.is_node_active,
     uptime: user.nodeStartTime ? calculateNodeUptime(user.nodeStartTime) : 0,
     hashRate: 0,
     dailyEarnings: 0,
@@ -26,7 +26,7 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
 
   // Load existing mining session on mount
   useEffect(() => {
-    if (user.isNodeActive && user.nodeStartTime) {
+    if (user.is_node_active && user.nodeStartTime) {
       loadCurrentSession();
     }
   }, [user.id]);
@@ -161,7 +161,7 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
       // Update user status
       const updatedUser = {
         ...user,
-        isNodeActive: true,
+        is_node_active: true,
         nodeStartTime: startTime
       };
       
@@ -222,7 +222,7 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
       // Update user status
       const updatedUser = {
         ...user,
-        isNodeActive: false,
+        is_node_active: false,
         nodeStartTime: undefined
       };
       
