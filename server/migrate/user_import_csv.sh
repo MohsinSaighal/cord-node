@@ -6,7 +6,7 @@ DB_PORT="5432"
 DB_NAME="cords"
 DB_USER="postgres"
 TABLE_NAME="users"
-CSV_FILE="users_rows.csv"
+CSV_FILE="final.csv"
 DELIMITER=","
 
 # Get absolute path to CSV file
