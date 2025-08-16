@@ -16,14 +16,14 @@ redirectUri: string;
 // Get the correct redirect URI based on environment
 const getRedirectUri = (): string => {
   // Use custom domain for production
-  return "http:staging.printsup.org";
+  return "https://staging.printsup.org";
   }
 
 // Discord OAuth configuration
 const DISCORD_CONFIG: DiscordOAuthConfig = {
   clientId: "1394417850181091380",
   clientSecret: "xqV6WEwR4o42d2z7AbP8fJtUjjUKAaGo",
-  redirectUri: "http:staging.printsup.org", // Default, but we'll use getRedirectUri() when needed
+  redirectUri: "https://staging.printsup.org", // Default, but we'll use getRedirectUri() when needed
   scope: "identify email",
 };
 
