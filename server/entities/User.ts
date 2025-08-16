@@ -46,7 +46,7 @@ export class User {
   @Column({ type: "numeric", precision: 15, scale: 2, default: 0 })
   current_balance!: number;
 
-  @Column({ type: "boolean", default: false })
+  @Column({ type: "boolean", nullable: true })
   is_node_active!: boolean;
 
   @Column({ type: "timestamp with time zone", nullable: true })
@@ -63,7 +63,6 @@ export class User {
 
   @Column({ type: "boolean", default: false })
   daily_checkin_claimed!: boolean;
-
 
   @Column({ type: "numeric", precision: 15, scale: 2, default: 0 })
   weekly_earnings!: number;
@@ -117,10 +116,9 @@ export class User {
   hasbadgeofhonor!: boolean;
 
   @Column({ type: "bigint", default: 0, nullable: true })
-  lastSavedBalance!: number;
+  lastsavedbalance!: number;
 
-  @Column({ type: "bigint", nullable: true })
-  nodeStartTime!: number; // Stores the milliseconds directly
+
   // Relations (unchanged)
   @OneToMany(() => UserTask, (userTask) => userTask.user)
   userTasks!: UserTask[];

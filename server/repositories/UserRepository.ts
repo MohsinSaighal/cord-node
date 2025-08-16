@@ -50,7 +50,7 @@ export class UserRepository {
       "is_node_active",
       "tasksCompleted",
       "rank",
-      "nodeStartTime",
+      "node_start_time",
       "last_login_time",
       "daily_checkin_claimed",
       "weekly_earnings",
@@ -62,7 +62,7 @@ export class UserRepository {
       "currentEpochId",
       "epochJoinDate",
       "totalEpochEarnings",
-      "lastSavedBalance",
+      "lastsavedbalance",
     ];
 const numericFields = [
       "total_earned",
@@ -71,7 +71,7 @@ const numericFields = [
       "monthly_earnings",
       "referralEarnings",
       "totalEpochEarnings",
-      "lastSavedBalance",
+      "lastsavedbalance",
     ];
 
     const filteredData: Partial<User> = {};

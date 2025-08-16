@@ -13,7 +13,7 @@ export interface UserData {
   is_node_active: boolean;
   tasksCompleted: number;
   rank: number;
-  nodeStartTime?: number;
+  node_start_time?: number;
   last_login_time: Date;
   daily_checkin_claimed: boolean;
   weekly_earnings: number;
@@ -25,7 +25,7 @@ export interface UserData {
   currentEpochId?: string;
   epochJoinDate?: number;
   totalEpochEarnings: number;
-  lastSavedBalance?: number;
+  lastsavedbalance?: number;
 }
 
 export interface Task {

@@ -206,7 +206,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
   console.log("hasVerifiedPurchase", hasVerifiedPurchase);
   useEffect(() => {
     const interval = setInterval(() => {
-      if (user.is_node_active && user.nodeStartTime) {
+      if (user.is_node_active && user.node_start_time) {
         const miningRate = calculateMiningRate(user, antiCheatStatus);
         const earningsPerSecond = miningRate / 60;
 
@@ -241,8 +241,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
           dailyEarnings: prev.dailyEarnings + earningsPerSecond,
           weekly_earnings: prev.weekly_earnings + earningsPerSecond,
           monthly_earnings: prev.monthly_earnings + earningsPerSecond,
-          nodeUptime: user.nodeStartTime
-            ? Math.floor((Date.now() - user.nodeStartTime) / 1000)
+          nodeUptime: user.node_start_time
+            ? Math.floor((Date.now() - user.node_start_time) / 1000)
             : 0,
           hashRate: 150 + Math.random() * 50,
           efficiency: 85 + Math.random() * 15,
@@ -255,7 +255,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
             total_earned: total_earned,
             weekly_earnings: stats.weekly_earnings,
             monthly_earnings: stats.monthly_earnings,
-            lastSavedBalance: current_balance,
+            lastsavedbalance: current_balance,
             hasbadgeofhonor: user.hasbadgeofhonor,
           };
 
@@ -276,7 +276,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
     return () => clearInterval(interval);
   }, [
     user.is_node_active,
-    user.nodeStartTime,
+    user.node_start_time,
     user.multiplier,
     current_balance,
     total_earned,

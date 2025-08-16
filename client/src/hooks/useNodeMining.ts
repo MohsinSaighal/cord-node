@@ -8,12 +8,12 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
   const { antiCheatStatus } = useAntiCheat(user);
   const [nodeStats, setNodeStats] = useState<NodeStats>({
     isActive: user.is_node_active,
-    uptime: user.nodeStartTime ? calculateNodeUptime(user.nodeStartTime) : 0,
+    uptime: user.node_start_time ? calculateNodeUptime(user.node_start_time) : 0,
     hashRate: 0,
     dailyEarnings: 0,
     totalEarnings: user.total_earned,
     efficiency: 85,
-    startTime: user.nodeStartTime
+    startTime: user.node_start_time
   });
 
   const [isStarting, setIsStarting] = useState(false);
@@ -26,7 +26,7 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
 
   // Load existing mining session on mount
   useEffect(() => {
-    if (user.is_node_active && user.nodeStartTime) {
+    if (user.is_node_active && user.node_start_time) {
       loadCurrentSession();
     }
   }, [user.id]);
@@ -44,7 +44,7 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
           ...prev,
           dailyEarnings: session.earnings || 0,
           isActive: true,
-          startTime: user.nodeStartTime
+          startTime: user.node_start_time
         }));
         
         console.log('Restored mining session:', session.id, 'with earnings:', session.earnings);
@@ -115,7 +115,7 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
           total_earned: user.total_earned + earningsToAdd,
           weekly_earnings: user.weekly_earnings + earningsToAdd,
           monthly_earnings: user.monthly_earnings + earningsToAdd,
-          lastSavedBalance: result.newBalance || user.current_balance + earningsToAdd
+          lastsavedbalance: result.newBalance || user.current_balance + earningsToAdd
         };
         
         onUserUpdate(updatedUser);
@@ -162,7 +162,7 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
       const updatedUser = {
         ...user,
         is_node_active: true,
-        nodeStartTime: startTime
+        node_start_time: startTime
       };
       
       await apiClient.updateUser(user.id, updatedUser);
@@ -223,7 +223,7 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
       const updatedUser = {
         ...user,
         is_node_active: false,
-        nodeStartTime: undefined
+        node_start_time: undefined
       };
       
       await apiClient.updateUser(user.id, updatedUser);

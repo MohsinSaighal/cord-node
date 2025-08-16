@@ -105,8 +105,8 @@ export const calculateInitialBalance = (account_age: number, multiplier: number)
 export const calculateTaskProgress = (taskId: string, dbProgress: number, user: UserData): number => {
   switch (taskId) {
     case 'mine-1-hour':
-      if (user.nodeStartTime && user.is_node_active) {
-        return Math.min(3600, Math.floor((Date.now() - user.nodeStartTime) / 1000));
+      if (user.node_start_time && user.is_node_active) {
+        return Math.min(3600, Math.floor((Date.now() - user.node_start_time) / 1000));
       }
       return dbProgress;
       

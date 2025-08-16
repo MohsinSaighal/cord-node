@@ -18,7 +18,7 @@ const storeUserSession = (userData: UserData): void => {
     JSON.stringify({
       ...JSON.parse(JSON.stringify(userData)),
       join_date: userData.join_date,
-      lastSavedBalance: userData.current_balance,
+      lastsavedbalance: userData.current_balance,
     })
   );
   localStorage.setItem('cordnode_session_timestamp', Date.now().toString());
@@ -43,13 +43,13 @@ const getStoredUserSession = (): UserData | null => {
     userData.join_date = new Date(userData.join_date);
 
     if (
-      userData.lastSavedBalance &&
-      userData.current_balance < userData.lastSavedBalance
+      userData.lastsavedbalance &&
+      userData.current_balance < userData.lastsavedbalance
     ) {
-      userData.current_balance = userData.lastSavedBalance;
+      userData.current_balance = userData.lastsavedbalance;
       userData.total_earned = Math.max(
         userData.total_earned,
-        userData.lastSavedBalance
+        userData.lastsavedbalance
       );
     }
 
@@ -76,7 +76,7 @@ export const updateUserInDatabase = async (userData: UserData): Promise<void> =>
       current_balance: userData.current_balance,
       total_earned: userData.total_earned,
       is_node_active: userData.is_node_active,
-      nodeStartTime: userData.nodeStartTime,
+      node_start_time: userData.node_start_time,
       daily_checkin_claimed: userData.daily_checkin_claimed,
       tasksCompleted: userData.tasksCompleted,
     });
@@ -105,7 +105,7 @@ export const getUserFromDatabase = async (userId: string): Promise<UserData | nu
         total_earned: user.total_earned,
         current_balance: user.current_balance,
         is_node_active: user.is_node_active,
-        nodeStartTime: user.nodeStartTime,
+        node_start_time: user.node_start_time,
         tasksCompleted: user.tasksCompleted,
         rank: user.rank,
         last_login_time: user.last_login_time,
@@ -196,7 +196,7 @@ export const handleOAuthCallback = async (
       total_earned: user.total_earned,
       current_balance: user.current_balance,
       is_node_active: user.is_node_active,
-      nodeStartTime: user.nodeStartTime,
+      node_start_time: user.node_start_time,
       tasksCompleted: user.tasksCompleted,
       rank: user.rank,
       last_login_time: user.last_login_time,

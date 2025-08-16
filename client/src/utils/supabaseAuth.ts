@@ -69,7 +69,7 @@ const storeUserSession = (userData: UserData): void => {
     JSON.stringify({
       ...JSON.parse(JSON.stringify(userData)), // Deep clone to avoid reference issues
       join_date: userData.join_date, // Convert Date to string for storage
-      lastSavedBalance: userData.current_balance, // Track last saved balance
+      lastsavedbalance: userData.current_balance, // Track last saved balance
     })
   );
   localStorage.setItem("cordnode_session_timestamp", Date.now().toString());
@@ -96,13 +96,13 @@ const getStoredUserSession = (): UserData | null => {
 
     // Ensure we don't lose balance between sessions
     if (
-      userData.lastSavedBalance &&
-      userData.current_balance < userData.lastSavedBalance
+      userData.lastsavedbalance &&
+      userData.current_balance < userData.lastsavedbalance
     ) {
-      userData.current_balance = userData.lastSavedBalance;
+      userData.current_balance = userData.lastsavedbalance;
       userData.total_earned = Math.max(
         userData.total_earned,
-        userData.lastSavedBalance
+        userData.lastsavedbalance
       );
     }
 
@@ -202,7 +202,7 @@ export const createOrUpdateUser = async (
         totalReferrals: 0,
         referredBy: referralCode || undefined,
         hasbadgeofhonor: false,
-        nodeStartTime: undefined,
+        node_start_time: undefined,
         currentEpochId: undefined,
         epochJoinDate: undefined,
         totalEpochEarnings: 0,
