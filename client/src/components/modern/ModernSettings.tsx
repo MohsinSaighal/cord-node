@@ -95,9 +95,9 @@ export const ModernSettings: React.FC<ModernSettingsProps> = ({ user, onUserUpda
   const handleExportData = () => {
     const data = {
       username: user.username,
-      totalEarned: user.totalEarned,
-      currentBalance: user.currentBalance,
-      accountAge: user.accountAge,
+      total_earned: user.total_earned,
+      current_balance: user.current_balance,
+      account_age: user.account_age,
       multiplier: user.multiplier,
       referralCode: user.referralCode,
       exportDate: new Date().toISOString()
@@ -152,24 +152,24 @@ export const ModernSettings: React.FC<ModernSettingsProps> = ({ user, onUserUpda
               <SettingItem
                 label="Account Age"
                 description="Your Discord account age affects mining multiplier"
-                value={`${user.accountAge} years (${user.multiplier}x multiplier)`}
+                value={`${user.account_age} years (${user.multiplier}x multiplier)`}
               />
               
               <SettingItem
                 label="Total Earnings"
-                value={`${user.totalEarned?.toFixed(2) || '0.00'} CORD`}
+                value={`${user?.total_earned || '0.00'} CORD`}
               />
               
               <SettingItem
                 label="Current Balance"
-                value={`${user.currentBalance?.toFixed(2) || '0.00'} CORD`}
+                value={`${user?.current_balance || '0.00'} CORD`}
               />
 
               <SettingItem
                 label="Badge of Honor"
-                value={user.hasBadgeOfHonor ? "Owned" : "Not owned"}
+                value={user.hasbadgeofhonor ? "Owned" : "Not owned"}
                 action={
-                  user.hasBadgeOfHonor ? (
+                  user.hasbadgeofhonor ? (
                     <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">Active</Badge>
                   ) : (
                     <SimpleButton size="sm" variant="secondary">
@@ -239,7 +239,7 @@ export const ModernSettings: React.FC<ModernSettingsProps> = ({ user, onUserUpda
                   <SimpleButton
                     size="sm"
                     variant="secondary"
-                    onClick={() => navigator.clipboard.writeText(user.referralCode)}
+                    onClick={() => navigator.clipboard.writeText(user.referralCode || '')}
                   >
                     Copy
                   </SimpleButton>

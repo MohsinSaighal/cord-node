@@ -427,7 +427,7 @@ export const ModernNodeManager: React.FC<ModernNodeManagerProps> = ({
               <div className="flex justify-between items-center p-2 md:p-3 rounded-lg bg-slate-700/30">
                 <span className="text-xs md:text-base text-slate-300">Account Age Bonus</span>
                 <span className="text-sm md:text-base text-cyan-400 font-bold">
-                  {user.accountAge} years
+                  {user.account_age} years
                 </span>
               </div>
             </div>

@@ -40,21 +40,21 @@ export class UserRepository {
       "username",
       "discriminator",
       "avatar",
-      "accountAge",
-      "joinDate",
+      "account_age",
+      "join_date",
       "multiplier",
       "compensationClaimed",
-      "hasBadgeOfHonor",
-      "totalEarned",
-      "currentBalance",
+      "hasbadgeofhonor",
+      "total_earned",
+      "current_balance",
       "isNodeActive",
       "tasksCompleted",
       "rank",
       "nodeStartTime",
-      "lastLoginTime",
-      "dailyCheckInClaimed",
-      "weeklyEarnings",
-      "monthlyEarnings",
+      "last_login_time",
+      "daily_checkin_claimed",
+      "weekly_earnings",
+      "monthly_earnings",
       "referralCode",
       "referredBy",
       "referralEarnings",
@@ -64,25 +64,47 @@ export class UserRepository {
       "totalEpochEarnings",
       "lastSavedBalance",
     ];
+const numericFields = [
+      "total_earned",
+      "current_balance",
+      "weekly_earnings",
+      "monthly_earnings",
+      "referralEarnings",
+      "totalEpochEarnings",
+      "lastSavedBalance",
+    ];
 
-    // 2. Create filtered update data
     const filteredData: Partial<User> = {};
     Object.keys(userData).forEach((key) => {
       if (updatableFields.includes(key)) {
-        filteredData[key] = userData[key];
+        if (numericFields.includes(key)) {
+          // Convert to number and round if needed
+          const numValue = Number(String(userData[key]).replace(/[^\d.-]/g, ""));
+          if (!isNaN(numValue)) {
+            // Round if storing as bigint, or keep as is for decimal
+            filteredData[key] = Math.round(numValue); // or just numValue if using decimal
+          } else {
+            console.warn(`Invalid number value for ${key}:`, userData[key]);
+          }
+        } else {
+          filteredData[key] = userData[key];
+        }
       }
     });
 
-    // 3. Perform update using query builder for maximum safety
-    await this.repository
-      .createQueryBuilder()
-      .update(User)
-      .set(filteredData)
-      .where("id = :id", { id })
-      .execute();
+    try {
+      await this.repository
+        .createQueryBuilder()
+        .update(User)
+        .set(filteredData)
+        .where("id = :id", { id })
+        .execute();
 
-    // 4. Return the updated user without problematic relations
-    return this.repository.findOne({ where: { id } });
+      return this.repository.findOne({ where: { id } });
+    } catch (error) {
+      console.error("Error updating user:", error);
+      throw error;
+    }
   }
 
   async delete(id: string): Promise<boolean> {
@@ -92,39 +114,32 @@ export class UserRepository {
 
   async findTopUsers(limit: number = 10): Promise<User[]> {
     return await this.repository.find({
-      order: { totalEarned: "DESC" },
+      order: { total_earned: "DESC" },
       take: limit,
     });
   }
 
-  async findActiveMiners(): Promise<User[]> {
-    return await this.repository.find({
-      where: { isNodeActive: true },
-    });
+  async findAll(): Promise<User[]> {
+    return await this.repository.find();
   }
 
   async updateBalance(id: string, newBalance: number): Promise<void> {
     await this.repository.update(id, {
-      currentBalance: newBalance,
-      lastSavedBalance: newBalance,
+      current_balance: newBalance,
     });
   }
 
   async getUserStats() {
-    const [totalUsers, activeUsers] = await Promise.all([
-      this.repository.count(),
-      this.repository.count({ where: { isNodeActive: true } }),
-    ]);
+    const [totalUsers] = await Promise.all([this.repository.count()]);
 
     const totalEarningsResult = await this.repository
       .createQueryBuilder("user")
-      .select("SUM(user.totalEarned)", "sum")
+      .select("SUM(user.total_earned)", "sum")
       .getRawOne();
 
     return {
       totalMiners: totalUsers,
-      activeMiners: activeUsers,
-      totalEarned: parseFloat(totalEarningsResult.sum) || 0,
+      total_earned: parseFloat(totalEarningsResult.sum) || 0,
     };
   }
 }

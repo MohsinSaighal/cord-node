@@ -26,8 +26,8 @@ export class AuthService {
     username: string;
     discriminator: string;
     avatar?: string;
-    accountAge: number;
-    joinDate: Date;
+    account_age: number;
+    join_date: Date;
     referredBy?: string;
   }): Promise<UserData> {
     const user = await apiClient.createUser(userData);

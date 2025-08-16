@@ -18,11 +18,17 @@ export class UserTask {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @Column({ type: "uuid" })
+  @Column({ type: "varchar" })
   userId!: string;
 
-  @Column({ type: "varchar", length: 255 })
+  @Column({ name: "task_id", type: "varchar", length: 255 })
   taskId!: string;
+
+  @Column({ name: "task_title", type: "varchar", length: 255, nullable: true })
+  taskTitle!: string | null;
+
+  @Column({ name: "task_type", type: "varchar", length: 50 })
+  taskType!: string;
 
   @Column({ type: "boolean", default: false })
   completed!: boolean;
@@ -30,23 +36,34 @@ export class UserTask {
   @Column({ type: "integer", default: 0 })
   progress!: number;
 
-  @Column({ type: "timestamp", nullable: true })
-  claimedAt!: Date;
+  @Column({ 
+    name: "claimed_at",
+    type: "timestamp",
+    nullable: true 
+  })
+  claimedAt!: Date | null;
 
-  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
-    to: (value: number) => value,
-    from: (value: string) => parseFloat(value)
-  }})
+  @Column({ 
+    name: "reward_amount",
+    type: "decimal", 
+    precision: 15, 
+    scale: 2, 
+    default: 0,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => parseFloat(value)
+    }
+  })
   reward!: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: "created_at" })
   createdAt!: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: "updated_at" })
   updatedAt!: Date;
 
   // Relations
   @ManyToOne(() => User, (user) => user.userTasks, { onDelete: "CASCADE" })
-  @JoinColumn({ name: "userId" })
+  @JoinColumn({ name: "user_id" })
   user!: User;
 }

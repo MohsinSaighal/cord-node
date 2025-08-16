@@ -97,17 +97,17 @@ export const useTasks = (user: UserData, onUserUpdate: (user: UserData) => void)
         return dbProgress;
 
       case 'weekly-mining':
-        return Math.min(user.weeklyEarnings, 1000);
+        return Math.min(user.weekly_earnings, 1000);
         
       case 'invite-friends':
         return user.totalReferrals || 0;
         
       case 'early-adopter':
-        return user.accountAge >= 5 ? 1 : 0;
+        return user.account_age >= 5 ? 1 : 0;
         
       case 'daily-checkin':
         // Daily check-in logic - check if it's a new day or not claimed yet
-        if (isNewDay(user.lastLoginTime) || !user.dailyCheckInClaimed) {
+        if (isNewDay(user.last_login_time) || !user.daily_checkin_claimed) {
           return 1; // Can be claimed
         } else {
           return 0; // Already claimed today
@@ -207,15 +207,14 @@ export const useTasks = (user: UserData, onUserUpdate: (user: UserData) => void)
       // Update local user state with the new balance from API
       const updatedUser = {
         ...user,
-        currentBalance: result.newBalance || user.currentBalance,
-        totalEarned: user.totalEarned + (result.reward || 0),
+        current_balance: result.newBalance || user.current_balance,
+        total_earned: user.total_earned + (result.reward || 0),
         tasksCompleted: user.tasksCompleted + 1
       };
 
       // Special handling for daily check-in
       if (taskId === 'daily-checkin') {
-        updatedUser.dailyCheckInClaimed = true;
-        updatedUser.lastLoginTime = Date.now();
+        updatedUser.daily_checkin_claimed = true;
         
         console.log('✅ Daily check-in completed, updating user data');
       }

@@ -55,8 +55,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
   console.log("user", user);
   const [stats, setStats] = useState({
     dailyEarnings: 0,
-    weeklyEarnings: user.weeklyEarnings,
-    monthlyEarnings: user.monthlyEarnings,
+    weekly_earnings: user.weekly_earnings,
+    monthly_earnings: user.monthly_earnings,
     nodeUptime: 0,
     hashRate: 0,
     efficiency: 0,
@@ -71,11 +71,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
   const { connection } = useConnection();
   const { publicKey, sendTransaction } = useWallet();
 
-  const [currentBalance, setCurrentBalance] = useState(user.currentBalance);
-  const [totalEarned, setTotalEarned] = useState(user.totalEarned);
+  const [current_balance, setcurrent_balance] = useState(user.current_balance);
+  const [total_earned, settotal_earned] = useState(user.total_earned);
   const [cordPerSecond, setCordPerSecond] = useState(0);
   const [sessionStartBalance, setSessionStartBalance] = useState(
-    user.currentBalance || 0
+    user.current_balance || 0
   );
   const [isPaying, setIsPaying] = useState(false);
   const [solPrice, setSolPrice] = useState<number | null>(null);
@@ -101,7 +101,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
     try {
       // TODO: Implement badge purchase verification with new API
       // For now, check if user has badge of honor
-      setHasVerifiedPurchase(user.hasBadgeOfHonor || false);
+      setHasVerifiedPurchase(user.hasbadgeofhonor || false);
     } catch (error) {
       console.error("Error verifying badge purchase:", error);
     }
@@ -155,16 +155,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
       // For now, just simulate the badge purchase
       const updatedUser = {
         ...user,
-        currentBalance: user.currentBalance + 10000,
-        totalEarned: user.totalEarned + 10000,
+        current_balance: user.current_balance + 10000,
+        total_earned: user.total_earned + 10000,
         tasksCompleted: user.tasksCompleted + 1,
-        hasBadgeOfHonor: true,
+        hasbadgeofhonor: true,
       };
 
       // Update user via new API
       await apiClient.updateUser(user.id, updatedUser);
-      setCurrentBalance(updatedUser.currentBalance);
-      setTotalEarned(updatedUser.totalEarned);
+      setcurrent_balance(updatedUser.current_balance);
+      settotal_earned(updatedUser.total_earned);
       onUserUpdate(updatedUser);
       setHasVerifiedPurchase(true);
 
@@ -182,11 +182,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
   };
   useEffect(() => {
     const initializeUser = async () => {
-      if (isNewDay(user.lastLoginTime)) {
+      if (isNewDay(user.last_login_time)) {
         const updatedUser = {
           ...user,
-          dailyCheckInClaimed: false,
-          lastLoginTime: Date.now(),
+          daily_checkin_claimed: false,
         };
         onUserUpdate(updatedUser);
         // Update via new API
@@ -199,7 +198,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
     };
 
     initializeUser();
-    setSessionStartBalance(user.currentBalance);
+    setSessionStartBalance(user.current_balance);
 
     // Add this line to verify badge purchase on load
     verifyBadgePurchase();
@@ -213,7 +212,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
 
         setCordPerSecond(earningsPerSecond);
 
-        setCurrentBalance((prev) => {
+        setcurrent_balance((prev) => {
           const newBalance = prev + earningsPerSecond;
           const now = Date.now();
           if (now % 10000 < 1000) {
@@ -235,13 +234,13 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
           return newBalance;
         });
 
-        setTotalEarned((prev) => prev + earningsPerSecond);
+        settotal_earned((prev) => prev + earningsPerSecond);
 
         setStats((prev) => ({
           ...prev,
           dailyEarnings: prev.dailyEarnings + earningsPerSecond,
-          weeklyEarnings: prev.weeklyEarnings + earningsPerSecond,
-          monthlyEarnings: prev.monthlyEarnings + earningsPerSecond,
+          weekly_earnings: prev.weekly_earnings + earningsPerSecond,
+          monthly_earnings: prev.monthly_earnings + earningsPerSecond,
           nodeUptime: user.nodeStartTime
             ? Math.floor((Date.now() - user.nodeStartTime) / 1000)
             : 0,
@@ -252,12 +251,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
         if (Math.floor(Date.now() / 1000) % 30 === 0) {
           const updatedUser = {
             ...user,
-            currentBalance: currentBalance,
-            totalEarned: totalEarned,
-            weeklyEarnings: stats.weeklyEarnings,
-            monthlyEarnings: stats.monthlyEarnings,
-            lastSavedBalance: currentBalance,
-            hasBadgeOfHonor: user.hasBadgeOfHonor,
+            current_balance: current_balance,
+            total_earned: total_earned,
+            weekly_earnings: stats.weekly_earnings,
+            monthly_earnings: stats.monthly_earnings,
+            lastSavedBalance: current_balance,
+            hasbadgeofhonor: user.hasbadgeofhonor,
           };
 
           const updateUserData = async () => {
@@ -279,8 +278,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
     user.isNodeActive,
     user.nodeStartTime,
     user.multiplier,
-    currentBalance,
-    totalEarned,
+    current_balance,
+    total_earned,
     stats,
     antiCheatStatus,
   ]);
@@ -289,12 +288,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   };
 
-  const sessionEarnings = currentBalance - sessionStartBalance;
+  const sessionEarnings = current_balance - sessionStartBalance;
 
   const cards = [
     {
       title: "Current Balance",
-      value: `${Math.floor(currentBalance).toLocaleString()} CORD`,
+      value: `${Math.floor(current_balance).toLocaleString()} CORD`,
       icon: DollarSign,
       color: "from-green-400 to-green-600",
       change:
@@ -319,7 +318,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
     },
     {
       title: "Account Age",
-      value: `${user.accountAge} years`,
+      value: `${user.account_age} years`,
       icon: Clock,
       color: "from-purple-400 to-purple-600",
       change: `${user.multiplier}x multiplier`,
@@ -420,7 +419,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
           Welcome back, {user.username}!
         </h1>
         <p className="text-gray-400 text-sm sm:text-base">
-          Your account has been active for {user.accountAge} years, giving you a{" "}
+          Your account has been active for {user.account_age} years, giving you a{" "}
           {user.multiplier}x earning multiplier.
         </p>
       </div>
@@ -489,7 +488,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
           </button>
         </div>
       </div> */}
-      {!user.hasBadgeOfHonor && !hasVerifiedPurchase && (
+      {!user.hasbadgeofhonor && !hasVerifiedPurchase && (
         <div className="bg-gradient-to-r from-purple-500/20 to-blue-600/20 border border-purple-500/30 rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
           <div className="flex items-center justify-between">
             <div>
@@ -531,9 +530,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
           </h3>
           <div className="flex items-center justify-center">
             <div className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent break-words">
-              {Math.floor(currentBalance).toLocaleString()} CORD
+              {Math.floor(current_balance).toLocaleString()} CORD
             </div>
-            {(user.hasBadgeOfHonor || hasVerifiedPurchase) && (
+            {(user.hasbadgeofhonor || hasVerifiedPurchase) && (
               <img
                 src={badgeImage}
                 alt="Badge of Honor"
@@ -543,7 +542,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
             )}
           </div>
           <p className="text-gray-400 mt-2 text-sm sm:text-base">
-            Total Earned: {Math.floor(totalEarned).toLocaleString()} CORD
+            Total Earned: {Math.floor(total_earned).toLocaleString()} CORD
           </p>
           {user.isNodeActive && (
             <div className="mt-3 flex items-center justify-center space-x-2 text-sm text-green-400">
@@ -619,7 +618,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
             <div className="grid grid-cols-2 gap-4 mt-6">
               <div className="text-center">
                 <div className="text-xl sm:text-2xl font-bold text-white">
-                  {Math.floor(stats.weeklyEarnings)}
+                  {Math.floor(stats.weekly_earnings)}
                 </div>
                 <div className="text-xs sm:text-sm text-gray-400">
                   This Week
@@ -627,7 +626,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, onUserUpdate }) => {
               </div>
               <div className="text-center">
                 <div className="text-xl sm:text-2xl font-bold text-white">
-                  {Math.floor(stats.monthlyEarnings)}
+                  {Math.floor(stats.monthly_earnings)}
                 </div>
                 <div className="text-xs sm:text-sm text-gray-400">
                   This Month

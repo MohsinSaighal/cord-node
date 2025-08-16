@@ -41,7 +41,7 @@ export class BadgePurchaseService {
     });
     if (user) {
       console.log("here")
-      user.hasBadgeOfHonor = true;
+      user.hasbadgeofhonor = true;
       await this.userRepository.save(user);
     }
 
@@ -69,7 +69,7 @@ export class BadgePurchaseService {
       });
 
       if (user) {
-        user.hasBadgeOfHonor = true;
+        user.hasbadgeofhonor = true;
         await this.userRepository.save(user);
       }
     }

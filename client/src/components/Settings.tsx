@@ -141,18 +141,18 @@ const Settings: React.FC<SettingsProps> = ({ user, onUserUpdate, onLogout }) => 
             </div>
             <div className="min-w-0 flex-1">
               <h4 className="text-white font-medium text-sm sm:text-base">{user.username}#{user.discriminator}</h4>
-              <p className="text-gray-400 text-xs sm:text-sm">Discord Account: {user.accountAge} years old</p>
+              <p className="text-gray-400 text-xs sm:text-sm">Discord Account: {user.account_age} years old</p>
               <p className="text-gray-400 text-xs sm:text-sm">Multiplier: {user.multiplier}x</p>
             </div>
           </div>
           <div className="space-y-2">
             <div className="flex justify-between">
               <span className="text-gray-400 text-xs sm:text-sm">Total Earned:</span>
-              <span className="text-white font-medium text-xs sm:text-sm">{Math.floor(user.totalEarned).toLocaleString()} CORD</span>
+              <span className="text-white font-medium text-xs sm:text-sm">{Math.floor(user.total_earned).toLocaleString()} CORD</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400 text-xs sm:text-sm">Current Balance:</span>
-              <span className="text-white font-medium text-xs sm:text-sm">{Math.floor(user.currentBalance).toLocaleString()} CORD</span>
+              <span className="text-white font-medium text-xs sm:text-sm">{Math.floor(user.current_balance).toLocaleString()} CORD</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400 text-xs sm:text-sm">Referrals:</span>

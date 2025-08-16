@@ -16,8 +16,8 @@ export class UserService {
     username: string;
     discriminator: string;
     avatar?: string;
-    accountAge: number;
-    joinDate: Date;
+    account_age: number;
+    join_date: Date;
     referredBy?: string;
   }): Promise<User> {
     const referralCode = generateReferralCode();
@@ -25,9 +25,9 @@ export class UserService {
     const user = await this.userRepository.create({
       ...userData,
       referralCode,
-      multiplier: this.calculateMultiplier(userData.accountAge),
-      joinDate: userData.joinDate || new Date(),
-      lastLoginTime: Date.now(),
+      multiplier: this.calculateMultiplier(userData.account_age),
+      join_date: userData.join_date || new Date(),
+      last_login_time: Date.now(),
     });
 
     // Process referral if user joined through referral code
@@ -62,12 +62,12 @@ export class UserService {
     await this.userRepository.updateBalance(id, newBalance);
   }
 
-  private calculateMultiplier(accountAge: number): number {
+  private calculateMultiplier(account_age: number): number {
     // Base multiplier starts at 1.0
     let multiplier = 1.0;
     
     // Add 0.1 for each year of account age, capped at 2.0
-    multiplier += Math.min(accountAge * 0.1, 1.0);
+    multiplier += Math.min(account_age * 0.1, 1.0);
     
     return Math.round(multiplier * 100) / 100; // Round to 2 decimal places
   }

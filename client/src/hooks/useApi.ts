@@ -2,6 +2,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { UserData, LeaderboardEntry, Task } from "../types";
 
 const API_BASE = "https://staging.printsup.org/api"; // Update to your API base URL
+// export const API_BASE = "http://localhost:5000/api"; // Update to your API base URL
+
 
 // API functions
 export const apiClient = {
@@ -46,7 +48,7 @@ export const apiClient = {
   async getGlobalStats(): Promise<{
     totalMiners: number;
     activeMiners: number;
-    totalEarned: number;
+    total_earned: number;
   }> {
     const response = await fetch(`${API_BASE}/stats`);
     if (!response.ok) throw new Error("Failed to fetch stats");
@@ -182,7 +184,13 @@ export function useLeaderboard(limit: number = 10) {
 export function useGlobalStats() {
   return useQuery({
     queryKey: ["globalStats"],
-    queryFn: apiClient.getGlobalStats,
+    queryFn: async () => {
+      const response = await apiClient.getGlobalStats();
+      return {
+        ...response,
+        activeMiners: response.activeMiners || 0 // Ensure this field exists in your API response
+      };
+    },
     staleTime: 30 * 1000, // 30 seconds
     refetchInterval: 60 * 1000, // Refetch every minute
   });

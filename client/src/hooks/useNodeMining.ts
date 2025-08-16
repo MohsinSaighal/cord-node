@@ -11,7 +11,7 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
     uptime: user.nodeStartTime ? calculateNodeUptime(user.nodeStartTime) : 0,
     hashRate: 0,
     dailyEarnings: 0,
-    totalEarnings: user.totalEarned,
+    totalEarnings: user.total_earned,
     efficiency: 85,
     startTime: user.nodeStartTime
   });
@@ -111,11 +111,11 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
         // Update user balance
         const updatedUser = {
           ...user,
-          currentBalance: result.newBalance || user.currentBalance + earningsToAdd,
-          totalEarned: user.totalEarned + earningsToAdd,
-          weeklyEarnings: user.weeklyEarnings + earningsToAdd,
-          monthlyEarnings: user.monthlyEarnings + earningsToAdd,
-          lastSavedBalance: result.newBalance || user.currentBalance + earningsToAdd
+          current_balance: result.newBalance || user.current_balance + earningsToAdd,
+          total_earned: user.total_earned + earningsToAdd,
+          weekly_earnings: user.weekly_earnings + earningsToAdd,
+          monthly_earnings: user.monthly_earnings + earningsToAdd,
+          lastSavedBalance: result.newBalance || user.current_balance + earningsToAdd
         };
         
         onUserUpdate(updatedUser);

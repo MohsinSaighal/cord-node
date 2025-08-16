@@ -24,7 +24,7 @@ export class AddUserTable1754598072877 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "id"`);
         await queryRunner.query(`ALTER TABLE "users" ADD "id" character varying(36) NOT NULL`);
         await queryRunner.query(`ALTER TABLE "users" ADD CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id")`);
-        await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "lastLoginTime" SET DEFAULT EXTRACT(epoch FROM NOW()) * 1000`);
+        await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "last_login_time" SET DEFAULT EXTRACT(epoch FROM NOW()) * 1000`);
         await queryRunner.query(`DROP INDEX "public"."IDX_bc9fe484404c29d4d769eed972"`);
         await queryRunner.query(`ALTER TABLE "node_stats" DROP CONSTRAINT "UQ_bc9fe484404c29d4d769eed9720"`);
         await queryRunner.query(`ALTER TABLE "node_stats" DROP COLUMN "userId"`);
@@ -56,7 +56,7 @@ export class AddUserTable1754598072877 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "node_stats" ADD "userId" uuid NOT NULL`);
         await queryRunner.query(`ALTER TABLE "node_stats" ADD CONSTRAINT "UQ_bc9fe484404c29d4d769eed9720" UNIQUE ("userId")`);
         await queryRunner.query(`CREATE UNIQUE INDEX "IDX_bc9fe484404c29d4d769eed972" ON "node_stats" ("userId") `);
-        await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "lastLoginTime" SET DEFAULT (EXTRACT(epoch FROM now()) * (1000))`);
+        await queryRunner.query(`ALTER TABLE "users" ALTER COLUMN "last_login_time" SET DEFAULT (EXTRACT(epoch FROM now()) * (1000))`);
         await queryRunner.query(`ALTER TABLE "users" DROP CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433"`);
         await queryRunner.query(`ALTER TABLE "users" DROP COLUMN "id"`);
         await queryRunner.query(`ALTER TABLE "users" ADD "id" uuid NOT NULL DEFAULT uuid_generate_v4()`);

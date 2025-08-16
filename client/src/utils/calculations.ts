@@ -1,7 +1,7 @@
 import { UserData } from '../types';
 import { AntiCheatStatus, applyAntiCheatEfficiency } from './antiCheat';
 
-export const calculateMultiplier = (accountAge: number): number => {
+export const calculateMultiplier = (account_age: number): number => {
   // More realistic multiplier calculation
   // 0-1 year: 1.0x
   // 1-2 years: 1.2x
@@ -13,14 +13,14 @@ export const calculateMultiplier = (accountAge: number): number => {
   // 7-8 years: 7.0x
   // 8+ years: 10.0x
   
-  if (accountAge < 1) return 1.0;
-  if (accountAge < 2) return 1.2;
-  if (accountAge < 3) return 1.5;
-  if (accountAge < 4) return 2.0;
-  if (accountAge < 5) return 2.5;
-  if (accountAge < 6) return 3.5;
-  if (accountAge < 7) return 5.0;
-  if (accountAge < 8) return 7.0;
+  if (account_age < 1) return 1.0;
+  if (account_age < 2) return 1.2;
+  if (account_age < 3) return 1.5;
+  if (account_age < 4) return 2.0;
+  if (account_age < 5) return 2.5;
+  if (account_age < 6) return 3.5;
+  if (account_age < 7) return 5.0;
+  if (account_age < 8) return 7.0;
   return 10.0;
 };
 
@@ -35,7 +35,7 @@ export const calculateMiningRate = (user: UserData, antiCheatStatus?: AntiCheatS
 
 export const calculateHashRate = (user: UserData): number => {
   // Simulate hash rate based on account age and random variance
-  const baseHashRate = 100 + (user.accountAge * 15);
+  const baseHashRate = 100 + (user.account_age * 15);
   const variance = 0.8 + (Math.random() * 0.4); // ±20% variance
   return baseHashRate * variance;
 };
@@ -62,8 +62,8 @@ export const calculateWeeklyReset = (): Date => {
   return nextWeek;
 };
 
-export const isNewDay = (lastLoginTime: number): boolean => {
-  const lastLogin = new Date(lastLoginTime);
+export const isNewDay = (last_login_time: number): boolean => {
+  const lastLogin = new Date(last_login_time);
   const now = new Date();
   
   // Check if it's a new day (different calendar date)
@@ -90,11 +90,11 @@ export const calculateOfflineEarnings = (user: UserData, offlineTime: number): n
   return offlineMinutes * miningRate;
 };
 
-export const calculateInitialBalance = (accountAge: number, multiplier: number): number => {
+export const calculateInitialBalance = (account_age: number, multiplier: number): number => {
   // Give users a starting balance based on their account age
   // Older accounts get more starting CP, with 2x welcome bonus
   const baseAmount = 50;
-  const ageBonus = accountAge * 25;
+  const ageBonus = account_age * 25;
   const multiplierBonus = (multiplier - 1) * 100;
   const welcomeBonusMultiplier = 2.0; // Double the welcome bonus
   
@@ -111,17 +111,17 @@ export const calculateTaskProgress = (taskId: string, dbProgress: number, user: 
       return dbProgress;
       
     case 'weekly-mining':
-      return Math.min(user.weeklyEarnings, 1000);
+      return Math.min(user.weekly_earnings, 1000);
       
     case 'invite-friends':
       return user.totalReferrals || 0;
       
     case 'early-adopter':
-      return user.accountAge >= 5 ? 1 : 0;
+      return user.account_age >= 5 ? 1 : 0;
       
     case 'daily-checkin':
       // Daily check-in logic - check if it's a new day or not claimed yet
-      if (isNewDay(user.lastLoginTime) || !user.dailyCheckInClaimed) {
+      if (isNewDay(user.last_login_time.getTime()) || !user.daily_checkin_claimed) {
         return 1; // Can be claimed
       } else {
         return 0; // Already claimed today

@@ -14,7 +14,7 @@ const WelcomePopup: React.FC<WelcomePopupProps> = ({ user, onClose, isNewUser = 
   }
 
   // Double the welcome bonus calculation
-  const bonusAmount = Math.floor((user.accountAge || 0) * 25 * (user.multiplier || 1) * 2);
+  const bonusAmount = Math.floor((user.account_age || 0) * 25 * (user.multiplier || 1) * 2);
   const referralBonus = user.referredBy ? Math.floor(bonusAmount * 0.1) : 0;
 
   return (
@@ -65,12 +65,12 @@ const WelcomePopup: React.FC<WelcomePopupProps> = ({ user, onClose, isNewUser = 
                     <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400" />
                     <span className="text-white font-medium text-sm sm:text-base">Account Age</span>
                   </div>
-                  <span className="text-xl sm:text-2xl font-bold text-cyan-400" title={`Account created ${user.joinDate || 'unknown'}`}>
-                    {user.accountAge || 0} years
+                  <span className="text-xl sm:text-2xl font-bold text-cyan-400" title={`Account created ${user.join_date || 'unknown'}`}>
+                    {user.account_age || 0} years
                   </span>
                 </div>
                 <p className="text-gray-400 text-xs sm:text-sm">
-                  Your Discord account was created {user.accountAge || 0} years ago
+                  Your Discord account was created {user.account_age || 0} years ago
                 </p>
               </div>
 

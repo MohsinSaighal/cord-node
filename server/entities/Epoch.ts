@@ -16,32 +16,44 @@ export class Epoch {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @Column({ type: "integer", unique: true })
+  @Column({ type: "integer", unique: true, name: "epoch_number" })
   epochNumber!: number;
 
-  @Column({ type: "varchar", length: 255 })
+  @Column({ type: "varchar", length: 255, name: "name" })
   name!: string;
 
-  @Column({ type: "text" })
+  @Column({ type: "text", name: "description" })
   description!: string;
 
-  @Column({ type: "timestamp" })
+  @Column({ type: "timestamp", name: "start_date" })
   startDate!: Date;
 
-  @Column({ type: "timestamp" })
+  @Column({ type: "timestamp", name: "end_date" })
   endDate!: Date;
 
-  @Column({ type: "boolean", default: true })
+  @Column({ type: "boolean", default: true, name: "is_active" })
   isActive!: boolean;
 
-  @Column({ type: "decimal", precision: 10, scale: 2, default: 1.0 })
+  @Column({ 
+    type: "decimal", 
+    precision: 10, 
+    scale: 2, 
+    default: 1.0,
+    name: "rewards_multiplier"
+  })
   rewardsMultiplier!: number;
 
-  @CreateDateColumn()
+  @Column({ type: "text", nullable: true, name: "special_features" })
+  specialFeatures?: string;
+
+  @CreateDateColumn({ name: "created_at" })
   createdAt!: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: "updated_at" })
   updatedAt!: Date;
+
+  @Column({ type: "boolean", default: false, name: "hasbadgeofhonor" })
+  hasbadgeofhonor!: boolean;
 
   // Relations
   @OneToMany(() => UserEpochStats, (userEpochStats) => userEpochStats.epoch)

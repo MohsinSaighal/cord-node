@@ -68,8 +68,8 @@ const storeUserSession = (userData: UserData): void => {
     "cordnode_user_session",
     JSON.stringify({
       ...JSON.parse(JSON.stringify(userData)), // Deep clone to avoid reference issues
-      joinDate: userData.joinDate, // Convert Date to string for storage
-      lastSavedBalance: userData.currentBalance, // Track last saved balance
+      join_date: userData.join_date, // Convert Date to string for storage
+      lastSavedBalance: userData.current_balance, // Track last saved balance
     })
   );
   localStorage.setItem("cordnode_session_timestamp", Date.now().toString());
@@ -92,16 +92,16 @@ const getStoredUserSession = (): UserData | null => {
 
     const userData = JSON.parse(stored);
     // Convert string back to Date
-    userData.joinDate = new Date(userData.joinDate);
+    userData.join_date = new Date(userData.join_date);
 
     // Ensure we don't lose balance between sessions
     if (
       userData.lastSavedBalance &&
-      userData.currentBalance < userData.lastSavedBalance
+      userData.current_balance < userData.lastSavedBalance
     ) {
-      userData.currentBalance = userData.lastSavedBalance;
-      userData.totalEarned = Math.max(
-        userData.totalEarned,
+      userData.current_balance = userData.lastSavedBalance;
+      userData.total_earned = Math.max(
+        userData.total_earned,
         userData.lastSavedBalance
       );
     }
@@ -134,15 +134,15 @@ export const createOrUpdateUser = async (
     hasReferralCode: !!referralCode,
   });
 
-  const accountAge = calculateAccountAge(discordUser.created_timestamp);
-  const multiplier = calculateMultiplier(accountAge);
-  const baseBalance = calculateInitialBalance(accountAge, multiplier) || 0;
+  const account_age = calculateAccountAge(discordUser.created_timestamp);
+  const multiplier = calculateMultiplier(account_age);
+  const baseBalance = calculateInitialBalance(account_age, multiplier) || 0;
   const userReferralCode = generateReferralCode();
 
   console.log("Creating/updating user:", {
     id: discordUser.id,
     username: discordUser.username,
-    accountAge,
+    account_age,
     multiplier,
     baseBalance,
     referralCode,
@@ -168,7 +168,7 @@ export const createOrUpdateUser = async (
       // For existing users, update the login time
       const updatedUser = {
         ...existingUser,
-        lastLoginTime: Date.now(),
+        last_login_time: new Date(Date.now()),
       };
       
       userData = await apiClient.updateUser(discordUser.id, updatedUser);
@@ -176,7 +176,7 @@ export const createOrUpdateUser = async (
       console.log("Creating new user");
       await logAuthAttempt(discordUser.id, "discord_oauth", "new_user", {
         username: discordUser.username,
-        accountAge,
+        account_age,
       });
 
       // Create new user data
@@ -185,23 +185,23 @@ export const createOrUpdateUser = async (
         username: discordUser.username,
         discriminator: discordUser.discriminator,
         avatar: getAvatarUrl(discordUser.id, discordUser.avatar),
-        accountAge,
-        joinDate: new Date(discordUser.created_timestamp),
+        account_age,
+        join_date: new Date(discordUser.created_timestamp),
         multiplier,
-        totalEarned: baseBalance,
-        currentBalance: baseBalance,
+        total_earned: baseBalance,
+        current_balance: baseBalance,
         referralCode: userReferralCode,
         rank: Math.floor(Math.random() * 1000) + 1,
-        lastLoginTime: Date.now(),
+        last_login_time: new Date(Date.now()),
         isNodeActive: false,
         tasksCompleted: 0,
-        dailyCheckInClaimed: false,
-        weeklyEarnings: 0,
-        monthlyEarnings: 0,
+        daily_checkin_claimed: false,
+        weekly_earnings: 0,
+        monthly_earnings: 0,
         referralEarnings: 0,
         totalReferrals: 0,
         referredBy: referralCode || undefined,
-        hasBadgeOfHonor: false,
+        hasbadgeofhonor: false,
         nodeStartTime: undefined,
         currentEpochId: undefined,
         epochJoinDate: undefined,

@@ -25,7 +25,7 @@ export class ReferralService {
         };
       }
 
-      if (newUser.referredBy) {
+      if (newUser.referred_by) {
         throw {
           statusCode: 400,
           message: "You have already used a referral code"
@@ -44,20 +44,20 @@ export class ReferralService {
       }
 
       // Calculate bonuses
-      const newUserWelcomeBonus = Math.floor(newUser.accountAge * 25 * newUser.multiplier * 2);
+      const newUserWelcomeBonus = Math.floor(newUser.account_age * 25 * newUser.multiplier * 2);
       const referrerBonus = Math.floor(newUserWelcomeBonus * 0.1);
 
       // Update referrer stats and balance
-      referrer.currentBalance += referrerBonus;
-      referrer.totalEarned += referrerBonus;
-      referrer.referralEarnings += referrerBonus;
-      referrer.totalReferrals += 1;
+      referrer.current_balance += referrerBonus;
+      referrer.total_earned += referrerBonus;
+      referrer.referral_earnings += referrerBonus;
+      referrer.total_referrals += 1;
       await this.userRepository.save(referrer);
 
       // Update new user with referral info and bonus
-      newUser.referredBy = referrer.id;
-      newUser.currentBalance += newUserWelcomeBonus;
-      newUser.totalEarned += newUserWelcomeBonus;
+      newUser.referred_by = referrer.id;
+      newUser.current_balance += newUserWelcomeBonus;
+      newUser.total_earned += newUserWelcomeBonus;
       await this.userRepository.save(newUser);
 
       // Create referral data record
@@ -77,6 +77,7 @@ export class ReferralService {
       };
 
     } catch (error:any) {
+      console.log('Error processing new user referral:', error);
       // Rethrow our custom errors
       if (error.statusCode) {
         throw error;
@@ -99,13 +100,13 @@ export class ReferralService {
         where: { id: userId }
       });
 
-      if (!user || !user.referredBy) {
+      if (!user || !user.referred_by) {
         return { success: true }; // No referrer, but not an error
       }
 
       // Get the referrer
       const referrer = await this.userRepository.findOne({
-        where: { id: user.referredBy }
+        where: { id: user.referred_by }
       });
 
       if (!referrer) {
@@ -116,9 +117,9 @@ export class ReferralService {
       const referrerBonus = earningAmount * 0.1;
 
       // Update referrer balance
-      referrer.currentBalance += referrerBonus;
-      referrer.totalEarned += referrerBonus;
-      referrer.referralEarnings += referrerBonus;
+      referrer.current_balance += referrerBonus;
+      referrer.total_earned += referrerBonus;
+      referrer.referral_earnings += referrerBonus;
       await this.userRepository.save(referrer);
 
       // Update referral data
@@ -177,14 +178,14 @@ export class ReferralService {
         createdAt: ref.createdAt,
         referredUser: {
           username: ref.referredUser.username,
-          accountAge: ref.referredUser.accountAge,
-          totalEarned: ref.referredUser.totalEarned
+          account_age: ref.referredUser.account_age,
+          total_earned: ref.referredUser.total_earned
         }
       }));
 
       return {
-        totalReferrals: user.totalReferrals,
-        totalEarnings: user.referralEarnings,
+        totalReferrals: user.total_referrals,
+        totalEarnings: user.referral_earnings,
         referralHistory: formattedHistory
       };
 

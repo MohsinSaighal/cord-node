@@ -24,38 +24,38 @@ export const useLeaderboard = (currentUser: UserData | null) => {
 
       // Calculate daily earnings for users who are actively mining
       const entries: LeaderboardEntry[] = users.map((user, index) => {
-        let displayEarnings = user.totalEarned;
+        let displayEarnings = user.total_earned;
         
         // For daily period, calculate approximate daily earnings
         if (selectedPeriod === 'daily') {
           // Estimate daily earnings based on recent activity
-          const accountAge = user.accountAge;
-          const multiplier = Math.min(10, 1 + (accountAge * 0.5));
+          const account_age = user.account_age;
+          const multiplier = Math.min(10, 1 + (account_age * 0.5));
           const baseRate = 0.5; // CP per minute
           const dailyRate = baseRate * multiplier * 60 * 24; // 24 hours
           
           // If user is active, show estimated daily rate, otherwise show 0
           displayEarnings = user.isNodeActive ? dailyRate * (0.8 + Math.random() * 0.4) : 0;
         } else if (selectedPeriod === 'weekly') {
-          displayEarnings = user.weeklyEarnings || 0;
+          displayEarnings = user.weekly_earnings || 0;
         } else if (selectedPeriod === 'monthly') {
-          displayEarnings = user.monthlyEarnings || 0;
+          displayEarnings = user.monthly_earnings || 0;
         }
 
         return {
           rank: index + 1,
           username: user.username,
           avatar: user.avatar,
-          totalEarned: displayEarnings,
-          accountAge: user.accountAge,
+          total_earned: displayEarnings,
+          account_age: user.account_age,
           isActive: user.isNodeActive,
-          weeklyEarnings: user.weeklyEarnings || 0
+          weekly_earnings: user.weekly_earnings || 0
         };
       });
 
       // Re-sort by display earnings and update ranks
       const sortedEntries = entries
-        .sort((a, b) => b.totalEarned - a.totalEarned)
+        .sort((a, b) => b.total_earned - a.total_earned)
         .map((entry, index) => ({ ...entry, rank: index + 1 }));
 
       setLeaderboard(sortedEntries);

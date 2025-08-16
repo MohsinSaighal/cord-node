@@ -230,8 +230,8 @@ const TaskPanel: React.FC<{ user: UserData; onUserUpdate: (user: UserData) => vo
     if (result.success && result.newBalance !== undefined) {
       onUserUpdate({
         ...user,
-        currentBalance: result.newBalance,
-        totalEarned: user.totalEarned + (result.reward || 0)
+        current_balance: result.newBalance,
+        total_earned: user.total_earned + (result.reward || 0)
       });
     }
   };
@@ -416,7 +416,7 @@ export const ModernApp: React.FC<ModernAppProps> = ({ user, onUserUpdate }) => {
               <Badge className="px-4 py-2 text-sm border-green-500/30 text-green-400">
                 Rank #{user.rank || 'Unranked'}
               </Badge>
-              {user.hasBadgeOfHonor && (
+              {user.hasbadgeofhonor && (
                 <Badge className="px-4 py-2 text-sm border" style={{ borderColor: 'var(--reward-gold)', color: 'var(--reward-gold)', backgroundColor: 'rgba(255, 193, 7, 0.1)' }}>
                   Badge of Honor
                 </Badge>
@@ -429,7 +429,7 @@ export const ModernApp: React.FC<ModernAppProps> = ({ user, onUserUpdate }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           <StatsCard
             title="Current Balance"
-            value={user.currentBalance?.toFixed(2) || '0.00'}
+            value={user.current_balance?.toFixed(2) || '0.00'}
             subtitle="CORD tokens"
             icon={<Coins className="w-6 h-6 text-green-400" />}
             gradient="from-green-400 to-emerald-600"
@@ -439,7 +439,7 @@ export const ModernApp: React.FC<ModernAppProps> = ({ user, onUserUpdate }) => {
           
           <StatsCard
             title="Total Earned"
-            value={user.totalEarned?.toFixed(2) || '0.00'}
+            value={user.total_earned?.toFixed(2) || '0.00'}
             subtitle="All time earnings"
             icon={<TrendingUp className="w-6 h-6 text-blue-400" />}
             gradient="from-blue-400 to-blue-600"
@@ -506,15 +506,15 @@ export const ModernApp: React.FC<ModernAppProps> = ({ user, onUserUpdate }) => {
                   },
                   {
                     label: 'Account Age',
-                    value: `${user.accountAge}y`,
+                    value: `${user.account_age}y`,
                     icon: <Clock className="w-4 h-4" />,
                     color: 'text-blue-400'
                   },
                   {
                     label: 'Badge Status',
-                    value: user.hasBadgeOfHonor ? 'Honor' : 'None',
+                    value: user.hasbadgeofhonor ? 'Honor' : 'None',
                     icon: <Award className="w-4 h-4" />,
-                    color: user.hasBadgeOfHonor ? 'text-purple-400' : 'text-slate-400'
+                    color: user.hasbadgeofhonor ? 'text-purple-400' : 'text-slate-400'
                   }
                 ].map((action, index) => (
                   <div

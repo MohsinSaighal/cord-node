@@ -8,47 +8,66 @@ import {
 } from "typeorm";
 import { User } from "./User";
 
-export type BadgePurchaseStatus = 'pending' | 'completed' | 'failed';
+export type BadgePurchaseStatus = "pending" | "completed" | "failed";
 
 @Entity("badge_purchases")
 export class BadgePurchase {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @Column({ type: "text" })
+  @Column({ type: "text", name: "user_id" })
   userId!: string;
 
-  @Column({ type: "varchar", length: 64 })
+  @Column({ type: "varchar", length: 64, name: "wallet_address" })
   walletAddress!: string;
 
-  @Column({ type: "varchar", length: 120, unique: true })
+  @Column({
+    type: "varchar",
+    length: 120,
+    unique: true,
+    name: "transaction_hash",
+  })
   transactionHash!: string;
 
-  @Column({ type: "decimal", precision: 10, scale: 6, transformer: {
-    to: (value: number) => value,
-    from: (value: string) => parseFloat(value)
-  }})
+  @Column({
+    type: "decimal",
+    precision: 10,
+    scale: 6,
+    name: "amount_sol",
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => parseFloat(value),
+    },
+  })
   amountSol!: number;
 
-  @Column({ type: "decimal", precision: 10, scale: 2, transformer: {
-    to: (value: number) => value,
-    from: (value: string) => parseFloat(value)
-  }})
+  @Column({
+    type: "decimal",
+    precision: 10,
+    scale: 2,
+    name: "amount_usd",
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => parseFloat(value),
+    },
+  })
   amountUsd!: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: "purchase_date" })
   purchaseDate!: Date;
 
-  @Column({ 
-    type: "varchar", 
-    length: 20, 
-    default: 'pending',
-    enum: ['pending', 'completed', 'failed']
+
+  @Column({
+    type: "varchar",
+    length: 20,
+    default: "pending",
+    enum: ["pending", "completed", "failed"],
+    name: "status",
   })
   status!: BadgePurchaseStatus;
 
   // Relations
   @ManyToOne(() => User, { onDelete: "CASCADE" })
-  @JoinColumn({ name: "userId" })
+  @JoinColumn({ name: "user_id" })
   user!: User;
 }

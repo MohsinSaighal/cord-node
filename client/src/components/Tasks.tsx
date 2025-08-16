@@ -170,7 +170,7 @@ const Tasks: React.FC<TasksProps> = ({ user, onUserUpdate }) => {
         taskId: task.id,
         progress: task.progress,
         required: task.maxProgress,
-        accountAge: user.accountAge
+        account_age: user.account_age
       });
       // Task status check removed
       
@@ -245,7 +245,7 @@ const Tasks: React.FC<TasksProps> = ({ user, onUserUpdate }) => {
     if (task.type === 'achievement') {
       // Early adopter achievement requires 5+ year Discord account
       if (task.id === 'early-adopter') {
-        return (user?.accountAge || 0) >= 5;
+        return (user?.account_age || 0) >= 5;
       }
       if (task.id === 'social-master') {
         const completedSocialTasks = tasks.filter(t => t.type === 'social' && t.completed).length;
@@ -581,14 +581,14 @@ const Tasks: React.FC<TasksProps> = ({ user, onUserUpdate }) => {
                         <div className="flex items-start space-x-2 mb-1">
                           <AlertTriangle className="w-4 h-4 text-yellow-400" />
                           <span className="text-yellow-300 text-sm font-medium flex-1">
-                            {task.type === 'achievement' && task.id === 'early-adopter' && (user?.accountAge || 0) < 5 
+                            {task.type === 'achievement' && task.id === 'early-adopter' && (user?.account_age || 0) < 5 
                               ? 'Achievement Locked' 
                               : 'Task Not Ready'}
                           </span>
                         </div>
                         <p className="text-yellow-200/80 text-xs">
-                          {task.type === 'achievement' && task.id === 'early-adopter' && (user?.accountAge || 0) < 5 
-                            ? `Requires a Discord account that's at least 5 years old. Your account is ${user?.accountAge || 0} years old.`
+                          {task.type === 'achievement' && task.id === 'early-adopter' && (user?.account_age || 0) < 5 
+                            ? `Requires a Discord account that's at least 5 years old. Your account is ${user?.account_age || 0} years old.`
                             : 'Complete the required actions to unlock the reward.'}
                           {task.id === 'social-media-master' && (
                             <span className="block mt-1">

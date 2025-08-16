@@ -14,6 +14,7 @@ import { SimpleButton } from "@/components/ui/SimpleButton";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { cn } from "@/lib/utils";
 import type { UserData } from "../../types";
+import { API_BASE } from "../../hooks/useApi"; // Ensure this path is correct
 import {
   SystemProgram,
   LAMPORTS_PER_SOL,
@@ -40,8 +41,12 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
   onUserUpdate,
 }) => {
   const [isPaying, setIsPaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
   const [solPrice, setSolPrice] = useState<number>(50);
   const [isConnectedToWallet, setIsConnectedToWallet] = useState(false);
+  const [hasPurchasedBadge, setHasPurchasedBadge] = useState(false);
+
   const [transactionStatus, setTransactionStatus] = useState<
     "idle" | "processing" | "success" | "error"
   >("idle");
@@ -91,7 +96,25 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
       solanaWallet?.on?.("disconnect", () => setIsConnectedToWallet(false));
     }
   }, []);
+  useEffect(() => {
+    const checkBadgePurchase = async () => {
+      try {
+        const response = await fetch(
+          `${API_BASE}/users/${user.id}/badge-purchases`
+        );
+        if (response.ok) {
+          const purchases = await response.json();
+          setHasPurchasedBadge(purchases.length > 0);
+        }
+      } catch (error) {
+        console.error("Failed to fetch badge purchases:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
+    checkBadgePurchase();
+  }, [user.id]);
   const connectWallet = async () => {
     try {
       if (typeof window !== "undefined" && "solana" in window) {
@@ -152,22 +175,19 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
         throw new Error("Wallet not available");
       }
 
-      const response = await fetch(
-        "https://staging.printsup.org/api/badge-purchases",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: user.id,
-            walletAddress: solanaWallet.publicKey?.toString() || "mock_address",
-            transactionHash: signature,
-            amountSol: BADGE_PRICE_SOL,
-            amountUsd: BADGE_PRICE_SOL * solPrice,
-          }),
-        }
-      );
+      const response = await fetch(`${API_BASE}/badge-purchases`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          walletAddress: solanaWallet.publicKey?.toString() || "mock_address",
+          transactionHash: signature,
+          amountSol: BADGE_PRICE_SOL,
+          amountUsd: BADGE_PRICE_SOL * solPrice,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to create badge purchase record");
@@ -175,7 +195,7 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
 
       const updatedUser = {
         ...user,
-        hasBadgeOfHonor: true,
+        hasbadgeofhonor: true,
       };
 
       onUserUpdate(updatedUser);
@@ -200,8 +220,15 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
   };
 
   const usdPrice = BADGE_PRICE_SOL * solPrice;
+  if (isLoading) {
+    return (
+      <div className="bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 flex items-center justify-center">
+        <Loader className="w-6 h-6 animate-spin text-slate-400" />
+      </div>
+    );
+  }
 
-  if (user.hasBadgeOfHonor) {
+  if (user.hasbadgeofhonor || hasPurchasedBadge) {
     return (
       <div className="bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6">
         <div className="flex flex-col items-center justify-center text-center">
@@ -233,7 +260,9 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
             <Award className="w-5 h-5 text-white" />
           </div>
           <div>
-            <div className="font-semibold text-lg text-white">Badge Of Honor</div>
+            <div className="font-semibold text-lg text-white">
+              Badge Of Honor
+            </div>
             <div className="text-sm text-slate-400">
               Unlock premium benefits and stand out from the crowd.
             </div>
@@ -246,7 +275,9 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
 
       <div className="bg-slate-700/20 rounded-xl p-4 border border-slate-600/30 mb-6">
         <div className="space-y-4">
-          <div className="text-lg font-semibold mb-3 text-white">Advantages</div>
+          <div className="text-lg font-semibold mb-3 text-white">
+            Advantages
+          </div>
           <div className="space-y-3">
             <div className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/50">
               <div className="flex items-center space-x-3">
@@ -263,7 +294,9 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
             <div className="bg-slate-700/30 rounded-lg p-3 border border-slate-600/50">
               <div className="flex items-center space-x-3">
                 <Crown className="w-4 h-4 text-yellow-400" />
-                <span className="text-sm text-slate-300">Exclusive Badge Display</span>
+                <span className="text-sm text-slate-300">
+                  Exclusive Badge Display
+                </span>
               </div>
             </div>
           </div>
@@ -272,10 +305,14 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
 
       <div className="flex items-center justify-between mb-4">
         <div>
-          <div className="text-2xl font-bold mb-1 text-white">{BADGE_PRICE_SOL} SOL</div>
-          <div className="text-sm text-slate-400">≈ ${usdPrice.toFixed(2)} USD</div>
+          <div className="text-2xl font-bold mb-1 text-white">
+            {BADGE_PRICE_SOL} SOL
+          </div>
+          <div className="text-sm text-slate-400">
+            ≈ ${usdPrice.toFixed(2)} USD
+          </div>
         </div>
-        
+
         {!isConnectedToWallet ? (
           <WalletMultiButton className="!bg-gradient-to-r !from-cyan-500 !to-blue-600 hover:!from-cyan-600 hover:!to-blue-700 !text-white !font-semibold !rounded-xl" />
         ) : (
@@ -284,9 +321,11 @@ export const BadgeOfHonorPurchase: React.FC<BadgeOfHonorPurchaseProps> = ({
             disabled={isPaying || transactionStatus === "processing"}
             className={cn(
               "px-6 py-2 font-semibold rounded-xl transition-all duration-300",
-              transactionStatus === "success" && "!bg-emerald-500 hover:!bg-emerald-600",
+              transactionStatus === "success" &&
+                "!bg-emerald-500 hover:!bg-emerald-600",
               transactionStatus === "error" && "!bg-red-500 hover:!bg-red-600",
-              transactionStatus === "idle" && "bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600"
+              transactionStatus === "idle" &&
+                "bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600"
             )}
           >
             <div className="flex items-center justify-center space-x-2">

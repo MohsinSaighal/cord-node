@@ -17,14 +17,14 @@ export const getUserData = (): UserData | null => {
   
   const userData = JSON.parse(stored);
   // Convert date strings back to Date objects
-  userData.joinDate = new Date(userData.joinDate);
+  userData.join_date = new Date(userData.join_date);
   
   // Ensure all new fields are defined with default values
-  if (userData.weeklyEarnings === undefined || userData.weeklyEarnings === null) {
-    userData.weeklyEarnings = 0;
+  if (userData.weekly_earnings === undefined || userData.weekly_earnings === null) {
+    userData.weekly_earnings = 0;
   }
-  if (userData.monthlyEarnings === undefined || userData.monthlyEarnings === null) {
-    userData.monthlyEarnings = 0;
+  if (userData.monthly_earnings === undefined || userData.monthly_earnings === null) {
+    userData.monthly_earnings = 0;
   }
   if (userData.referralEarnings === undefined || userData.referralEarnings === null) {
     userData.referralEarnings = 0;
@@ -60,7 +60,7 @@ export const getAppState = (): AppState => {
       globalStats: {
         totalMiners: 0,
         activeMiners: 0,
-        totalEarned: 0
+        total_earned: 0
       }
     };
   }

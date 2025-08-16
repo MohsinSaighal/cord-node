@@ -1,26 +1,25 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
   OneToOne,
   Index,
-  PrimaryColumn,
 } from "typeorm";
-import { Task } from "./Task";
-import { UserEpochStats } from "./UserEpochStats";
-import { ReferralData } from "./ReferralData";
 import { UserTask } from "./UserTask";
 import { MiningSession } from "./MiningSession";
 import { UserSettings } from "./UserSettings";
+import { UserEpochStats } from "./UserEpochStats";
+import { ReferralData } from "./ReferralData";
 
 @Entity("users")
 @Index(["username"], { unique: true })
 @Index(["referralCode"], { unique: true })
 export class User {
-  @PrimaryColumn({type:"varchar", length: 36})
+  // Direct mappings from CSV
+  @PrimaryColumn({ type: "varchar", length: 228 })
   id!: string;
 
   @Column({ type: "varchar", length: 255, unique: true })
@@ -32,104 +31,99 @@ export class User {
   @Column({ type: "varchar", length: 255, nullable: true })
   avatar!: string;
 
-  @Column({ type: "decimal", precision: 10, scale: 2, default: 0 })
-  accountAge!: number;
+  @Column({ type: "numeric", precision: 10, scale: 2, default: 0 })
+  account_age!: number;
 
-  @Column({ type: "timestamp" })
-  joinDate!: Date;
+  @Column({ type: "timestamp with time zone" })
+  join_date!: Date;
 
-  @Column({ type: "decimal", precision: 10, scale: 2, default: 1.0 })
+  @Column({ type: "numeric", precision: 10, scale: 2, default: 1.0 })
   multiplier!: number;
 
-  @Column({ type: "boolean", default: false })
-  compensationClaimed!: boolean;
+  @Column({ type: "decimal", precision: 20, scale: 8 })
+  total_earned!: number;
+
+  @Column({ type: "numeric", precision: 15, scale: 2, default: 0 })
+  current_balance!: number;
 
   @Column({ type: "boolean", default: false })
-  hasBadgeOfHonor!: boolean;
+  is_node_active!: boolean;
 
-  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
-    to: (value: number) => value,
-    from: (value: string) => parseFloat(value)
-  }})
-  totalEarned!: number;
-
-  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
-    to: (value: number) => value,
-    from: (value: string) => parseFloat(value)
-  }})
-  currentBalance!: number;
-
-  @Column({ type: "boolean", default: false })
-  isNodeActive!: boolean;
+  @Column({ type: "timestamp with time zone", nullable: true })
+  node_start_time!: Date | null;
 
   @Column({ type: "integer", default: 0 })
-  tasksCompleted!: number;
+  tasks_completed!: number;
 
   @Column({ type: "integer", default: 0 })
   rank!: number;
 
-  @Column({ type: "bigint", nullable: true })
-  nodeStartTime!: number;
-
-  @Column({ type: "bigint", default: () => "EXTRACT(epoch FROM NOW()) * 1000" })
-  lastLoginTime!: number;
+  @Column({ type: "timestamp with time zone" })
+  last_login_time!: Date;
 
   @Column({ type: "boolean", default: false })
-  dailyCheckInClaimed!: boolean;
+  daily_checkin_claimed!: boolean;
 
-  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
-    to: (value: number) => value,
-    from: (value: string) => parseFloat(value)
-  }})
-  weeklyEarnings!: number;
+  @Column({ type: "boolean", default: false, nullable: true })
+  isNodeActive!: boolean;
 
-  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
-    to: (value: number) => value,
-    from: (value: string) => parseFloat(value)
-  }})
-  monthlyEarnings!: number;
+  @Column({ type: "numeric", precision: 15, scale: 2, default: 0 })
+  weekly_earnings!: number;
 
-  @Column({ type: "varchar", length: 50, nullable: true, unique: true })
-  referralCode!: string;
+  @Column({ type: "numeric", precision: 15, scale: 2, default: 0 })
+  monthly_earnings!: number;
+
+  @Column({
+    type: "varchar",
+    length: 50,
+    nullable: true,
+    unique: true,
+    name: "referral_code", // This matches your database column name
+  })
+  referralCode!: string | null;
 
   @Column({ type: "varchar", length: 50, nullable: true })
-  referredBy!: string;
+  referred_by!: string | null;
 
-  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
-    to: (value: number) => value,
-    from: (value: string) => parseFloat(value)
-  }})
-  referralEarnings!: number;
+  @Column({ type: "numeric", precision: 15, scale: 2, default: 0 })
+  referral_earnings!: number;
 
   @Column({ type: "integer", default: 0 })
-  totalReferrals!: number;
+  total_referrals!: number;
+
+  @CreateDateColumn({ type: "timestamp with time zone" })
+  created_at!: Date;
+
+  @UpdateDateColumn({ type: "timestamp with time zone" })
+  updated_at!: Date;
 
   @Column({ type: "varchar", length: 100, nullable: true })
-  currentEpochId!: string;
+  current_epoch_id!: string | null;
 
-  @Column({ type: "bigint", nullable: true })
-  epochJoinDate!: number;
+  @Column({ type: "timestamp with time zone", nullable: true })
+  epoch_join_date!: Date | null;
 
-  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
-    to: (value: number) => value,
-    from: (value: string) => parseFloat(value)
-  }})
-  totalEpochEarnings!: number;
+  @Column({ type: "numeric", precision: 15, scale: 2, default: 0 })
+  total_epoch_earnings!: number;
 
-  @Column({ type: "decimal", precision: 15, scale: 2, nullable: true, transformer: {
-    to: (value: number) => value,
-    from: (value: string) => parseFloat(value)
-  }})
+  @Column({ type: "numeric", precision: 15, scale: 2, default: 0 })
+  lifetime_referral_earnings!: number;
+
+  @Column({ type: "timestamp with time zone", nullable: true })
+  last_referral_payout!: Date | null;
+
+  @Column({ type: "boolean", default: false })
+  compensation_claimed!: boolean;
+
+  @Column({ type: "boolean", name: "hasbadgeofhonor", default: false })
+  hasbadgeofhonor!: boolean;
+
+  @Column({ type: "bigint", default: 0, nullable: true })
   lastSavedBalance!: number;
 
-  @CreateDateColumn()
-  createdAt!: Date;
-
-  @UpdateDateColumn()
-  updatedAt!: Date;
-
-  // Relations - Tasks are global, user progress tracked in UserTask
-
+  @Column({ type: "bigint", nullable: true })
+  nodeStartTime!: number; // Stores the milliseconds directly
+  // Relations (unchanged)
   @OneToMany(() => UserTask, (userTask) => userTask.user)
   userTasks!: UserTask[];
 
@@ -144,4 +138,15 @@ export class User {
 
   @OneToMany(() => ReferralData, (referral) => referral.referrer)
   referrals!: ReferralData[];
+
+  // Helper methods for conversion if needed
+  getAccountAge(): number {
+    return this.account_age;
+  }
+
+  getJoinDate(): Date {
+    return this.join_date;
+  }
+
+  // Add other getters as needed
 }

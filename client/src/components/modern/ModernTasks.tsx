@@ -85,7 +85,20 @@ const TaskCard: React.FC<{
       : task.progress >= task.maxProgress
       ? 100
       : 0;
+
+  // Check if daily task is claimable again (24 hours since last claim)
+  const isDailyTaskClaimable = () => {
+    if (task.type !== "daily" || !task.completed) return true;
+    if (!task.claimedAt) return true;
+    
+    const lastClaimTime = new Date(task.claimedAt).getTime();
+    const now = Date.now();
+    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+    return now - lastClaimTime >= TWENTY_FOUR_HOURS;
+  };
+
   const canComplete =
+    (task.type === "daily" && isDailyTaskClaimable()) ||
     (task.progress >= task.maxProgress && !task.completed) ||
     (task.type === "social" && visited && !task.completed);
 
@@ -124,11 +137,31 @@ const TaskCard: React.FC<{
     setVisited(true);
   };
 
+  // Calculate time until next claim for daily tasks
+  const getTimeUntilNextClaim = () => {
+    if (task.type !== "daily" || !task.claimedAt) return null;
+    
+    const lastClaimTime = new Date(task.claimedAt).getTime();
+    const now = Date.now();
+    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+    const timePassed = now - lastClaimTime;
+    const timeLeft = TWENTY_FOUR_HOURS - timePassed;
+
+    if (timeLeft <= 0) return null;
+
+    const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    
+    return `${hours}h ${minutes}m`;
+  };
+
+  const timeUntilNextClaim = getTimeUntilNextClaim();
+
   return (
     <AnimatedCard
       className={cn(
         "relative p-6 transition-all duration-300 border overflow-hidden",
-        task.completed
+        task.completed && !canComplete
           ? "bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/30"
           : `bg-gradient-to-br ${getTaskTypeGradient(
               task.type
@@ -136,7 +169,7 @@ const TaskCard: React.FC<{
       )}
     >
       {/* Background sparkles for completed tasks */}
-      {task.completed && (
+      {task.completed && !canComplete && (
         <div className="absolute inset-0 pointer-events-none">
           {[...Array(8)].map((_, i) => (
             <Sparkles
@@ -158,10 +191,10 @@ const TaskCard: React.FC<{
           <div
             className={cn(
               "p-3 rounded-xl transition-all duration-300",
-              task.completed
+              task.completed && !canComplete
                 ? "bg-green-500/20"
                 : getTaskTypeGradient(task.type)
-            )}
+  )}
           >
             {getTaskTypeIcon(task.type)}
           </div>
@@ -174,7 +207,7 @@ const TaskCard: React.FC<{
           </div>
         </div>
 
-        {task.completed && (
+        {task.completed && !canComplete && (
           <div className="flex items-center space-x-2">
             <CheckCircle className="w-6 h-6 text-green-400 animate-pulse" />
             <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
@@ -211,13 +244,31 @@ const TaskCard: React.FC<{
           </GradientText>
         </div>
 
-        {/* Action buttons - Fixed to keep text and icon in one line */}
+        {/* Action buttons */}
         <div className="w-full sm:w-auto">
           {task.completed ? (
-            <div className="flex items-center text-green-400 font-medium text-sm sm:text-base whitespace-nowrap">
-              <CheckCircle className="w-4 h-4 mr-1 flex-shrink-0" />
-              <span>Claimed</span>
-            </div>
+            canComplete ? (
+              <SimpleButton
+                onClick={() => onComplete(task.id)}
+                size="sm"
+                className="w-full sm:w-auto bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 px-4 sm:px-6 whitespace-nowrap"
+              >
+                <div className="flex items-center">
+                  <Award className="w-4 h-4 mr-2 flex-shrink-0" />
+                  <span>Claim Again</span>
+                </div>
+              </SimpleButton>
+            ) : timeUntilNextClaim ? (
+              <div className="flex items-center text-amber-400 font-medium text-sm sm:text-base whitespace-nowrap">
+                <Clock className="w-4 h-4 mr-1 flex-shrink-0" />
+                <span>Available in {timeUntilNextClaim}</span>
+              </div>
+            ) : (
+              <div className="flex items-center text-green-400 font-medium text-sm sm:text-base whitespace-nowrap">
+                <CheckCircle className="w-4 h-4 mr-1 flex-shrink-0" />
+                <span>Claimed</span>
+              </div>
+            )
           ) : canComplete ? (
             <SimpleButton
               onClick={() => onComplete(task.id)}

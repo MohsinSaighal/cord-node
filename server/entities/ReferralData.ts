@@ -20,10 +20,16 @@ export class ReferralData {
   @Column({ type: "varchar", length: 50, unique: true })
   code!: string;
 
-  @Column({ type: "decimal", precision: 15, scale: 2, default: 0, transformer: {
-    to: (value: number) => value,
-    from: (value: string) => parseFloat(value)
-  }})
+  @Column({
+    type: "decimal",
+    precision: 15,
+    scale: 2,
+    default: 0,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => parseFloat(value),
+    },
+  })
   totalEarnings!: number;
 
   @Column({ type: "integer", default: 0 })

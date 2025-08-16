@@ -13,7 +13,7 @@ export const processReferralInDatabase = async (newUser: UserData, referralCode:
     }
     
     // Calculate referral bonuses
-    const newUserWelcomeBonus = Math.floor(newUser.accountAge * 25 * newUser.multiplier);
+    const newUserWelcomeBonus = Math.floor(newUser.account_age * 25 * newUser.multiplier);
     console.log("new welcome bonus", newUserWelcomeBonus);
     const referrerBonus = Math.floor(newUserWelcomeBonus * 0.2); // 20% of new user's welcome bonus
 
@@ -48,8 +48,8 @@ export const processReferralInDatabase = async (newUser: UserData, referralCode:
       const updatedNewUser = {
         ...newUser,
         referredBy: result.referrer_id,
-        currentBalance: newUser.currentBalance + (result.referred_bonus || 0),
-        totalEarned: newUser.totalEarned + (result.referred_bonus || 0)
+        current_balance: newUser.current_balance + (result.referred_bonus || 0),
+        total_earned: newUser.total_earned + (result.referred_bonus || 0)
       };
 
       console.log('Referral processed successfully:', {

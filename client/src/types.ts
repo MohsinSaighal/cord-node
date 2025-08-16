@@ -3,21 +3,21 @@ export interface UserData {
   username: string;
   discriminator: string;
   avatar: string;
-  accountAge: number; // in years
-  joinDate: Date;
+  account_age: number; // in years
+  join_date: Date;
   multiplier: number;
   compensationClaimed: boolean;
-  hasBadgeOfHonor: boolean;
-  totalEarned: number;
-  currentBalance: number;
+  hasbadgeofhonor: boolean;
+  total_earned: number;
+  current_balance: number;
   isNodeActive: boolean;
   tasksCompleted: number;
   rank: number;
   nodeStartTime?: number;
-  lastLoginTime: number;
-  dailyCheckInClaimed: boolean;
-  weeklyEarnings: number;
-  monthlyEarnings: number;
+  last_login_time: Date;
+  daily_checkin_claimed: boolean;
+  weekly_earnings: number;
+  monthly_earnings: number;
   referralCode?: string;
   referredBy?: string;
   referralEarnings: number;
@@ -46,10 +46,10 @@ export interface LeaderboardEntry {
   rank: number;
   username: string;
   avatar: string;
-  totalEarned: number;
-  accountAge: number;
+  total_earned: number;
+  account_age: number;
   isActive: boolean;
-  weeklyEarnings: number;
+  weekly_earnings: number;
 }
 
 export interface NodeStats {
@@ -97,7 +97,7 @@ export interface AppState {
   globalStats: {
     totalMiners: number;
     activeMiners: number;
-    totalEarned: number;
+    total_earned: number;
   };
 }
 

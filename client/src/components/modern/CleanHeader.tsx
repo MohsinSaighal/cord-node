@@ -41,7 +41,7 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({
     { id: "referrals", label: "Referrals", icon: UserPlus },
     { id: "settings", label: "Settings", icon: Settings },
   ];
-
+  console.log("user", user);
   return (
     <header className="fixed top-0 w-full backdrop-blur-lg border-b border-slate-700/50 z-50 bg-slate-900/95">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -86,7 +86,7 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({
             {/* User Balance */}
             <div className="hidden md:flex items-center space-x-2 bg-slate-800/50 rounded-lg px-3 py-1.5 border border-slate-700/50">
               <span className="text-sm font-semibold text-white">
-                {user.currentBalance?.toFixed(2) || "0.00"} CORD
+                {user?.current_balance|| "0.00"} CORD
               </span>
             </div>
 
@@ -95,7 +95,7 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({
               <div className="hidden md:block text-right">
                 <div className="text-sm font-semibold text-white">{user.username}</div>
                 <div className="text-xs text-slate-400">
-                  Age: {user.accountAge}y • {user.multiplier}x
+                  Age: {user.account_age}y • {user.multiplier}x
                 </div>
               </div>
               {user.avatar ? (
@@ -132,7 +132,7 @@ export const CleanHeader: React.FC<CleanHeaderProps> = ({
             <div className="flex items-center justify-between px-4 py-3 bg-slate-700/50 rounded-lg mx-4 mb-4">
               <span className="text-sm font-semibold text-slate-300">Balance</span>
               <span className="text-sm font-bold text-white">
-                {user.currentBalance?.toFixed(2) || "0.00"} CORD
+                {user.current_balance?.toFixed(2) || "0.00"} CORD
               </span>
             </div>
 

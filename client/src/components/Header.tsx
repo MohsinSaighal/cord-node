@@ -89,8 +89,8 @@ const Header: React.FC<HeaderProps> = ({
                   {user.username}#{user.discriminator}
                 </div>
                 <div className="text-xs text-gray-400">
-                  {user.accountAge}y •{" "}
-                  {Math.floor(user.currentBalance).toLocaleString()} CORD
+                  {user.account_age}y •{" "}
+                  {Math.floor(user.current_balance).toLocaleString()} CORD
                 </div>
               </div>
               <div className="w-8 h-8 rounded-full overflow-hidden">
@@ -156,8 +156,8 @@ const Header: React.FC<HeaderProps> = ({
                   {user.username}#{user.discriminator}
                 </div>
                 <div className="text-xs text-gray-400">
-                  {user.accountAge} years •{" "}
-                  {Math.floor(user.currentBalance).toLocaleString()} CORD
+                  {user.account_age} years •{" "}
+                  {Math.floor(user.current_balance).toLocaleString()} CORD
                 </div>
               </div>
             </div>

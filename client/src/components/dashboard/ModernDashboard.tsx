@@ -97,12 +97,12 @@ const QuickActions: React.FC<{ user: any }> = ({ user }) => {
       color: "text-green-400",
     },
     { label: "Multiplier", value: `${user.multiplier}x`, icon: <Star className="w-4 h-4" />, color: "text-yellow-400" },
-    { label: "Account Age", value: `${user.accountAge}y`, icon: <Clock className="w-4 h-4" />, color: "text-blue-400" },
+    { label: "Account Age", value: `${user.account_age}y`, icon: <Clock className="w-4 h-4" />, color: "text-blue-400" },
     {
       label: "Badge Status",
-      value: user.hasBadgeOfHonor ? "Honor" : "None",
+      value: user.hasbadgeofhonor ? "Honor" : "None",
       icon: <Award className="w-4 h-4" />,
-      color: user.hasBadgeOfHonor ? "text-purple-400" : "text-gray-400",
+      color: user.hasbadgeofhonor ? "text-purple-400" : "text-gray-400",
     },
   ]
 
@@ -181,7 +181,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
               <Badge variant="outline" className="px-4 py-2 text-sm border-teal-500/30 text-teal-400">
                 Rank #{user.rank || "Unranked"}
               </Badge>
-              {user.hasBadgeOfHonor && (
+              {user.hasbadgeofhonor && (
                 <Badge variant="outline" className="px-4 py-2 text-sm border-purple-500/30 text-purple-400">
                   Badge of Honor
                 </Badge>
@@ -194,7 +194,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           <StatCard
             title="Current Balance"
-            value={user.currentBalance?.toFixed(2) || "0.00"}
+            value={user.current_balance?.toFixed(2) || "0.00"}
             subtitle="CORD tokens"
             icon={<Coins className="w-6 h-6 text-cyan-400" />}
             gradient="from-cyan-400 to-teal-500" // New vibrant gradient
@@ -203,7 +203,7 @@ export const ModernDashboard: React.FC<ModernDashboardProps> = ({
           />
           <StatCard
             title="Total Earzzzned"
-            value={user.totalEarned?.toFixed(2) || "0.00"}
+            value={user.total_earned?.toFixed(2) || "0.00"}
             subtitle="All time earnings"
             icon={<TrendingUp className="w-6 h-6 text-indigo-400" />}
             gradient="from-indigo-400 to-violet-600" // New vibrant gradient

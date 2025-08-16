@@ -79,7 +79,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ currentUser }) => {
     { id: 'all-time', label: 'All Time' }
   ];
 
-  const topEarner = leaderboard.length > 0 ? leaderboard[0].totalEarned : 0;
+  const topEarner = leaderboard.length > 0 ? leaderboard[0].total_earned : 0;
 
   if (loading) {
     return (
@@ -123,7 +123,7 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ currentUser }) => {
             </div>
             <div className="text-right flex-shrink-0">
               <div className="text-xl sm:text-2xl font-bold text-cyan-400">#{currentUserPosition}</div>
-              <div className="text-gray-300 text-xs sm:text-sm">{Math.floor(currentUser.totalEarned).toLocaleString()} CORD</div>
+              <div className="text-gray-300 text-xs sm:text-sm">{Math.floor(currentUser.total_earned).toLocaleString()} CORD</div>
             </div>
           </div>
         </div>
@@ -257,16 +257,16 @@ const Leaderboard: React.FC<LeaderboardProps> = ({ currentUser }) => {
                           <div className={`text-xs sm:text-sm font-medium truncate ${isCurrentUser ? 'text-cyan-400' : 'text-white'}`}>
                             {entry.username} {isCurrentUser && '(You)'}
                           </div>
-                          <div className="sm:hidden text-xs text-gray-400">{entry.accountAge}y</div>
+                          <div className="sm:hidden text-xs text-gray-400">{entry.account_age}y</div>
                         </div>
                       </div>
                     </td>
                     <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-300">{entry.accountAge} years</div>
+                      <div className="text-sm text-gray-300">{entry.account_age} years</div>
                     </td>
                     <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                       <div className="text-xs sm:text-sm font-medium text-white">
-                        {Math.floor(entry.totalEarned).toLocaleString()}
+                        {Math.floor(entry.total_earned).toLocaleString()}
                       </div>
                     </td>
                     <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">

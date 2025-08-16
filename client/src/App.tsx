@@ -13,6 +13,8 @@ import { QueryProvider } from "./providers/QueryProvider";
 import { useUserStore } from "./stores/userStore";
 import { useAppStore } from "./stores/appStore";
 import { UserData } from "./types";
+import { API_BASE } from "./hooks/useApi"; // Ensure this path is correct
+
 import { isNewDay, calculateMiningRate } from "./utils/calculations";
 import {
   getReferralCodeFromUrl,
@@ -47,8 +49,7 @@ import { clusterApiUrl } from "@solana/web3.js";
 // Import the wallet adapter styles
 import "@solana/wallet-adapter-react-ui/styles.css";
 function App() {
-  const endpoint =
-    "https://solana-mainnet.g.alchemy.com/v2/NsnP2tXE9zCuu7hjj4zpABQ--AraC4pB";
+  const endpoint = "https://api.devnet.solana.com";
   const wallets = useMemo(
     () => [
       new PhantomWalletAdapter(),
@@ -103,21 +104,22 @@ function App() {
         const freshUserData = await getUserFromDatabase(storedSession.id);
         if (freshUserData) {
           // Ensure we don't lose balance between sessions
-          if (storedSession.currentBalance > freshUserData.currentBalance) {
+          if (storedSession.current_balance > freshUserData.current_balance) {
             console.log(
               "Stored balance higher than database balance, keeping stored balance"
             );
-            freshUserData.currentBalance = storedSession.currentBalance;
-            freshUserData.totalEarned = Math.max(
-              freshUserData.totalEarned,
-              storedSession.currentBalance
+            freshUserData.current_balance = storedSession.current_balance;
+            freshUserData.total_earned = Math.max(
+              freshUserData.total_earned,
+              storedSession.current_balance
             );
           }
 
           // Reset daily tasks if new day
-          if (isNewDay(freshUserData.lastLoginTime)) {
-            freshUserData.dailyCheckInClaimed = false;
-            freshUserData.lastLoginTime = Date.now();
+          if (isNewDay(freshUserData.last_login_time.getTime())) {
+            // ✅ .getTime() converts Date → milliseconds
+            freshUserData.daily_checkin_claimed = false;
+            freshUserData.last_login_time = new Date(); // Store as Date
             await updateUserInDatabase(freshUserData);
           }
 
@@ -126,14 +128,14 @@ function App() {
           setUser({
             ...freshUserData,
             compensationClaimed: freshUserData.compensationClaimed,
-            hasBadgeOfHonor: freshUserData.hasBadgeOfHonor,
+            hasbadgeofhonor: freshUserData.hasbadgeofhonor,
           });
         } else {
           // If we can't get fresh data, use stored session
           setUser({
             ...storedSession,
             compensationClaimed: storedSession.compensationClaimed || false,
-            hasBadgeOfHonor: storedSession.hasBadgeOfHonor || false,
+            hasbadgeofhonor: storedSession.hasbadgeofhonor || false,
           });
         }
       }
@@ -152,7 +154,7 @@ function App() {
     if (userData && userData.id) {
       setIsNewUser(isNew);
       setShowWelcomePopup(true);
-  console.log("is new user:", isNew);
+      console.log("is new user:", isNew);
       // Process referral if this is a new user
       if (isNew) {
         await processReferral(userData.id);
@@ -193,20 +195,25 @@ function App() {
       console.error("Error updating user:", error);
     }
   };
- const processReferral = async (userId: string) => {
+  const processReferral = async (userId: string) => {
     try {
       const referralCode = getStoredReferralCode();
       if (referralCode) {
-        console.log("Processing referral for user:", userId, "with code:", referralCode);
-        
-        const response = await fetch("http://staging.printsup.org/api/referrals/process", {
+        console.log(
+          "Processing referral for user:",
+          userId,
+          "with code:",
+          referralCode
+        );
+
+        const response = await fetch(`${API_BASE}/referrals/process`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             userId,
-            referralCode
+            referralCode,
           }),
         });
 
@@ -216,7 +223,7 @@ function App() {
 
         const result = await response.json();
         console.log("Referral processed successfully:", result);
-        
+
         // Clear the referral code after successful processing
       }
     } catch (error) {

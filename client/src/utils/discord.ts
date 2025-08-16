@@ -9,21 +9,21 @@ interface DiscordUser {
 interface DiscordOAuthConfig {
   clientId: string;
   clientSecret: string;
-  redirectUri: string;
+redirectUri: string;
   scope: string;
 }
 
 // Get the correct redirect URI based on environment
 const getRedirectUri = (): string => {
   // Use custom domain for production
-  return "https://staging.printsup.org";
+  return "http://localhost:5173";
   }
 
 // Discord OAuth configuration
 const DISCORD_CONFIG: DiscordOAuthConfig = {
   clientId: "1394417850181091380",
   clientSecret: "xqV6WEwR4o42d2z7AbP8fJtUjjUKAaGo",
-  redirectUri: "https://staging.printsup.org", // Default, but we'll use getRedirectUri() when needed
+  redirectUri: "http://localhost:5173", // Default, but we'll use getRedirectUri() when needed
   scope: "identify email",
 };
 

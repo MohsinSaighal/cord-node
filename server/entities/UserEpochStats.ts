@@ -16,41 +16,41 @@ import { Epoch } from "./Epoch";
 @Index(["epochId", "userEarnings"])
 export class UserEpochStats {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
 
   @Column({ type: "decimal", precision: 15, scale: 8, default: 0 })
-  userEarnings: number;
+  userEarnings!: number;
 
   @Column({ type: "integer", default: 0 })
-  userTasksCompleted: number;
+  userTasksCompleted!: number;
 
   @Column({ type: "bigint", default: 0 })
-  userMiningTime: number;
+  userMiningTime!: number;
 
   @Column({ type: "integer", default: 0 })
-  userRank: number;
+  userRank!: number;
 
   @Column({ type: "timestamp" })
-  joinedAt: Date;
+  joinedAt!: Date;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   // Relations
   @Column({ type: "uuid" })
-  userId: string;
+  userId!: string;
 
   @Column({ type: "uuid" })
-  epochId: string;
+  epochId!: string;
 
   @ManyToOne(() => User, (user) => user.epochStats, { onDelete: "CASCADE" })
   @JoinColumn({ name: "userId" })
-  user: User;
+  user!: User;
 
   @ManyToOne(() => Epoch, (epoch) => epoch.userStats, { onDelete: "CASCADE" })
   @JoinColumn({ name: "epochId" })
-  epoch: Epoch;
+  epoch!: Epoch;
 }

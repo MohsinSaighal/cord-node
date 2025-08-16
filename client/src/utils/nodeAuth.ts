@@ -17,8 +17,8 @@ const storeUserSession = (userData: UserData): void => {
     'cordnode_user_session',
     JSON.stringify({
       ...JSON.parse(JSON.stringify(userData)),
-      joinDate: userData.joinDate,
-      lastSavedBalance: userData.currentBalance,
+      join_date: userData.join_date,
+      lastSavedBalance: userData.current_balance,
     })
   );
   localStorage.setItem('cordnode_session_timestamp', Date.now().toString());
@@ -40,15 +40,15 @@ const getStoredUserSession = (): UserData | null => {
     }
 
     const userData = JSON.parse(stored);
-    userData.joinDate = new Date(userData.joinDate);
+    userData.join_date = new Date(userData.join_date);
 
     if (
       userData.lastSavedBalance &&
-      userData.currentBalance < userData.lastSavedBalance
+      userData.current_balance < userData.lastSavedBalance
     ) {
-      userData.currentBalance = userData.lastSavedBalance;
-      userData.totalEarned = Math.max(
-        userData.totalEarned,
+      userData.current_balance = userData.lastSavedBalance;
+      userData.total_earned = Math.max(
+        userData.total_earned,
         userData.lastSavedBalance
       );
     }
@@ -71,13 +71,13 @@ const clearUserSession = (): void => {
 export const updateUserInDatabase = async (userData: UserData): Promise<void> => {
   try {
     await apiClient.updateUserProfile({
-      weeklyEarnings: userData.weeklyEarnings,
-      monthlyEarnings: userData.monthlyEarnings,
-      currentBalance: userData.currentBalance,
-      totalEarned: userData.totalEarned,
+      weekly_earnings: userData.weekly_earnings,
+      monthly_earnings: userData.monthly_earnings,
+      current_balance: userData.current_balance,
+      total_earned: userData.total_earned,
       isNodeActive: userData.isNodeActive,
       nodeStartTime: userData.nodeStartTime,
-      dailyCheckInClaimed: userData.dailyCheckInClaimed,
+      daily_checkin_claimed: userData.daily_checkin_claimed,
       tasksCompleted: userData.tasksCompleted,
     });
 
@@ -99,25 +99,25 @@ export const getUserFromDatabase = async (userId: string): Promise<UserData | nu
         username: user.username,
         discriminator: user.discriminator,
         avatar: user.avatar,
-        accountAge: user.accountAge,
-        joinDate: new Date(user.joinDate),
+        account_age: user.account_age,
+        join_date: new Date(user.join_date),
         multiplier: user.multiplier,
-        totalEarned: user.totalEarned,
-        currentBalance: user.currentBalance,
+        total_earned: user.total_earned,
+        current_balance: user.current_balance,
         isNodeActive: user.isNodeActive,
         nodeStartTime: user.nodeStartTime,
         tasksCompleted: user.tasksCompleted,
         rank: user.rank,
-        lastLoginTime: user.lastLoginTime,
-        dailyCheckInClaimed: user.dailyCheckInClaimed,
-        weeklyEarnings: user.weeklyEarnings,
-        monthlyEarnings: user.monthlyEarnings,
+        last_login_time: user.last_login_time,
+        daily_checkin_claimed: user.daily_checkin_claimed,
+        weekly_earnings: user.weekly_earnings,
+        monthly_earnings: user.monthly_earnings,
         referralCode: user.referralCode,
         referredBy: user.referredBy,
         referralEarnings: user.referralEarnings,
         totalReferrals: user.totalReferrals,
         compensationClaimed: user.compensationClaimed,
-        hasBadgeOfHonor: user.hasBadgeOfHonor,
+        hasbadgeofhonor: user.hasbadgeofhonor,
       };
 
       storeUserSession(userData);
@@ -190,25 +190,25 @@ export const handleOAuthCallback = async (
       username: user.username,
       discriminator: user.discriminator,
       avatar: user.avatar,
-      accountAge: user.accountAge,
-      joinDate: new Date(user.joinDate),
+      account_age: user.account_age,
+      join_date: new Date(user.join_date),
       multiplier: user.multiplier,
-      totalEarned: user.totalEarned,
-      currentBalance: user.currentBalance,
+      total_earned: user.total_earned,
+      current_balance: user.current_balance,
       isNodeActive: user.isNodeActive,
       nodeStartTime: user.nodeStartTime,
       tasksCompleted: user.tasksCompleted,
       rank: user.rank,
-      lastLoginTime: user.lastLoginTime,
-      dailyCheckInClaimed: user.dailyCheckInClaimed,
-      weeklyEarnings: user.weeklyEarnings,
-      monthlyEarnings: user.monthlyEarnings,
+      last_login_time: user.last_login_time,
+      daily_checkin_claimed: user.daily_checkin_claimed,
+      weekly_earnings: user.weekly_earnings,
+      monthly_earnings: user.monthly_earnings,
       referralCode: user.referralCode,
       referredBy: user.referredBy,
       referralEarnings: user.referralEarnings,
       totalReferrals: user.totalReferrals,
       compensationClaimed: user.compensationClaimed,
-      hasBadgeOfHonor: user.hasBadgeOfHonor,
+      hasbadgeofhonor: user.hasbadgeofhonor,
     };
 
  
@@ -227,8 +227,8 @@ export const signOut = async (finalUserData?: UserData): Promise<void> => {
     // Save final user data before logout if provided
     if (finalUserData) {
       console.log('Saving final user data before logout:', {
-        balance: finalUserData.currentBalance,
-        totalEarned: finalUserData.totalEarned
+        balance: finalUserData.current_balance,
+        total_earned: finalUserData.total_earned
       });
       
       // Store the final state in localStorage as backup
