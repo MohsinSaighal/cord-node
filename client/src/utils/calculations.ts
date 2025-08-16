@@ -40,8 +40,18 @@ export const calculateHashRate = (user: UserData): number => {
   return baseHashRate * variance;
 };
 
-export const calculateNodeUptime = (startTime: number): number => {
-  return Math.floor((Date.now() - startTime) / 1000);
+export const calculateNodeUptime = (startTime: string): number => {
+  // Convert ISO string to milliseconds timestamp
+  const startTimestamp = new Date(startTime).getTime();
+  
+  // Handle invalid dates
+  if (isNaN(startTimestamp)) {
+    console.error("Invalid startTime:", startTime);
+    return 0;
+  }
+
+  // Calculate uptime in seconds
+  return Math.floor((Date.now() - startTimestamp) / 1000);
 };
 
 // Removed calculateOfflineEarnings function since we no longer support offline earnings

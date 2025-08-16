@@ -149,7 +149,7 @@ const MiningNode: React.FC<{ user: UserData; onUserUpdate: (user: UserData) => v
             <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Active Time</span>
           </div>
           <div className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-            {formatTime(timeActive)}
+            {formatTime(Number(timeActive))}
           </div>
           <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Hours:Min:Sec</div>
         </div>

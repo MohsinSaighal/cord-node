@@ -291,7 +291,8 @@ export const ModernNodeManager: React.FC<ModernNodeManagerProps> = ({
     if (nodeStats.isActive && currentSession) {
       const interval = setInterval(() => {
         const now = Date.now();
-        const sessionStart = new Date(currentSession.startTime).getTime();
+        console.log("current session", currentSession);
+        const sessionStart = new Date(user.node_start_time).getTime();
         setUptime(Math.floor((now - sessionStart) / 1000));
 
         // Calculate session earnings

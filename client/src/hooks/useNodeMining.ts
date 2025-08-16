@@ -15,6 +15,7 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
     efficiency: 85,
     startTime: user.node_start_time
   });
+  
 
   const [isStarting, setIsStarting] = useState(false);
   const [currentSession, setCurrentSession] = useState<string | null>(null);
@@ -144,7 +145,7 @@ export const useNodeMining = (user: UserData, onUserUpdate: (user: UserData) => 
       // Simulate startup delay
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      const startTime = Date.now();
+   const startTime = new Date().toISOString()
       
       // Create new mining session
       console.log('Creating new mining session...');

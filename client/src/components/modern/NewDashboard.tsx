@@ -130,6 +130,8 @@ export const NewDashboard: React.FC<NewDashboardProps> = ({
   const { isActive, earnings, timeActive, efficiency, toggleMining } =
     useNodeMining(user, onUserUpdate);
   const { tasks } = useTasks(user, onUserUpdate);
+console.log("timeActive (raw):", timeActive);
+console.log("typeof timeActive:", typeof timeActive);
   const [referralCode, setReferralCode] = useState("");
   const [referralStatus, setReferralStatus] = useState<
     "idle" | "loading" | "success" | "error"
@@ -367,7 +369,7 @@ export const NewDashboard: React.FC<NewDashboardProps> = ({
 
         {/* Main Stats Grid */}
         <div className="bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
             <StatCard
               icon={Coin}
               value={Number(user.current_balance || 485007).toLocaleString(
@@ -381,19 +383,7 @@ export const NewDashboard: React.FC<NewDashboardProps> = ({
               change="+12.09%"
               gradient="bg-[linear-gradient(135deg,#229162_0%,#38b48f_100%)]"
             />
-            <StatCard
-              icon={trending}
-              value={Number(user.total_earned || 20098).toLocaleString(
-                undefined,
-                {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                }
-              )}
-              label="Total Earned CORD Tokens."
-              change="+12.09%"
-              gradient="bg-[linear-gradient(135deg,#2556C2_0%,#4f7be8_100%)]"
-            />
+           
             <StatCard
               icon={zap}
               value={`#${user.rank || 145}`}

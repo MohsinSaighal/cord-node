@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { UserData, LeaderboardEntry, Task } from "../types";
 
-export const API_BASE = "https://staging.printsup.org/api"; // Update to your API base URL
-// export const API_BASE = "http://localhost:5000/api"; // Update to your API base URL
+// export const API_BASE = "https://staging.printsup.org/api"; // Update to your API base URL
+export const API_BASE = "http://localhost:5000/api"; // Update to your API base URL
 
 
 // API functions
